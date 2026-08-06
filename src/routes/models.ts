@@ -8,6 +8,7 @@
 
 import { Router } from 'express';
 import { store } from '../data/store.ts';
+import { BadQueryError, listModels } from '../lib/filter.ts';
 import { problem } from '../lib/problem.ts';
 import type { ModelEntry } from '../types.ts';
 
@@ -26,6 +27,18 @@ function findById(id: string): { model?: ModelEntry; ambiguous?: ModelEntry[] } 
   if (candidates.length > 1) return { ambiguous: candidates };
   return { model: candidates[0] };
 }
+
+modelsRouter.get('/models', (req, res) => {
+  try {
+    const result = listModels(store.snapshot.models, req.query as Record<string, string | undefined>);
+    res.json(result);
+  } catch (error) {
+    if (error instanceof BadQueryError) {
+      return problem(res, 400, 'invalid-query', error.message, { field: error.field });
+    }
+    throw error;
+  }
+});
 
 /**
  * Query-param escape hatch. Covers the single id ending in `/`
