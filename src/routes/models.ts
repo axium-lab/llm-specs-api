@@ -14,6 +14,49 @@ import type { ModelEntry } from '../types.ts';
 
 export const modelsRouter: Router = Router();
 
+/**
+ * Suggestions for a 404. Criteria are tried from most to least exact: full substring, suffix
+ * after the last `/`, and finally trigram similarity — that last one is what rescues typos
+ * (`claude-sonnet-9-9` -> `claude-sonnet-4-5`), where there is no common substring at all.
+ */
+function suggest(id: string, all: ModelEntry[]): string[] {
+  const needle = id.toLowerCase();
+  const tail = needle.split('/').pop() ?? needle;
+
+  const bySubstring = all.filter((m) => m.id.toLowerCase().includes(tail)).map((m) => m.id);
+  if (bySubstring.length > 0) return bySubstring.slice(0, 10);
+
+  const bySuffix = all
+    .filter((m) => (m.id.toLowerCase().split('/').pop() ?? '') === tail)
+    .map((m) => m.id);
+  if (bySuffix.length > 0) return bySuffix.slice(0, 10);
+
+  const wanted = trigrams(tail);
+  if (wanted.size === 0) return [];
+
+  return all
+    .map((m) => ({ id: m.id, score: similarity(wanted, trigrams(m.id.toLowerCase())) }))
+    .filter((x) => x.score >= 0.4)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10)
+    .map((x) => x.id);
+}
+
+function trigrams(value: string): Set<string> {
+  const padded = `  ${value} `;
+  const out = new Set<string>();
+  for (let i = 0; i < padded.length - 2; i++) out.add(padded.slice(i, i + 3));
+  return out;
+}
+
+/** Jaccard index between the two trigram sets. */
+function similarity(a: Set<string>, b: Set<string>): number {
+  if (a.size === 0 || b.size === 0) return 0;
+  let shared = 0;
+  for (const gram of a) if (b.has(gram)) shared++;
+  return shared / (a.size + b.size - shared);
+}
+
 function findById(id: string): { model?: ModelEntry; ambiguous?: ModelEntry[] } {
   const { byId, byLowerId } = store.snapshot;
 
@@ -72,6 +115,7 @@ function respondWithModel(res: Parameters<typeof problem>[0], id: string) {
   if (!model) {
     return problem(res, 404, 'model-not-found', 'Model not found.', {
       detail: `There is no "${id}" entry in the dataset.`,
+      suggestions: suggest(id, store.snapshot.models),
     });
   }
 
