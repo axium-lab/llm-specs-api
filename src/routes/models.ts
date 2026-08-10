@@ -96,6 +96,28 @@ modelsRouter.get('/models/by-id', (req, res) => {
   return respondWithModel(res, id);
 });
 
+modelsRouter.get('/compare', (req, res) => {
+  const raw = req.query['ids'];
+  if (typeof raw !== 'string' || raw === '') {
+    return problem(res, 400, 'invalid-query', 'Missing "ids" parameter.', { field: 'ids' });
+  }
+
+  const ids = raw.split(',').map((s) => s.trim()).filter(Boolean);
+  const found: ModelEntry[] = [];
+  const missing: string[] = [];
+
+  for (const id of ids) {
+    const { model } = findById(id);
+    if (model) found.push(model);
+    else missing.push(id);
+  }
+
+  // Union of the attributes present in any of the models: that is the comparison table.
+  const attributes = [...new Set(found.flatMap((m) => Object.keys(m)))].sort();
+
+  res.json({ requested: ids, found: found.length, missing, attributes, data: found });
+});
+
 modelsRouter.get('/models/*splat', (req, res) => {
   const splat = (req.params as Record<string, unknown>)['splat'];
   const id = Array.isArray(splat) ? splat.join('/') : String(splat ?? '');
