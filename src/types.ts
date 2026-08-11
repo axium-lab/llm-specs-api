@@ -46,3 +46,30 @@ export function isModelEntry(
     'litellm_provider' in value
   );
 }
+
+// ---------------------------------------------------------------------------
+// Cost primitives
+// ---------------------------------------------------------------------------
+
+export type ServiceTier = 'standard' | 'batch' | 'priority' | 'flex';
+export type CacheTtl = '5m' | '1h';
+export type CurrencyCode = 'USD' | 'DBU';
+export type CostCategory =
+  | 'input'
+  | 'output'
+  | 'cache_read'
+  | 'cache_write'
+  | 'surcharge'
+  | 'other';
+
+export type Unit =
+  | 'token'
+  | 'second'
+  | 'character'
+  | 'image'
+  | 'pixel'
+  | 'page'
+  | 'query'
+  | 'request'
+  | 'session'
+  | 'credit';
