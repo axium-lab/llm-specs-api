@@ -1,6 +1,7 @@
 import express, { type Express, type NextFunction, type Request, type Response } from 'express';
 import { store } from './data/store.ts';
 import { problem } from './lib/problem.ts';
+import { estimateRouter } from './routes/estimate.ts';
 import { facetsRouter } from './routes/facets.ts';
 import { healthRouter } from './routes/health.ts';
 import { modelsRouter } from './routes/models.ts';
@@ -22,6 +23,7 @@ export function createApp(): Express {
 
   app.use('/v1', modelsRouter);
   app.use('/v1', facetsRouter);
+  app.use('/v1', estimateRouter);
 
   app.use((req, res) => {
     problem(res, 404, 'not-found', 'Route not found.', { path: req.path });
