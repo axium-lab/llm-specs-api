@@ -1,0 +1,9 @@
+node_modules
+test
+.git
+.gitignore
+*.md
+# The runtime downloads the dataset from upstream; the copy in data/ is only a test fixture.
+# A pattern without a slash only matches at the root, hence the explicit prefix.
+data/
+count-attributes.js
