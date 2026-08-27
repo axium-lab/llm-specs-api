@@ -1,0 +1,469 @@
+# llm-pricing-api — peticiones de prueba para la extensión REST Client de VS Code
+# (humao.rest-client). Pulsa "Send Request" sobre cualquier bloque separado por ###.
+#
+#   bun run dev     # levanta el servicio en http://localhost:8080
+
+@baseUrl = http://localhost:8080
+# @baseUrl = https://llm-pricing-api-xxxxxxxx.europe-west1.run.app
+
+@contentType = application/json
+
+
+###############################################################################
+# Salud y metadatos
+###############################################################################
+
+### Liveness / readiness. 503 mientras el dataset se está cargando.
+GET {{baseUrl}}/health
+
+### Contadores, origen del dataset, ETag y sha256.
+# @name meta
+GET {{baseUrl}}/v1/meta
+
+### Los 127 proveedores con su número de modelos.
+GET {{baseUrl}}/v1/providers
+
+### Los 16 modes con su número de modelos (+ modelos sin mode).
+GET {{baseUrl}}/v1/modes
+
+### Los 153 atributos del dataset, marcando cuáles son claves de precio.
+GET {{baseUrl}}/v1/attributes
+
+
+###############################################################################
+# GET /v1/models — listado, filtros, orden, proyección y paginación
+###############################################################################
+
+### Listado por defecto (limit = DEFAULT_LIMIT, 50).
+GET {{baseUrl}}/v1/models
+
+### Filtro por proveedor y mode, proyectando sólo algunos campos.
+GET {{baseUrl}}/v1/models?provider=anthropic&mode=chat&fields=id,provider,input_cost_per_token,max_input_tokens&limit=5
+
+### provider y mode aceptan lista separada por comas.
+GET {{baseUrl}}/v1/models?provider=openai,anthropic&mode=chat,responses&limit=10&fields=id,provider,mode
+
+### Búsqueda por subcadena del id.
+GET {{baseUrl}}/v1/models?q=claude-sonnet&fields=id,provider&limit=20
+
+### Filtros genéricos sobre cualquier clave supports_* del dataset.
+GET {{baseUrl}}/v1/models?supports_vision=true&supports_prompt_caching=true&limit=10&fields=id,provider
+
+### Umbrales numéricos: ventana de contexto mínima y coste de entrada máximo.
+GET {{baseUrl}}/v1/models?min_input_tokens=1000000&max_input_cost=0.000005&fields=id,max_input_tokens,input_cost_per_token&limit=20
+
+### Orden: los chat más baratos primero (los que no declaran el campo van al final).
+GET {{baseUrl}}/v1/models?mode=chat&sort=input_cost_per_token:asc&fields=id,provider,input_cost_per_token&limit=15
+
+### Orden descendente por ventana de contexto.
+GET {{baseUrl}}/v1/models?sort=max_input_tokens:desc&fields=id,max_input_tokens&limit=10
+
+### Paginación: `total` es el resultado del filtro, antes de recortar.
+GET {{baseUrl}}/v1/models?provider=bedrock&limit=25&offset=50&fields=id
+
+### El límite se recorta a MAX_LIMIT (500), no da error.
+GET {{baseUrl}}/v1/models?limit=100000&fields=id
+
+
+###############################################################################
+# GET /v1/models — errores de query (400, problem+json)
+###############################################################################
+
+### limit no numérico -> 400 invalid-query.
+GET {{baseUrl}}/v1/models?limit=abc
+
+### limit < 1 -> 400 invalid-query.
+GET {{baseUrl}}/v1/models?limit=0
+
+### Dirección de orden inválida -> 400 invalid-query.
+GET {{baseUrl}}/v1/models?sort=input_cost_per_token:ascending
+
+### Un supports_* que no es booleano -> 400 invalid-query.
+GET {{baseUrl}}/v1/models?supports_vision=maybe
+
+
+###############################################################################
+# Consulta de un modelo concreto
+###############################################################################
+
+### Id simple.
+GET {{baseUrl}}/v1/models/claude-sonnet-4-5
+
+### Id con `/` (el 81% del dataset): la ruta es un wildcard, no hay que escapar nada.
+GET {{baseUrl}}/v1/models/bedrock/us.anthropic.claude-3-5-haiku-20241022-v1:0
+
+### Id con `/` a varios niveles.
+GET {{baseUrl}}/v1/models/vertex_ai/gemini-3-pro-preview
+
+### Modelo sin ninguna clave de precio: existe, pero no es facturable
+### (98 entradas del dataset están así). En /v1/estimate da 422.
+GET {{baseUrl}}/v1/models/github_copilot/claude-opus-4.5
+
+### Escape hatch por query param: el único id que acaba en `/` y que Express
+### normalizaría al resolver la ruta.
+GET {{baseUrl}}/v1/models/by-id?id=fireworks_ai/accounts/fireworks/models/
+
+### by-id sin parámetro -> 400 invalid-query.
+GET {{baseUrl}}/v1/models/by-id
+
+### La búsqueda es sensible a mayúsculas: `together_ai/baai/...` y
+### `together_ai/BAAI/...` son entradas distintas. Cada una resuelve exacta.
+GET {{baseUrl}}/v1/models/together_ai/BAAI/bge-base-en-v1.5
+
+### Si sólo difiere en el case respecto a varias entradas -> 409 ambiguous-model.
+GET {{baseUrl}}/v1/models/together_ai/BaAi/bge-base-en-v1.5
+
+### 404 con sugerencias por trigramas (rescata erratas sin subcadena común).
+GET {{baseUrl}}/v1/models/claude-sonnet-9-9
+
+### Ruta inexistente -> 404 not-found.
+GET {{baseUrl}}/v1/nope
+
+
+###############################################################################
+# GET /v1/compare — comparativa lado a lado
+###############################################################################
+
+### `attributes` es la unión de las claves presentes en cualquiera de los modelos.
+GET {{baseUrl}}/v1/compare?ids=claude-sonnet-4-5,gpt-5.2,gemini-2.5-pro
+
+### Los ids no encontrados se devuelven en `missing`, no rompen la respuesta.
+GET {{baseUrl}}/v1/compare?ids=gpt-4o,no-existe-este-modelo
+
+### Sin `ids` -> 400 invalid-query.
+GET {{baseUrl}}/v1/compare
+
+
+###############################################################################
+# POST /v1/estimate — cálculo de coste de una llamada
+###############################################################################
+
+### El ejemplo del README: cruza el umbral de 200k, así que se reprecia la
+### petición entera (output incluido) y se compone con la caché de 1h.
+# @name estimate
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "claude-sonnet-4-5",
+  "usage": {
+    "input_tokens": 190000,
+    "output_tokens": 4000,
+    "cache_read_tokens": 20000,
+    "cache_creation_tokens_by_ttl": { "1h": 8000 }
+  }
+}
+
+### Caso mínimo: sólo entrada y salida.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-4o",
+  "usage": { "input_tokens": 12000, "output_tokens": 800 }
+}
+
+### `tier_policy: "marginal"` cobra por tramos en vez de repreciar todo.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "claude-sonnet-4-5",
+  "usage": { "input_tokens": 240000, "output_tokens": 4000 },
+  "options": { "tier_policy": "marginal" }
+}
+
+### `threshold_basis: "input_only"` deja la caché fuera del cómputo del umbral.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "claude-sonnet-4-5",
+  "usage": { "input_tokens": 150000, "cache_read_tokens": 90000, "output_tokens": 2000 },
+  "options": { "threshold_basis": "input_only" }
+}
+
+### Si el proveedor ya cuenta la caché dentro de input_tokens, dilo y no se
+### suma dos veces.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "claude-sonnet-4-5",
+  "usage": { "input_tokens": 100000, "cache_read_tokens": 80000, "output_tokens": 1500 },
+  "options": { "cache_tokens_included_in_input": true }
+}
+
+### service_tier: batch (mitad de precio en OpenAI).
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-4o",
+  "usage": { "input_tokens": 500000, "output_tokens": 50000 },
+  "service_tier": "batch"
+}
+
+### service_tier: priority.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-4o",
+  "usage": { "input_tokens": 20000, "output_tokens": 2000 },
+  "service_tier": "priority"
+}
+
+### Tokens de razonamiento (subconjunto de output_tokens).
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-5.2",
+  "usage": { "input_tokens": 8000, "output_tokens": 6000, "reasoning_tokens": 4500 }
+}
+
+### Web search: se factura por consulta, con tamaño de contexto.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-4o",
+  "usage": {
+    "input_tokens": 5000,
+    "output_tokens": 900,
+    "web_search": { "queries": 3, "context_size": "high" }
+  }
+}
+
+### Embeddings: sólo entrada.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "text-embedding-3-small",
+  "usage": { "input_tokens": 2500000 }
+}
+
+### Transcripción de audio: tokens de audio de entrada + texto de salida.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-4o-transcribe",
+  "usage": { "input_audio_tokens": 14000, "output_tokens": 1200 }
+}
+
+### Transcripción tarifada por segundo de audio.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "assemblyai/best",
+  "usage": { "audio_seconds": 3600 }
+}
+
+### Generación de imagen: se factura por imagen.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "dall-e-3",
+  "usage": { "input_images": 4 }
+}
+
+### OCR: se factura por página.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "azure_ai/mistral-document-ai-2505",
+  "usage": { "pages": 320 }
+}
+
+### Databricks publica además tarifas en DBU (`input_dbu_cost_per_token`),
+### que no son dólares: `totals` está indexado por divisa justamente por eso.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "databricks/databricks-claude-3-7-sonnet",
+  "usage": { "input_tokens": 40000, "output_tokens": 3000 }
+}
+
+### Procesado regional (eu / us / global).
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "claude-sonnet-4-5",
+  "usage": { "input_tokens": 10000, "output_tokens": 1000 },
+  "region_processing": "eu"
+}
+
+### `round_to` controla los decimales del total.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-4o",
+  "usage": { "input_tokens": 1234, "output_tokens": 567 },
+  "options": { "round_to": 4 }
+}
+
+
+###############################################################################
+# POST /v1/estimate — avisos y errores
+###############################################################################
+
+### Superar max_input_tokens: con limit_policy "warn" (por defecto) sólo avisa.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-4o",
+  "usage": { "input_tokens": 5000000, "output_tokens": 1000 }
+}
+
+### El mismo caso con limit_policy "error" -> 422 limits-exceeded.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-4o",
+  "usage": { "input_tokens": 5000000, "output_tokens": 1000 },
+  "options": { "limit_policy": "error" }
+}
+
+### Tarifa disparatada de upstream ($55.000/MTok): no se corrige, se avisa
+### con SUSPICIOUS_RATE_MAGNITUDE.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "wandb/zai-org/GLM-4.5",
+  "usage": { "input_tokens": 10000, "output_tokens": 2000 }
+}
+
+### o1-pro a $600/MTok sí es correcto y está en la allowlist: sin aviso.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "o1-pro",
+  "usage": { "input_tokens": 10000, "output_tokens": 2000 }
+}
+
+### Modelo sin ninguna clave de precio -> 422 model-not-priced.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "github_copilot/claude-opus-4.5",
+  "usage": { "input_tokens": 1000, "output_tokens": 100 }
+}
+
+### Modelo que sólo tarifa por `tiered_pricing`: pasa el filtro de precio pero
+### el motor no lee esas bandas, así que responde 200 con total 0 y todo el
+### consumo en `unpriced[]` (NO_RATE_KEY). Ojo al interpretarlo.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "dashscope/qwen-flash",
+  "usage": { "input_tokens": 1000, "output_tokens": 100 }
+}
+
+### Modelo inexistente -> 404 model-not-found.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-42-turbo",
+  "usage": { "input_tokens": 1000 }
+}
+
+### Id ambiguo salvo por el case -> 409 ambiguous-model.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "together_ai/BaAi/bge-base-en-v1.5",
+  "usage": { "input_tokens": 1000 }
+}
+
+### El mismo id desambiguado con `provider`.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "together_ai/BAAI/bge-base-en-v1.5",
+  "provider": "together_ai",
+  "usage": { "input_tokens": 1000 }
+}
+
+### reasoning_tokens > output_tokens -> 400 invalid-request.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-5.2",
+  "usage": { "input_tokens": 1000, "output_tokens": 100, "reasoning_tokens": 500 }
+}
+
+### Clave desconocida en `usage`: el esquema es strict -> 400 invalid-request.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-4o",
+  "usage": { "input_tokens": 1000, "tokens_de_entrada": 500 }
+}
+
+### Valor negativo -> 400 invalid-request.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-4o",
+  "usage": { "input_tokens": -1 }
+}
+
+### service_tier fuera del enum -> 400 invalid-request.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "gpt-4o",
+  "usage": { "input_tokens": 1000 },
+  "service_tier": "gratis"
+}
+
+### Falta `model` -> 400 invalid-request.
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "usage": { "input_tokens": 1000 }
+}
+
+
+###############################################################################
+# Encadenar peticiones: usar la respuesta de una en la siguiente
+###############################################################################
+
+### Coge el primer id del listado y pídelo por su ruta.
+# @name cheapest
+GET {{baseUrl}}/v1/models?mode=chat&sort=input_cost_per_token:asc&fields=id&limit=1
+
+###
+GET {{baseUrl}}/v1/models/{{cheapest.response.body.data[0].id}}
+
+###
+POST {{baseUrl}}/v1/estimate
+Content-Type: {{contentType}}
+
+{
+  "model": "{{cheapest.response.body.data[0].id}}",
+  "usage": { "input_tokens": 100000, "output_tokens": 5000 }
+}

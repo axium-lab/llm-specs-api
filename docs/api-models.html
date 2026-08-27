@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Models API — llm-pricing-api</title>
+<meta name="description" content="Reference for the model endpoints of llm-pricing-api: listing with filters, sorting, projection and pagination, lookup by ids containing slashes and colons, the by-id escape hatch, and side-by-side comparison." />
+<link rel="canonical" href="https://llm-pricing.dev/api-models.html" />
+<meta name="theme-color" content="#0b0e14" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%235b7cfa'/><text x='16' y='23' font-family='monospace' font-size='17' font-weight='700' fill='%23ffffff' text-anchor='middle'>$</text></svg>" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="llm-pricing-api" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:title" content="llm-pricing-api — Models API" />
+<meta property="og:description" content="Listing with filters, sorting, projection and pagination, lookup by ids containing slashes and colons, and side-by-side comparison." />
+<meta property="og:url" content="https://llm-pricing.dev/api-models.html" />
+<meta property="og:image" content="https://llm-pricing.dev/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="llm-pricing-api — every LLM price and context window behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="llm-pricing-api — Models API" />
+<meta name="twitter:description" content="Listing with filters, sorting, projection and pagination, lookup by awkward ids, and side-by-side comparison." />
+<meta name="twitter:image" content="https://llm-pricing.dev/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "llm-pricing-api — Models API",
+  "description": "Reference for the model endpoints: listing with filters, sorting, projection and pagination, lookup by id, and comparison.",
+  "url": "https://llm-pricing.dev/api-models.html",
+  "author": { "@type": "Organization", "name": "Axium", "url": "https://github.com/axium-lab" },
+  "about": { "@type": "SoftwareApplication", "name": "llm-pricing-api", "url": "https://llm-pricing.dev/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://llm-pricing.dev/" },
+    { "@type": "ListItem", "position": 2, "name": "API reference", "item": "https://llm-pricing.dev/api.html" },
+    { "@type": "ListItem", "position": 3, "name": "Models", "item": "https://llm-pricing.dev/api-models.html" }
+  ]
+}
+</script>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="wrap">
+<nav>
+  <div class="brand"><a href="/">llm-pricing<span>-api</span></a></div>
+  <div class="nav-links">
+    <a href="api.html">API</a>
+    <a class="active" href="api-models.html">Models</a>
+    <a href="api-estimate.html">Estimate</a>
+    <a href="dataset.html">Dataset</a>
+    <a class="gh" href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+  </div>
+</nav>
+</div>
+
+<header>
+<div class="wrap">
+  <div class="eyebrow">API reference</div>
+  <h1>Models</h1>
+  <p class="sub">
+    Four endpoints over the 3,214 entries in the catalog: list them, look one up, look up the awkward one, and
+    compare several. All of them return dataset entries verbatim — this API filters and indexes, it does not
+    reshape.
+  </p>
+</div>
+</header>
+
+<div class="wrap">
+<div class="layout">
+
+<aside class="toc">
+  <p class="toc-title">On this page</p>
+  <ul>
+    <li><a href="#list">Listing</a></li>
+    <li><a href="#filters">Filters</a></li>
+    <li><a href="#supports">Capability filters</a></li>
+    <li><a href="#sort">Sorting</a></li>
+    <li><a href="#fields">Projection</a></li>
+    <li><a href="#paging">Pagination</a></li>
+  </ul>
+  <p class="toc-group">Lookup</p>
+  <ul>
+    <li><a href="#lookup">By id</a></li>
+    <li><a href="#awkward">Awkward ids</a></li>
+    <li><a href="#by-id">by-id</a></li>
+    <li><a href="#failures">404, 409</a></li>
+  </ul>
+  <p class="toc-group">Compare</p>
+  <ul>
+    <li><a href="#compare">/v1/compare</a></li>
+  </ul>
+</aside>
+
+<main>
+
+<section id="list">
+  <h2>Listing</h2>
+  <div class="endpoint"><span class="method get">GET</span> <span class="path">/v1/models</span></div>
+  <p>
+    Filter, sort, project and paginate over the catalog. Filters combine with AND; a filter that takes a list
+    combines its own values with OR.
+  </p>
+<pre><code>curl <span class="tok-str">'localhost:8080/v1/models?provider=anthropic&amp;mode=chat&amp;fields=id,provider,input_cost_per_token,max_input_tokens&amp;limit=3'</span></code></pre>
+<pre><code>{
+  <span class="tok-key">"total"</span>: 26,
+  <span class="tok-key">"limit"</span>: 3,
+  <span class="tok-key">"offset"</span>: 0,
+  <span class="tok-key">"data"</span>: [
+    { <span class="tok-key">"id"</span>: <span class="tok-str">"claude-haiku-4-5-20251001"</span>, <span class="tok-key">"provider"</span>: <span class="tok-str">"anthropic"</span>, <span class="tok-key">"input_cost_per_token"</span>: 0.000001, <span class="tok-key">"max_input_tokens"</span>: 200000 },
+    { <span class="tok-key">"id"</span>: <span class="tok-str">"claude-haiku-4-5"</span>,          <span class="tok-key">"provider"</span>: <span class="tok-str">"anthropic"</span>, <span class="tok-key">"input_cost_per_token"</span>: 0.000001, <span class="tok-key">"max_input_tokens"</span>: 200000 },
+    { <span class="tok-key">"id"</span>: <span class="tok-str">"claude-3-7-sonnet-20250219"</span>, <span class="tok-key">"provider"</span>: <span class="tok-str">"anthropic"</span>, <span class="tok-key">"input_cost_per_token"</span>: 0.000003, <span class="tok-key">"max_input_tokens"</span>: 200000 }
+  ]
+}</code></pre>
+  <p>
+    Without <code>fields</code>, each element is the complete dataset entry — every attribute the catalog holds
+    for that model, which for a frontier model is around 30 keys.
+  </p>
+</section>
+
+<section id="filters">
+  <h2>Filters</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Parameter</th><th>Type</th><th>Behaviour</th></tr></thead>
+    <tbody>
+      <tr><td><code>provider</code></td><td>comma-separated</td><td>Case-insensitive exact match on the provider name. Several values are OR-ed. Names come from <a href="api.html#providers"><code>/v1/providers</code></a>.</td></tr>
+      <tr><td><code>mode</code></td><td>comma-separated</td><td>Same, over the 16 <a href="api.html#modes">modes</a>. The 8 models with no mode never match.</td></tr>
+      <tr><td><code>q</code></td><td>string</td><td>Case-insensitive substring of the <strong>id</strong> only. Not a fuzzy search — for that, see the <a href="#failures">404 suggestions</a>.</td></tr>
+      <tr><td><code>min_input_tokens</code></td><td>number</td><td>Keeps models whose <code>max_input_tokens</code> is at least this. Models that do not declare it are excluded.</td></tr>
+      <tr><td><code>max_input_cost</code></td><td>number</td><td>Keeps models whose <code>input_cost_per_token</code> is at most this. Per <em>token</em>, so <code>0.000005</code> is $5/MTok.</td></tr>
+      <tr><td><code>supports_*</code></td><td><code>true</code>|<code>false</code>|<code>1</code>|<code>0</code></td><td>Any capability flag. <a href="#supports">See below.</a></td></tr>
+      <tr><td><code>sort</code></td><td><code>field[:asc|desc]</code></td><td><a href="#sort">See below.</a> Default direction <code>asc</code>.</td></tr>
+      <tr><td><code>fields</code></td><td>comma-separated</td><td><a href="#fields">See below.</a></td></tr>
+      <tr><td><code>limit</code></td><td>integer</td><td>Default 50, clamped to 500. Below 1 is a <code>400</code>.</td></tr>
+      <tr><td><code>offset</code></td><td>integer</td><td>Default 0. Negative values are treated as 0.</td></tr>
+    </tbody>
+  </table>
+  </div>
+<pre><code><span class="tok-com"># Two providers, two modes, ids only</span>
+curl <span class="tok-str">'localhost:8080/v1/models?provider=openai,anthropic&amp;mode=chat,responses&amp;fields=id,provider,mode&amp;limit=10'</span>
+
+<span class="tok-com"># Substring of the id</span>
+curl <span class="tok-str">'localhost:8080/v1/models?q=claude-sonnet&amp;fields=id,provider&amp;limit=3'</span>
+<span class="tok-com"># -> {"total":62,"limit":3,"offset":0,"data":[{"id":"anthropic.claude-sonnet-5","provider":"bedrock_converse"}, …]}</span>
+
+<span class="tok-com"># Numeric thresholds: a 1M context window under $5/MTok</span>
+curl <span class="tok-str">'localhost:8080/v1/models?min_input_tokens=1000000&amp;max_input_cost=0.000005&amp;fields=id,max_input_tokens,input_cost_per_token'</span></code></pre>
+  <div class="callout">
+    <strong>A filter that finds nothing is not an error.</strong> It answers <code>200</code> with
+    <code>"total": 0</code> and an empty <code>data</code>. Only a malformed parameter is a
+    <a href="api.html#errors"><code>400 invalid-query</code></a>, and the response names the offending
+    <code>field</code>.
+  </div>
+</section>
+
+<section id="supports">
+  <h2>Capability filters</h2>
+  <p>
+    Any key of the dataset starting with <code>supports_</code> works as a filter, without being enumerated
+    anywhere. There are <strong>37</strong> of them today, and a new one added upstream becomes filterable at
+    the next boot — no code change.
+  </p>
+<pre><code>curl <span class="tok-str">'localhost:8080/v1/models?supports_vision=true&amp;supports_prompt_caching=true&amp;fields=id,provider&amp;limit=2'</span>
+<span class="tok-com"># -> {"total":548, …}</span></code></pre>
+  <p>The current set, from <a href="api.html#attributes"><code>/v1/attributes</code></a>:</p>
+<pre><code>supports_adaptive_thinking          supports_native_streaming
+supports_assistant_prefill          supports_native_structured_output
+supports_audio_input                supports_none_reasoning_effort
+supports_audio_output               supports_nova_canvas_image_edit
+supports_computer_use               supports_output_config
+supports_embedding_image_input      supports_parallel_function_calling
+supports_function_calling           supports_parallel_tool_use_config
+supports_image_input                supports_pdf_input
+supports_image_size                 supports_prompt_cache_breakpoint
+supports_legacy_thinking            supports_prompt_caching
+supports_low_reasoning_effort       supports_reasoning
+supports_max_reasoning_effort       supports_response_schema
+supports_mid_conversation_system    supports_sampling_params
+supports_minimal_reasoning_effort   supports_speed
+supports_multimodal                 supports_system_messages
+supports_tool_choice                supports_url_context
+supports_tool_search                supports_video_input
+supports_vision                     supports_web_search
+supports_xhigh_reasoning_effort</code></pre>
+  <div class="callout">
+    <strong><code>false</code> means "not true", not "declared false".</strong> The filter compares
+    <code>key === true</code> against what you asked for, so <code>?supports_vision=false</code> returns both
+    the models that declare it <code>false</code> and the many that do not mention it at all. Use
+    <a href="api.html#attributes"><code>/v1/attributes</code></a> to see how many models declare a given key
+    before reading anything into its absence.
+  </div>
+  <p>A value that is not a boolean is rejected rather than ignored:</p>
+<pre><code>curl <span class="tok-str">'localhost:8080/v1/models?supports_vision=maybe'</span>
+<span class="tok-com"># 400</span>
+{ <span class="tok-key">"type"</span>: <span class="tok-str">"about:blank#invalid-query"</span>, <span class="tok-key">"title"</span>: <span class="tok-str">"\"supports_vision\" must be true or false"</span>, <span class="tok-key">"status"</span>: 400, <span class="tok-key">"field"</span>: <span class="tok-str">"supports_vision"</span> }</code></pre>
+</section>
+
+<section id="sort">
+  <h2>Sorting</h2>
+  <p>
+    <code>sort=field</code> or <code>sort=field:desc</code>. Any attribute works, including one only a handful
+    of models declare. Numbers compare numerically, everything else compares as a string.
+  </p>
+<pre><code>curl <span class="tok-str">'localhost:8080/v1/models?mode=chat&amp;sort=input_cost_per_token:asc&amp;fields=id,provider,input_cost_per_token&amp;limit=3'</span></code></pre>
+  <div class="callout">
+    <strong>Models that do not declare the field always go last</strong>, in both directions. "No value" is not
+    the same as "the lowest value", and sorting them to the top of an ascending price list would be actively
+    misleading — those models are not free, their price is unknown.
+  </div>
+  <p>
+    Note what <em>is</em> at the top of that ascending list: entries that genuinely declare
+    <code>input_cost_per_token: 0</code>, such as <code>anthropic.claude-mythos-preview</code> and the
+    Cloudflare LoRA models. Free and unknown stay on opposite ends.
+  </p>
+  <p>An unknown direction is a <code>400</code>; an unknown <em>field</em> is not — it simply sorts everything to the tail.</p>
+<pre><code>curl <span class="tok-str">'localhost:8080/v1/models?sort=input_cost_per_token:ascending'</span>
+<span class="tok-com"># 400</span>
+{ <span class="tok-key">"type"</span>: <span class="tok-str">"about:blank#invalid-query"</span>, <span class="tok-key">"title"</span>: <span class="tok-str">"The \"sort\" direction must be asc or desc"</span>, <span class="tok-key">"status"</span>: 400, <span class="tok-key">"field"</span>: <span class="tok-str">"sort"</span> }</code></pre>
+</section>
+
+<section id="fields">
+  <h2>Projection</h2>
+  <p>
+    <code>fields</code> trims each row to the keys you name. A key a model does not have is simply absent —
+    it is never emitted as <code>null</code>, because in this dataset "absent" carries meaning.
+  </p>
+<pre><code>curl <span class="tok-str">'localhost:8080/v1/models?provider=bedrock&amp;fields=id&amp;limit=2&amp;offset=50'</span>
+{
+  <span class="tok-key">"total"</span>: 268, <span class="tok-key">"limit"</span>: 2, <span class="tok-key">"offset"</span>: 50,
+  <span class="tok-key">"data"</span>: [
+    { <span class="tok-key">"id"</span>: <span class="tok-str">"bedrock/ap-northeast-1/1-month-commitment/anthropic.claude-instant-v1"</span> },
+    { <span class="tok-key">"id"</span>: <span class="tok-str">"bedrock/ap-northeast-1/1-month-commitment/anthropic.claude-v1"</span> }
+  ]
+}</code></pre>
+  <p>Projection happens after pagination, so it saves bytes on the wire, not work on the server.</p>
+</section>
+
+<section id="paging">
+  <h2>Pagination</h2>
+  <p>
+    <code>total</code> is the size of the filtered set <strong>before</strong> the page is cut, so
+    <code>Math.ceil(total / limit)</code> is the number of pages. There are no cursors and no
+    <code>Link</code> headers.
+  </p>
+<pre><code>curl <span class="tok-str">'localhost:8080/v1/models?limit=100000&amp;fields=id'</span>
+<span class="tok-com"># -> 200 with {"total":3214,"limit":500,…} and 500 rows: the ceiling clamps, it does not reject</span></code></pre>
+  <p>
+    The ceiling is <code>MAX_LIMIT</code> (500 by default) and the default page is <code>DEFAULT_LIMIT</code>
+    (50); both are environment variables, so a self-hosted instance can raise them.
+  </p>
+</section>
+
+<section id="lookup">
+  <h2>Lookup by id</h2>
+  <div class="endpoint"><span class="method get">GET</span> <span class="path">/v1/models/{id}</span></div>
+  <p>Returns the complete dataset entry, with <code>id</code> appended.</p>
+<pre><code>curl localhost:8080/v1/models/claude-sonnet-4-5</code></pre>
+<pre><code>{
+  <span class="tok-key">"deprecation_date"</span>: <span class="tok-str">"2026-09-29"</span>,
+  <span class="tok-key">"cache_creation_input_token_cost"</span>: 0.00000375,
+  <span class="tok-key">"cache_creation_input_token_cost_above_1hr"</span>: 0.000006,
+  <span class="tok-key">"cache_creation_input_token_cost_above_1hr_above_200k_tokens"</span>: 0.000012,
+  <span class="tok-key">"cache_read_input_token_cost"</span>: 3e-7,
+  <span class="tok-key">"input_cost_per_token"</span>: 0.000003,
+  <span class="tok-key">"input_cost_per_token_above_200k_tokens"</span>: 0.000006,
+  <span class="tok-key">"output_cost_per_token"</span>: 0.000015,
+  <span class="tok-key">"output_cost_per_token_above_200k_tokens"</span>: 0.0000225,
+  <span class="tok-key">"provider"</span>: <span class="tok-str">"anthropic"</span>,
+  <span class="tok-key">"max_input_tokens"</span>: 200000,
+  <span class="tok-key">"max_output_tokens"</span>: 64000,
+  <span class="tok-key">"mode"</span>: <span class="tok-str">"chat"</span>,
+  <span class="tok-key">"search_context_cost_per_query"</span>: { <span class="tok-key">"search_context_size_high"</span>: 0.01, <span class="tok-key">"search_context_size_low"</span>: 0.01, <span class="tok-key">"search_context_size_medium"</span>: 0.01 },
+  <span class="tok-key">"supports_prompt_caching"</span>: true,
+  <span class="tok-key">"supports_reasoning"</span>: true,
+  <span class="tok-com">… more capability flags …</span>
+  <span class="tok-key">"prompt_cache_min_tokens"</span>: 1024,
+  <span class="tok-key">"id"</span>: <span class="tok-str">"claude-sonnet-4-5"</span>
+}</code></pre>
+  <p>
+    Those four <code>_above_200k_tokens</code> keys are the long-context tier, and the
+    <code>_above_1hr</code> ones are Anthropic's 1&nbsp;hour cache TTL. The
+    <a href="api-estimate.html">estimator</a> is what turns them into a price.
+  </p>
+</section>
+
+<section id="awkward">
+  <h2>Ids the URL has opinions about</h2>
+  <p>
+    82% of the ids contain a <code>/</code>, 244 contain <code>:</code>, four contain a literal <code>*</code>.
+    The route is a wildcard that rejoins every segment, so all of them are passed literally — nothing to
+    escape, nothing to encode.
+  </p>
+<pre><code><span class="tok-com"># Slashes and a colon</span>
+curl <span class="tok-str">'localhost:8080/v1/models/bedrock/us.anthropic.claude-3-5-haiku-20241022-v1:0'</span>
+
+<span class="tok-com"># Four segments</span>
+curl <span class="tok-str">'localhost:8080/v1/models/vertex_ai/gemini-3-pro-preview'</span>
+
+<span class="tok-com"># A literal asterisk in the id</span>
+curl <span class="tok-str">'localhost:8080/v1/models/bedrock/*/1-month-commitment/cohere.command-text-v14'</span>
+<span class="tok-com"># -> 200 {"input_cost_per_second":0.011, "provider":"bedrock", …}</span></code></pre>
+  <h3>Case matters</h3>
+  <p>
+    The catalog holds <code>together_ai/baai/bge-base-en-v1.5</code> and
+    <code>together_ai/BAAI/bge-base-en-v1.5</code> as two separate entries with identical content. Lookup is
+    exact and case-sensitive first, so each of those resolves to itself with a <code>200</code>. Only when
+    <em>no</em> exact match exists does a case-insensitive pass run — and if that matches more than one entry,
+    it is a <a href="#failures"><code>409</code></a> rather than a coin flip.
+  </p>
+</section>
+
+<section id="by-id">
+  <h2>The by-id escape hatch</h2>
+  <div class="endpoint"><span class="method get">GET</span> <span class="path">/v1/models/by-id?id={id}</span></div>
+  <p>
+    One id in the catalog ends in a slash — <code>fireworks_ai/accounts/fireworks/models/</code> — and a path
+    cannot carry a trailing slash, because the router normalizes it away before anything sees it. That entry is
+    reachable only here.
+  </p>
+<pre><code>curl <span class="tok-str">'localhost:8080/v1/models/by-id?id=fireworks_ai/accounts/fireworks/models/'</span>
+{
+  <span class="tok-key">"max_tokens"</span>: 40960, <span class="tok-key">"max_input_tokens"</span>: 40960, <span class="tok-key">"max_output_tokens"</span>: 40960,
+  <span class="tok-key">"input_cost_per_token"</span>: 1e-7, <span class="tok-key">"output_cost_per_token"</span>: 0,
+  <span class="tok-key">"provider"</span>: <span class="tok-str">"fireworks_ai"</span>, <span class="tok-key">"mode"</span>: <span class="tok-str">"embedding"</span>,
+  <span class="tok-key">"id"</span>: <span class="tok-str">"fireworks_ai/accounts/fireworks/models/"</span>
+}</code></pre>
+  <p>
+    It behaves identically to the path form for every other id, so it is also the safer choice when you are
+    passing an id you did not construct yourself. Omitting <code>id</code> is a <code>400</code>:
+  </p>
+<pre><code>{ <span class="tok-key">"type"</span>: <span class="tok-str">"about:blank#invalid-query"</span>, <span class="tok-key">"title"</span>: <span class="tok-str">"Missing \"id\" parameter."</span>, <span class="tok-key">"status"</span>: 400, <span class="tok-key">"field"</span>: <span class="tok-str">"id"</span> }</code></pre>
+</section>
+
+<section id="failures">
+  <h2>When a lookup fails</h2>
+  <h3>404 — with suggestions</h3>
+  <p>
+    A miss comes back with up to 10 candidates, tried from most to least exact: full substring of the id, then
+    the segment after the last <code>/</code>, and finally trigram similarity. That last pass is what rescues a
+    typo with no common substring at all.
+  </p>
+<pre><code>curl localhost:8080/v1/models/claude-sonnet-9-9
+<span class="tok-com"># 404</span>
+{
+  <span class="tok-key">"type"</span>: <span class="tok-str">"about:blank#model-not-found"</span>,
+  <span class="tok-key">"title"</span>: <span class="tok-str">"Model not found."</span>,
+  <span class="tok-key">"status"</span>: 404,
+  <span class="tok-key">"detail"</span>: <span class="tok-str">"There is no \"claude-sonnet-9-9\" entry in the dataset."</span>,
+  <span class="tok-key">"suggestions"</span>: [
+    <span class="tok-str">"claude-sonnet-5"</span>, <span class="tok-str">"claude-sonnet-4-5"</span>, <span class="tok-str">"claude-sonnet-4-6"</span>,
+    <span class="tok-str">"claude-sonnet-4-20250514"</span>, <span class="tok-str">"claude-sonnet-4-5-20250929"</span>,
+    <span class="tok-str">"claude-4-sonnet-20250514"</span>, <span class="tok-str">"claude-3-7-sonnet-20250219"</span>
+  ]
+}</code></pre>
+  <h3>409 — ambiguous except for case</h3>
+<pre><code>curl <span class="tok-str">'localhost:8080/v1/models/together_ai/BaAi/bge-base-en-v1.5'</span>
+<span class="tok-com"># 409</span>
+{
+  <span class="tok-key">"type"</span>: <span class="tok-str">"about:blank#ambiguous-model"</span>,
+  <span class="tok-key">"title"</span>: <span class="tok-str">"The identifier is ambiguous except for case."</span>,
+  <span class="tok-key">"status"</span>: 409,
+  <span class="tok-key">"detail"</span>: <span class="tok-str">"\"together_ai/BaAi/bge-base-en-v1.5\" matches several dataset entries."</span>,
+  <span class="tok-key">"candidates"</span>: [<span class="tok-str">"together_ai/baai/bge-base-en-v1.5"</span>, <span class="tok-str">"together_ai/BAAI/bge-base-en-v1.5"</span>]
+}</code></pre>
+  <p>Pick one of the candidates and ask again. On <a href="api-estimate.html#errors"><code>/v1/estimate</code></a> the same conflict is resolved with a <code>provider</code> field instead.</p>
+  <h3>404 — the route, not the model</h3>
+<pre><code>curl localhost:8080/v1/nope
+{ <span class="tok-key">"type"</span>: <span class="tok-str">"about:blank#not-found"</span>, <span class="tok-key">"title"</span>: <span class="tok-str">"Route not found."</span>, <span class="tok-key">"status"</span>: 404, <span class="tok-key">"path"</span>: <span class="tok-str">"/v1/nope"</span> }</code></pre>
+  <p>The <code>type</code> slug is what tells the two 404s apart: <code>model-not-found</code> versus <code>not-found</code>.</p>
+</section>
+
+<section id="compare">
+  <h2>Compare</h2>
+  <div class="endpoint"><span class="method get">GET</span> <span class="path">/v1/compare?ids=a,b,c</span></div>
+  <p>
+    Several models side by side, plus the union of every attribute any of them declares — that union is the
+    row set of a comparison table, and it is sorted so the table is stable.
+  </p>
+<pre><code>curl <span class="tok-str">'localhost:8080/v1/compare?ids=gpt-4o,no-such-model'</span></code></pre>
+<pre><code>{
+  <span class="tok-key">"requested"</span>: [<span class="tok-str">"gpt-4o"</span>, <span class="tok-str">"no-such-model"</span>],
+  <span class="tok-key">"found"</span>: 1,
+  <span class="tok-key">"missing"</span>: [<span class="tok-str">"no-such-model"</span>],
+  <span class="tok-key">"attributes"</span>: [
+    <span class="tok-str">"cache_read_input_token_cost"</span>, <span class="tok-str">"cache_read_input_token_cost_priority"</span>, <span class="tok-str">"id"</span>,
+    <span class="tok-str">"input_cost_per_token"</span>, <span class="tok-str">"input_cost_per_token_batches"</span>, <span class="tok-com">… 17 more</span>
+  ],
+  <span class="tok-key">"data"</span>: [ { <span class="tok-com">… the full gpt-4o entry …</span> } ]
+}</code></pre>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>requested</code></td><td>The ids you asked for, in order, trimmed and with empties dropped.</td></tr>
+      <tr><td><code>found</code></td><td>A <strong>count</strong>, not a list. The models themselves are in <code>data</code>.</td></tr>
+      <tr><td><code>missing</code></td><td>Ids that did not resolve. An id that is ambiguous by case lands here too — this endpoint never answers <code>409</code>.</td></tr>
+      <tr><td><code>attributes</code></td><td>Sorted union of the keys present in any found model.</td></tr>
+      <tr><td><code>data</code></td><td>The full entries, in the order they were requested.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout">
+    <strong>A missing model never breaks the response.</strong> Comparison is a bulk operation, and failing all
+    of it because one id was wrong would be the wrong trade. The only <code>400</code> here is omitting
+    <code>ids</code> entirely.
+  </div>
+</section>
+
+<section id="next">
+  <h2>Next</h2>
+  <p>
+    You have a model and its rates. <a href="api-estimate.html">The estimator</a> turns them into a cost for a
+    specific call — including the parts of the pricing model a raw attribute dump does not tell you, like which
+    of those four Anthropic cache keys applies to your request.
+  </p>
+</section>
+
+</main>
+</div>
+</div>
+
+<footer>
+<div class="wrap">
+  <div class="footer-brand">llm-pricing-api</div>
+  <div>Open source under the MIT license.</div>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="api.html">API reference</a>
+    <a href="api-estimate.html">Estimate</a>
+    <a href="dataset.html">Dataset</a>
+    <a href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+  </div>
+</div>
+</footer>
+
+</body>
+</html>

@@ -5,7 +5,7 @@
  * already serialized into the JSON literal itself (e.g. `1.2999000000000001e-07`) and rates as
  * small as 1.3e-10; summing in float drifts visibly across aggregates.
  *
- * Hard rule: a missing rate is NEVER replaced by 0. 249 models legitimately declare
+ * Hard rule: a missing rate is NEVER replaced by 0. 258 models legitimately declare
  * `output_cost_per_token: 0.0`, so "free" (present and 0) has to stay distinguishable from
  * "unknown" (absent -> `unpriced` entry).
  */

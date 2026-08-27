@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>API reference — llm-pricing-api</title>
+<meta name="description" content="API reference for llm-pricing-api: base URL, versioning, the RFC 9457 error envelope with every type slug, pagination, and the health, meta, providers, modes and attributes endpoints." />
+<link rel="canonical" href="https://llm-pricing.dev/api.html" />
+<meta name="theme-color" content="#0b0e14" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%235b7cfa'/><text x='16' y='23' font-family='monospace' font-size='17' font-weight='700' fill='%23ffffff' text-anchor='middle'>$</text></svg>" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="llm-pricing-api" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:title" content="llm-pricing-api — API reference" />
+<meta property="og:description" content="Base URL, versioning, the RFC 9457 error envelope with every type slug, pagination, and the health, meta, providers, modes and attributes endpoints." />
+<meta property="og:url" content="https://llm-pricing.dev/api.html" />
+<meta property="og:image" content="https://llm-pricing.dev/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="llm-pricing-api — every LLM price and context window behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="llm-pricing-api — API reference" />
+<meta name="twitter:description" content="Base URL, versioning, the RFC 9457 error envelope with every type slug, pagination, and the facet endpoints." />
+<meta name="twitter:image" content="https://llm-pricing.dev/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "llm-pricing-api — API reference",
+  "description": "Base URL, versioning, the RFC 9457 error envelope with every type slug, pagination, and the health, meta, providers, modes and attributes endpoints.",
+  "url": "https://llm-pricing.dev/api.html",
+  "author": { "@type": "Organization", "name": "Axium", "url": "https://github.com/axium-lab" },
+  "about": { "@type": "SoftwareApplication", "name": "llm-pricing-api", "url": "https://llm-pricing.dev/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://llm-pricing.dev/" },
+    { "@type": "ListItem", "position": 2, "name": "API reference", "item": "https://llm-pricing.dev/api.html" }
+  ]
+}
+</script>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="wrap">
+<nav>
+  <div class="brand"><a href="/">llm-pricing<span>-api</span></a></div>
+  <div class="nav-links">
+    <a class="active" href="api.html">API</a>
+    <a href="api-models.html">Models</a>
+    <a href="api-estimate.html">Estimate</a>
+    <a href="dataset.html">Dataset</a>
+    <a class="gh" href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+  </div>
+</nav>
+</div>
+
+<header>
+<div class="wrap">
+  <div class="eyebrow">API reference</div>
+  <h1>API reference</h1>
+  <p class="sub">
+    Ten endpoints, no authentication, no rate limit headers, no pagination cursors. Everything on this page is
+    shared ground: where the API lives, what an error looks like, and the small endpoints that describe the
+    dataset itself.
+  </p>
+</div>
+</header>
+
+<div class="wrap">
+<div class="layout">
+
+<aside class="toc">
+  <p class="toc-title">On this page</p>
+  <ul>
+    <li><a href="#pages">Per-area reference</a></li>
+    <li><a href="#base">Base URL</a></li>
+    <li><a href="#auth">Authentication</a></li>
+    <li><a href="#errors">Errors</a></li>
+    <li><a href="#conventions">Response conventions</a></li>
+  </ul>
+  <p class="toc-group">Endpoints</p>
+  <ul>
+    <li><a href="#health">/health</a></li>
+    <li><a href="#meta">/v1/meta</a></li>
+    <li><a href="#providers">/v1/providers</a></li>
+    <li><a href="#modes">/v1/modes</a></li>
+    <li><a href="#attributes">/v1/attributes</a></li>
+  </ul>
+</aside>
+
+<main>
+
+<section id="pages">
+  <h2>Per-area reference</h2>
+  <p class="section-sub">The two endpoints with real surface get a page each.</p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Area</th><th>Covers</th><th>Reference</th></tr></thead>
+    <tbody>
+      <tr><td>Models</td><td><code>/v1/models</code>, lookup by id, <code>by-id</code>, <code>/v1/compare</code></td><td><a href="api-models.html">Docs →</a></td></tr>
+      <tr><td>Estimate</td><td><code>POST /v1/estimate</code>: usage fields, options, breakdown, warnings</td><td><a href="api-estimate.html">Docs →</a></td></tr>
+      <tr><td>Dataset</td><td>Where the data comes from, how it is loaded and normalized</td><td><a href="dataset.html">Docs →</a></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="base">
+  <h2>Base URL</h2>
+  <div class="callout warn">
+    <strong>The hosted instance is not live yet.</strong> <code>https://api.llm-pricing.dev</code> is the
+    address the free instance will answer on. Until it is deployed, run your own — the examples below use
+    <code>localhost:8080</code>, which is what <code>bun start</code> gives you.
+  </div>
+  <p>
+    Everything that queries the catalog lives under <code>/v1</code>. <strong><code>/health</code> sits outside
+    the version prefix</strong>, on purpose: it has to answer while the dataset is still loading, and a
+    liveness probe should not have to know about API versions.
+  </p>
+<pre><code>https://api.llm-pricing.dev/v1/models      <span class="tok-com"># hosted (not live yet)</span>
+http://localhost:8080/v1/models            <span class="tok-com"># bun start</span>
+http://localhost:8080/health               <span class="tok-com"># note: no /v1</span></code></pre>
+  <p>
+    While the dataset is loading, every <code>/v1</code> route answers <code>503</code> with
+    <code>not-ready</code> and <code>/health</code> answers <code>503</code> with
+    <code>{"status":"starting","ready":false}</code>. In practice the window is short — the file is read from
+    disk, not downloaded — but a container orchestrator should wait for <code>/health</code> to return
+    <code>200</code> before sending traffic.
+  </p>
+</section>
+
+<section id="auth">
+  <h2>Authentication</h2>
+  <p>
+    There is none. The API is free and read-only: it serves a public dataset and computes arithmetic over it.
+    No keys, no accounts, no quotas.
+  </p>
+  <div class="callout">
+    <strong>No CORS headers are sent.</strong> The service does not mount CORS middleware, so a browser page on
+    another origin cannot call it directly. Call it from a server, or add the middleware to your own deployment.
+  </div>
+</section>
+
+<section id="errors">
+  <h2>Errors</h2>
+  <p class="section-sub">
+    Every failure is <a href="https://www.rfc-editor.org/rfc/rfc9457.html">RFC 9457</a>
+    <code>application/problem+json</code>. The <code>type</code> slug is the stable part — branch on that, not
+    on the title.
+  </p>
+<pre><code>{
+  <span class="tok-key">"type"</span>: <span class="tok-str">"about:blank#model-not-found"</span>,
+  <span class="tok-key">"title"</span>: <span class="tok-str">"Model not found."</span>,
+  <span class="tok-key">"status"</span>: 404,
+  <span class="tok-key">"detail"</span>: <span class="tok-str">"There is no \"claude-sonnet-9-9\" entry in the dataset."</span>,
+  <span class="tok-key">"suggestions"</span>: [<span class="tok-str">"claude-sonnet-5"</span>, <span class="tok-str">"claude-sonnet-4-5"</span>, <span class="tok-str">"claude-sonnet-4-6"</span>]
+}</code></pre>
+  <p>
+    <code>type</code>, <code>title</code> and <code>status</code> are always present. Anything else is
+    extra context for that specific failure, listed below.
+  </p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Status</th><th><code>type</code> slug</th><th>When</th><th>Extra members</th></tr></thead>
+    <tbody>
+      <tr><td><span class="status s4">400</span></td><td><code>invalid-query</code></td><td>A query parameter is malformed: non-numeric <code>limit</code>, <code>limit &lt; 1</code>, a bad <code>sort</code> direction, a non-boolean <code>supports_*</code>, a missing <code>id</code> or <code>ids</code>.</td><td><code>field</code></td></tr>
+      <tr><td><span class="status s4">400</span></td><td><code>invalid-request</code></td><td>The <code>/v1/estimate</code> body fails validation, or <code>reasoning_tokens</code> exceeds <code>output_tokens</code>.</td><td><code>errors[]</code> or <code>detail</code></td></tr>
+      <tr><td><span class="status s4">404</span></td><td><code>model-not-found</code></td><td>No entry with that id. On <code>GET</code> it comes with suggestions; on <code>POST /v1/estimate</code> it does not.</td><td><code>detail</code>, <code>suggestions[]</code> (GET only)</td></tr>
+      <tr><td><span class="status s4">404</span></td><td><code>not-found</code></td><td>The route itself does not exist.</td><td><code>path</code></td></tr>
+      <tr><td><span class="status s4">409</span></td><td><code>ambiguous-model</code></td><td>The id matches several entries that differ only by case.</td><td><code>candidates[]</code></td></tr>
+      <tr><td><span class="status s4">422</span></td><td><code>model-not-priced</code></td><td>The model exists but carries no pricing key at all — 97 entries are like this.</td><td><code>model</code></td></tr>
+      <tr><td><span class="status s4">422</span></td><td><code>limits-exceeded</code></td><td>Usage exceeds a limit the model declares, and <code>options.limit_policy</code> is <code>"error"</code>.</td><td><code>max_input_tokens</code> / <code>max_output_tokens</code>, <code>provided</code></td></tr>
+      <tr><td><span class="status s5">503</span></td><td><code>not-ready</code></td><td>The dataset is still loading. Only on <code>/v1</code> routes.</td><td>—</td></tr>
+      <tr><td><span class="status s5">500</span></td><td><code>internal-error</code></td><td>Anything unhandled.</td><td><code>detail</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout warn">
+    <strong>Malformed JSON answers 500, not 400.</strong> A body that is not valid JSON, or one larger than the
+    256 kB limit, makes the JSON parser throw and lands in the generic handler:
+    <code>{"type":"about:blank#internal-error","title":"Internal error.","status":500,"detail":"JSON Parse error: Unexpected EOF"}</code>.
+    That is a known rough edge, not a designed response.
+  </div>
+</section>
+
+<section id="conventions">
+  <h2>Response conventions</h2>
+  <h3>Pagination</h3>
+  <p>
+    Only <code>/v1/models</code> paginates, with <code>limit</code> and <code>offset</code>.
+    <strong><code>total</code> is the size of the filtered result, before the page is cut</strong> — so it is
+    the number you divide by <code>limit</code> to know how many pages there are.
+  </p>
+<pre><code>{ <span class="tok-key">"total"</span>: 2419, <span class="tok-key">"limit"</span>: 3, <span class="tok-key">"offset"</span>: 0, <span class="tok-key">"data"</span>: [ … ] }</code></pre>
+  <p>
+    <code>limit</code> defaults to 50 and is <em>clamped</em> to 500 rather than rejected:
+    <code>?limit=100000</code> answers <code>200</code> with 500 rows. A <code>limit</code> below 1 is an error.
+  </p>
+  <h3>The <code>id</code> field</h3>
+  <p>
+    The upstream catalog is a JSON object keyed by model id, so the id is not a field of the entry. This API
+    injects it as <code>id</code> on the way out, which is why it appears last in a model object.
+  </p>
+  <h3>Naming</h3>
+  <p>
+    Upstream calls the provider field <code>litellm_provider</code>; it is renamed to <code>provider</code> at
+    the single normalization boundary, so that is the name in the filter, in the responses and in the facets.
+    <a href="dataset.html#parse">Why the rename happens on the way in →</a>
+  </p>
+  <h3>Caching</h3>
+  <p>
+    No <code>Cache-Control</code>, <code>ETag</code> or <code>Last-Modified</code> headers are set on API
+    responses. The dataset's own ETag and sha256 are exposed as <em>data</em>, in
+    <a href="#meta"><code>/v1/meta</code></a>, so you can tell two answers apart by the snapshot that produced
+    them.
+  </p>
+</section>
+
+<section id="health">
+  <h2>Health</h2>
+  <div class="endpoint"><span class="method get">GET</span> <span class="path">/health</span></div>
+  <p>
+    Liveness and readiness in one. Outside the <code>/v1</code> prefix, and the only endpoint that answers
+    before the dataset is loaded.
+  </p>
+<pre><code>curl localhost:8080/health</code></pre>
+<pre><code>{
+  <span class="tok-key">"status"</span>: <span class="tok-str">"ok"</span>,
+  <span class="tok-key">"ready"</span>: true,
+  <span class="tok-key">"models"</span>: 3214,
+  <span class="tok-key">"dataset"</span>: {
+    <span class="tok-key">"source"</span>: <span class="tok-str">"local"</span>,
+    <span class="tok-key">"etag"</span>: <span class="tok-str">"W/\"74e5328441bbeb0259c44db6ce9a333d7871356ea505ca8190ca23d112fdf801\""</span>,
+    <span class="tok-key">"sha256"</span>: <span class="tok-str">"a5682d2fb71a4e40cd2030dc71afbce28b1272cfe4f546c28f9aaa29d5472501"</span>,
+    <span class="tok-key">"loaded_at"</span>: <span class="tok-str">"2026-08-27T06:23:42.602Z"</span>
+  },
+  <span class="tok-key">"startup_error"</span>: null
+}</code></pre>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>source</code></td><td><code>"local"</code> — the copy on disk was current (a <code>304</code>, or upstream was unreachable). <code>"upstream"</code> — a newer version was downloaded at boot.</td></tr>
+      <tr><td><code>etag</code></td><td>The upstream ETag the local copy was last validated against. <code>null</code> when it is unknown or was discarded.</td></tr>
+      <tr><td><code>sha256</code></td><td>Digest of the <em>normalized</em> JSON being served. Two instances serving the same digest are serving the same prices.</td></tr>
+      <tr><td><code>startup_error</code></td><td><code>null</code> normally. A string when upstream could not be reached at boot and the local copy carried the service — worth alerting on, but not an outage.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>While loading, it answers <code>503</code> with a deliberately minimal body — note it is plain JSON, not <code>problem+json</code>:</p>
+<pre><code>{ <span class="tok-key">"status"</span>: <span class="tok-str">"starting"</span>, <span class="tok-key">"ready"</span>: false }</code></pre>
+</section>
+
+<section id="meta">
+  <h2>Dataset metadata</h2>
+  <div class="endpoint"><span class="method get">GET</span> <span class="path">/v1/meta</span></div>
+  <p>Counts and provenance. <code>/health</code> answers "can I serve?"; this answers "what am I serving?".</p>
+<pre><code>curl localhost:8080/v1/meta</code></pre>
+<pre><code>{
+  <span class="tok-key">"models"</span>: 3214,
+  <span class="tok-key">"providers"</span>: 127,
+  <span class="tok-key">"modes"</span>: 16,
+  <span class="tok-key">"attributes"</span>: 153,
+  <span class="tok-key">"dataset"</span>: {
+    <span class="tok-key">"source"</span>: <span class="tok-str">"local"</span>,
+    <span class="tok-key">"upstream_url"</span>: <span class="tok-str">"https://raw.githubusercontent.com/BerriAI/litellm/refs/heads/litellm_internal_staging/model_prices_and_context_window.json"</span>,
+    <span class="tok-key">"etag"</span>: <span class="tok-str">"W/\"74e5328441bbeb0259c44db6ce9a333d7871356ea505ca8190ca23d112fdf801\""</span>,
+    <span class="tok-key">"sha256"</span>: <span class="tok-str">"a5682d2fb71a4e40cd2030dc71afbce28b1272cfe4f546c28f9aaa29d5472501"</span>,
+    <span class="tok-key">"loaded_at"</span>: <span class="tok-str">"2026-08-27T06:23:42.602Z"</span>,
+    <span class="tok-key">"startup_error"</span>: null
+  }
+}</code></pre>
+  <p>
+    <code>upstream_url</code> is worth reading before you trust the numbers: the default points at an
+    <strong>internal</strong> LiteLLM branch. <a href="dataset.html#upstream">Why, and what the risk is →</a>
+  </p>
+</section>
+
+<section id="providers">
+  <h2>Providers</h2>
+  <div class="endpoint"><span class="method get">GET</span> <span class="path">/v1/providers</span></div>
+  <p>The 127 providers with their model counts, ordered by count descending, ties broken alphabetically.</p>
+<pre><code>curl localhost:8080/v1/providers</code></pre>
+<pre><code>{
+  <span class="tok-key">"total"</span>: 127,
+  <span class="tok-key">"data"</span>: [
+    { <span class="tok-key">"name"</span>: <span class="tok-str">"fireworks_ai"</span>, <span class="tok-key">"models"</span>: 313 },
+    { <span class="tok-key">"name"</span>: <span class="tok-str">"bedrock"</span>,       <span class="tok-key">"models"</span>: 268 },
+    { <span class="tok-key">"name"</span>: <span class="tok-str">"openai"</span>,        <span class="tok-key">"models"</span>: 226 },
+    { <span class="tok-key">"name"</span>: <span class="tok-str">"azure"</span>,         <span class="tok-key">"models"</span>: 221 },
+    <span class="tok-com">… 123 more</span>
+  ]
+}</code></pre>
+  <p>These names are exactly what <code>?provider=</code> accepts on <a href="api-models.html#list">the listing endpoint</a>.</p>
+</section>
+
+<section id="modes">
+  <h2>Modes</h2>
+  <div class="endpoint"><span class="method get">GET</span> <span class="path">/v1/modes</span></div>
+  <p>
+    A mode is what the model <em>does</em>: chat, embedding, transcription, image generation. Eight entries
+    declare none, which is why the count is reported separately instead of being folded in as a bucket.
+  </p>
+<pre><code>{
+  <span class="tok-key">"total"</span>: 16,
+  <span class="tok-key">"models_without_mode"</span>: 8,
+  <span class="tok-key">"data"</span>: [
+    { <span class="tok-key">"name"</span>: <span class="tok-str">"chat"</span>,             <span class="tok-key">"models"</span>: 2419 },
+    { <span class="tok-key">"name"</span>: <span class="tok-str">"image_generation"</span>, <span class="tok-key">"models"</span>: 269 },
+    { <span class="tok-key">"name"</span>: <span class="tok-str">"embedding"</span>,        <span class="tok-key">"models"</span>: 133 },
+    { <span class="tok-key">"name"</span>: <span class="tok-str">"responses"</span>,        <span class="tok-key">"models"</span>: 89 },
+    <span class="tok-com">… 12 more</span>
+  ]
+}</code></pre>
+  <p>
+    The full set: <code>audio_speech</code>, <code>audio_transcription</code>, <code>chat</code>,
+    <code>completion</code>, <code>embedding</code>, <code>guardrail</code>, <code>image_edit</code>,
+    <code>image_generation</code>, <code>moderation</code>, <code>ocr</code>, <code>realtime</code>,
+    <code>rerank</code>, <code>responses</code>, <code>search</code>, <code>vector_store</code>,
+    <code>video_generation</code>.
+  </p>
+</section>
+
+<section id="attributes">
+  <h2>Attributes</h2>
+  <div class="endpoint"><span class="method get">GET</span> <span class="path">/v1/attributes</span></div>
+  <p>
+    Every key that appears on at least one model, with how many models carry it and whether it is a pricing
+    key. This is the endpoint to hit before writing a <code>fields=</code> projection or a <code>sort=</code>,
+    because it tells you how many models actually declare what you are about to sort by.
+  </p>
+<pre><code>{
+  <span class="tok-key">"total"</span>: 153,
+  <span class="tok-key">"pricing_keys"</span>: 86,
+  <span class="tok-key">"data"</span>: [
+    { <span class="tok-key">"name"</span>: <span class="tok-str">"provider"</span>,             <span class="tok-key">"models"</span>: 3214, <span class="tok-key">"pricing"</span>: false },
+    { <span class="tok-key">"name"</span>: <span class="tok-str">"mode"</span>,                 <span class="tok-key">"models"</span>: 3206, <span class="tok-key">"pricing"</span>: false },
+    { <span class="tok-key">"name"</span>: <span class="tok-str">"max_input_tokens"</span>,     <span class="tok-key">"models"</span>: 2713, <span class="tok-key">"pricing"</span>: false },
+    { <span class="tok-key">"name"</span>: <span class="tok-str">"input_cost_per_token"</span>, <span class="tok-key">"models"</span>: 2663, <span class="tok-key">"pricing"</span>: true },
+    <span class="tok-com">… 149 more</span>
+  ]
+}</code></pre>
+  <p>
+    <code>pricing: true</code> means the key name contains <code>cost</code>, or is <code>tiered_pricing</code>.
+    It is the same test the estimator uses to decide whether a model is billable at all — a model with zero
+    pricing keys answers <a href="api-estimate.html#errors"><code>422 model-not-priced</code></a>.
+  </p>
+  <p>
+    37 of these keys are <code>supports_*</code> capability flags, and every one of them
+    <a href="api-models.html#supports">works as a filter</a> without being enumerated anywhere in the code.
+  </p>
+</section>
+
+<section id="next">
+  <h2>Next</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Page</th><th>What it covers</th></tr></thead>
+    <tbody>
+      <tr><td><a href="api-models.html">Models</a></td><td>Filters, sorting, projection, id lookup and its three failure modes, comparison.</td></tr>
+      <tr><td><a href="api-estimate.html">Estimate</a></td><td>Every usage field, every option, the breakdown, the warnings, and what it cannot price.</td></tr>
+      <tr><td><a href="dataset.html">Dataset</a></td><td>Where the prices come from, how a boot revalidates them, and the decisions behind the numbers.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+</main>
+</div>
+</div>
+
+<footer>
+<div class="wrap">
+  <div class="footer-brand">llm-pricing-api</div>
+  <div>Open source under the MIT license.</div>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="api-models.html">Models</a>
+    <a href="api-estimate.html">Estimate</a>
+    <a href="dataset.html">Dataset</a>
+    <a href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+  </div>
+</div>
+</footer>
+
+</body>
+</html>

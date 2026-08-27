@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The dataset — llm-pricing-api</title>
+<meta name="description" content="Where llm-pricing-api gets its prices: the vendored LiteLLM catalog, how a boot revalidates it with If-None-Match, the normalization boundary, the pricing decisions behind the estimator, and the upstream risk." />
+<link rel="canonical" href="https://llm-pricing.dev/dataset.html" />
+<meta name="theme-color" content="#0b0e14" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%235b7cfa'/><text x='16' y='23' font-family='monospace' font-size='17' font-weight='700' fill='%23ffffff' text-anchor='middle'>$</text></svg>" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="llm-pricing-api" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:title" content="llm-pricing-api — The dataset" />
+<meta property="og:description" content="The vendored LiteLLM catalog, how a boot revalidates it with If-None-Match, the normalization boundary, and the pricing decisions behind the estimator." />
+<meta property="og:url" content="https://llm-pricing.dev/dataset.html" />
+<meta property="og:image" content="https://llm-pricing.dev/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="llm-pricing-api — every LLM price and context window behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="llm-pricing-api — The dataset" />
+<meta name="twitter:description" content="Where the prices come from, how a boot revalidates them, and the decisions behind the numbers." />
+<meta name="twitter:image" content="https://llm-pricing.dev/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "llm-pricing-api — The dataset",
+  "description": "The vendored LiteLLM catalog, how a boot revalidates it, the normalization boundary, the pricing decisions and the upstream risk.",
+  "url": "https://llm-pricing.dev/dataset.html",
+  "author": { "@type": "Organization", "name": "Axium", "url": "https://github.com/axium-lab" },
+  "about": { "@type": "SoftwareApplication", "name": "llm-pricing-api", "url": "https://llm-pricing.dev/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://llm-pricing.dev/" },
+    { "@type": "ListItem", "position": 2, "name": "API reference", "item": "https://llm-pricing.dev/api.html" },
+    { "@type": "ListItem", "position": 3, "name": "Dataset", "item": "https://llm-pricing.dev/dataset.html" }
+  ]
+}
+</script>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="wrap">
+<nav>
+  <div class="brand"><a href="/">llm-pricing<span>-api</span></a></div>
+  <div class="nav-links">
+    <a href="api.html">API</a>
+    <a href="api-models.html">Models</a>
+    <a href="api-estimate.html">Estimate</a>
+    <a class="active" href="dataset.html">Dataset</a>
+    <a class="gh" href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+  </div>
+</nav>
+</div>
+
+<header>
+<div class="wrap">
+  <div class="eyebrow">Reference</div>
+  <h1>The dataset</h1>
+  <p class="sub">
+    Every number this API returns comes from one file. Where it comes from, how it gets refreshed, what is done
+    to it on the way in, and which of its quirks the API had to be designed around.
+  </p>
+</div>
+</header>
+
+<div class="wrap">
+<div class="layout">
+
+<aside class="toc">
+  <p class="toc-title">On this page</p>
+  <ul>
+    <li><a href="#source">Source and licence</a></li>
+    <li><a href="#numbers">By the numbers</a></li>
+    <li><a href="#truth">The file on disk</a></li>
+    <li><a href="#parse">Normalization</a></li>
+    <li><a href="#boot">What a boot does</a></li>
+    <li><a href="#refresh">Refreshing</a></li>
+    <li><a href="#upstream">Upstream risk</a></li>
+  </ul>
+  <p class="toc-group">Consequences</p>
+  <ul>
+    <li><a href="#pricing">Pricing decisions</a></li>
+    <li><a href="#suspicious">Implausible rates</a></li>
+    <li><a href="#quirks">Quirks in the ids</a></li>
+  </ul>
+</aside>
+
+<main>
+
+<section id="source">
+  <h2>Source and licence</h2>
+  <p>
+    The catalog is
+    <a href="https://github.com/BerriAI/litellm"><code>model_prices_and_context_window.json</code></a> from
+    LiteLLM, MIT licensed. It is vendored into this repository under <code>data/</code>, about 1.7 MB, and
+    redistributed <a href="#parse">normalized</a>.
+  </p>
+  <div class="callout">
+    <strong>The prices are LiteLLM's, not ours.</strong> This project does not source, negotiate or correct
+    them. What it adds is an index, a query surface and an
+    <a href="api-estimate.html">arithmetic engine that shows its work</a> — plus a
+    <a href="#suspicious">flag on the entries that look wrong</a>, which it deliberately does not fix.
+  </div>
+  <p>
+    Both this project and LiteLLM are MIT, so redistribution is straightforward; the upstream copyright and
+    licence terms cover the data file itself.
+  </p>
+</section>
+
+<section id="numbers">
+  <h2>By the numbers</h2>
+  <p class="section-sub">
+    The snapshot documented here. Live values are always available at
+    <a href="api.html#meta"><code>/v1/meta</code></a> — this table is the shape, not a contract.
+  </p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Count</th><th>What</th></tr></thead>
+    <tbody>
+      <tr><td>3,214</td><td>models (the file also holds <code>sample_spec</code> and <code>fallback_generalizations</code>, which are not models and are excluded)</td></tr>
+      <tr><td>127</td><td>providers</td></tr>
+      <tr><td>16</td><td>modes, with 8 models declaring none</td></tr>
+      <tr><td>153</td><td>distinct attributes, of which <strong>86</strong> are pricing keys and <strong>37</strong> are <code>supports_*</code> flags</td></tr>
+      <tr><td>2,632</td><td>ids containing a <code>/</code> — 82% of them</td></tr>
+      <tr><td>244 / 4</td><td>ids containing a <code>:</code> / a literal <code>*</code></td></tr>
+      <tr><td>258</td><td>models that declare <code>output_cost_per_token: 0</code> — genuinely free, not unknown</td></tr>
+      <tr><td>97</td><td>models with no pricing key at all — they answer <a href="api-estimate.html#errors"><code>422</code></a></td></tr>
+      <tr><td>21</td><td>models priced only through <code>tiered_pricing</code>, which the estimator <a href="api-estimate.html#limitations">does not read</a></td></tr>
+      <tr><td>18</td><td>models with an <a href="#suspicious">implausible rate</a></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="truth">
+  <h2>The file on disk is the source of truth</h2>
+  <p>
+    <code>data/model_prices_and_context_window.json</code> is versioned in git and baked into the container
+    image. It is read at boot, and it is what the service falls back on when the network is not there. There
+    is no database and no cache layer — the snapshot lives in memory with its indexes prebuilt, and gets
+    swapped atomically.
+  </p>
+  <p>
+    Next to it sits <code>model_prices_and_context_window.meta.json</code>, a sidecar holding
+    <code>{ etag, sha256, parseVersion, fetchedAt }</code>. It exists because <strong>a file has no ETag of its
+    own</strong> — the server issues one, so if you want to make a conditional request later you have to store
+    it yourself.
+  </p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Sidecar field</th><th>Why it is there</th></tr></thead>
+    <tbody>
+      <tr><td><code>etag</code></td><td>What to send in <code>If-None-Match</code> on the next boot.</td></tr>
+      <tr><td><code>sha256</code></td><td>Digest of the <strong>normalized</strong> JSON. If it does not match the file, the pair is out of sync and the ETag is discarded — better a full download than a stale validator.</td></tr>
+      <tr><td><code>parseVersion</code></td><td>Which version of the normalization produced the file. An older version triggers a renormalize-and-write-back.</td></tr>
+      <tr><td><code>fetchedAt</code></td><td>When the copy was last downloaded.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="parse">
+  <h2>Normalization: one boundary, on the way in</h2>
+  <p>
+    The dataset is downloaded verbatim but <strong>not stored verbatim</strong>. It goes through
+    <code>parse</code> immediately before being written to disk, and that output is what everything else reads
+    — the snapshot, the indexes and the API responses all see the same normalized data.
+  </p>
+  <p>The edits are numbered and applied in order. Today there is exactly one:</p>
+  <ol>
+    <li><code>litellm_provider</code> → <strong><code>provider</code></strong>, applied recursively, preserving
+      key position and never overwriting an existing <code>provider</code>.</li>
+  </ol>
+  <p>
+    Doing it here rather than at the API layer means there is no second place where field names get adjusted,
+    and no chance of the file on disk and the responses disagreeing.
+    <code>parse</code> is idempotent, so running it twice changes nothing.
+  </p>
+  <div class="callout">
+    <strong>The ETag survives normalization.</strong> It identifies the <em>upstream</em> resource, not our
+    bytes — so a boot that renormalizes an older local copy keeps the ETag and still gets a <code>304</code>
+    next time. <code>sha256</code>, by contrast, describes the normalized file, which is what the sidecar has
+    to match.
+  </div>
+</section>
+
+<section id="boot">
+  <h2>What a boot does</h2>
+  <ol>
+    <li>Read both files and check that the sidecar's <code>sha256</code> matches the JSON on disk. A mismatch
+      means the pair drifted apart, so the ETag is discarded.</li>
+    <li>Send a conditional <code>GET</code> to <code>UPSTREAM_URL</code> with <code>If-None-Match</code>.</li>
+    <li>Build the in-memory snapshot and start serving.</li>
+  </ol>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Upstream says</th><th>What happens</th><th><code>/health</code> reports</th></tr></thead>
+    <tbody>
+      <tr><td><span class="status s2">304</span></td><td>The local copy is current. <strong>Nothing is transferred.</strong> If it predates the current <code>parse</code>, it is normalized and written back.</td><td><code>source: "local"</code></td></tr>
+      <tr><td><span class="status s2">200</span></td><td>Upstream is newer. It is normalized, served, and written back to disk with a fresh sidecar.</td><td><code>source: "upstream"</code></td></tr>
+      <tr><td><span class="status s5">error or timeout</span></td><td>The local copy is served. The service boots without network.</td><td><code>source: "local"</code>, <code>startup_error</code> set</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>
+    The only fatal case is having neither a usable local copy <em>nor</em> a reachable upstream. Since the copy
+    ships inside the image, that means a genuinely broken deployment.
+  </p>
+  <p>
+    Writes are atomic (temporary file plus rename) and <strong>never fatal</strong>: on Cloud Run the filesystem
+    is an ephemeral tmpfs, so a failed write-back should not take down a service that is otherwise perfectly
+    able to answer.
+  </p>
+</section>
+
+<section id="refresh">
+  <h2>How the data gets refreshed</h2>
+  <div class="callout">
+    <strong>Restarting or redeploying the instance is what updates the dataset.</strong> There is no background
+    refresh, no scheduled job and no admin endpoint. An instance serves one immutable snapshot for its whole
+    life, which is what makes two answers from the same <code>sha256</code> comparable.
+  </div>
+  <p>
+    On Cloud Run the write-back lasts only as long as the instance; it is the copy in the image that keeps cold
+    boots cheap. A cold start with a current copy transfers zero bytes.
+  </p>
+  <div class="callout warn">
+    <strong>Do not mount a Cloud Storage bucket over <code>data/</code>.</strong> GCS FUSE hides whatever sits
+    below the mount point, like any Linux mount, and you would lose the file baked into the image — turning
+    every cold start into a full download, and an upstream outage into a failed boot. Mount somewhere else
+    (<code>/mnt/dataset</code>) and point <code>DATASET_PATH</code> at it.
+  </div>
+</section>
+
+<section id="upstream">
+  <h2>Upstream risk</h2>
+  <p>
+    <code>UPSTREAM_URL</code> defaults to LiteLLM's <code>litellm_internal_staging</code> branch. That is an
+    <strong>internal</strong> branch: it can be force-pushed, carry unvalidated data, or disappear.
+  </p>
+  <p>
+    A cold start with upstream down is survivable — the copy in the image is served and <code>/health</code>
+    reports <code>startup_error</code>. The quieter failure is the branch going away for good: every boot then
+    keeps shipping whatever version was last baked into the image, without anything looking broken. Watch
+    <code>startup_error</code> and <code>dataset.loaded_at</code> if that matters to you.
+  </p>
+  <p>For production, consider pointing at <code>main</code> instead:</p>
+<pre><code>UPSTREAM_URL=https://raw.githubusercontent.com/BerriAI/litellm/refs/heads/main/model_prices_and_context_window.json</code></pre>
+</section>
+
+<section id="pricing">
+  <h2>Decisions the data forced</h2>
+
+  <h3>The context tier is a flag, not a marginal band</h3>
+  <p>
+    If the prompt crosses the threshold, the <em>whole</em> request is repriced — output included. The
+    cleanest evidence is that the dataset defines <code>output_cost_per_token_above_200k_tokens</code>: an
+    output price gated on an <em>input</em> threshold only makes sense as a flag. 116 of the 117 threshold
+    pairs have a ratio of exactly 2.0, LiteLLM picks a single rate the same way, and Anthropic, Google and
+    OpenAI all document it that way.
+  </p>
+
+  <h3><code>_above_1hr</code> is not a volume threshold</h3>
+  <p>
+    It is Anthropic's 1&nbsp;hour cache TTL, and it composes with the context tier — which is how a key like
+    <code>cache_creation_input_token_cost_above_1hr_above_200k_tokens</code> comes to exist, and why the cost
+    engine treats TTL and threshold as separate axes rather than parsing key names ad hoc.
+  </p>
+
+  <h3>A missing rate is never billed as 0</h3>
+  <p>
+    258 models legitimately declare <code>output_cost_per_token: 0</code>. If an absent key were also treated
+    as zero, "free" and "unknown" would be indistinguishable in the total. Unknown usage goes to
+    <a href="api-estimate.html#unpriced"><code>unpriced[]</code></a> instead.
+  </p>
+
+  <h3>Decimal arithmetic, not <code>number</code></h3>
+  <p>
+    The file ships floating point noise already serialized into the JSON literal
+    (<code>1.2999000000000001e-07</code>) and rates as small as <code>1.3e-10</code>. Summing those in binary
+    floating point drifts visibly across an aggregate, so everything accumulates in <code>Decimal</code>.
+  </p>
+
+  <h3>Two incompatible key families</h3>
+  <p>
+    The catalog spells cost keys two ways: <code>&lt;direction&gt;_cost_per_&lt;unit&gt;</code>, and the cache
+    family where <code>_cost</code> comes <em>last</em> (<code>cache_read_input_token_cost</code>). A single
+    <code>*_cost_per_*</code> regex would miss roughly 1,100 cache key occurrences, so the engine keeps an
+    explicit registry of 33 base keys instead of guessing — and a test walks the whole dataset to fail the
+    build when upstream introduces a pricing key that registry cannot describe.
+  </p>
+
+  <h3>Databricks DBU rates are not dollars</h3>
+  <p>
+    47 models carry <code>input_dbu_cost_per_token</code> / <code>output_dbu_cost_per_token</code>, which is
+    why <code>totals</code> is keyed by currency rather than being one number. No usage field maps to them yet
+    — see the <a href="api-estimate.html#limitations">limitations</a>.
+  </p>
+</section>
+
+<section id="suspicious">
+  <h2>Implausible rates are flagged, not corrected</h2>
+  <p>
+    18 models carry a rate above roughly $500/MTok — <code>wandb/*</code> entries at $55,000/MTok and beyond.
+    They are almost certainly upstream errors, and they are served <strong>as they are</strong>, with a
+    <code>SUSPICIOUS_RATE_MAGNITUDE</code> warning on the affected line.
+  </p>
+  <p>
+    Correcting them would mean this API silently disagreeing with its own stated source, and the threshold that
+    catches the errors also catches the genuine outliers: <code>o1-pro</code> really is $600/MTok, and it sits
+    in an explicit allowlist so it produces no warning.
+  </p>
+</section>
+
+<section id="quirks">
+  <h2>Quirks in the ids</h2>
+  <ul>
+    <li><strong>82% of the ids contain a <code>/</code></strong>, 244 contain <code>:</code>, and four contain a
+      literal <code>*</code>. A conventional <code>:id</code> path parameter is useless here, so the lookup
+      route is a wildcard that rejoins every segment.
+      <a href="api-models.html#awkward">How to call it →</a></li>
+    <li><strong>One id ends in a slash</strong> — <code>fireworks_ai/accounts/fireworks/models/</code> — which
+      no path can carry, because the router normalizes the trailing slash away. That is the entire reason
+      <a href="api-models.html#by-id"><code>/v1/models/by-id</code></a> exists.</li>
+    <li><strong>Two entries differ only by case</strong>: <code>together_ai/baai/…</code> and
+      <code>together_ai/BAAI/…</code>, with identical content. Lookup is exact first, so each resolves to
+      itself; an id that matches several only case-insensitively is a <code>409</code> rather than an
+      arbitrary pick.</li>
+    <li><strong>The id is not a field.</strong> Upstream is an object keyed by model id, so <code>id</code> is
+      injected into each entry on the way out — which is why it shows up last.</li>
+  </ul>
+</section>
+
+<section id="next">
+  <h2>Next</h2>
+  <p>
+    <a href="api.html">The API reference</a> for the endpoints that expose all of this, or
+    <a href="api-estimate.html">the estimator</a> for how these decisions turn into a number.
+  </p>
+</section>
+
+</main>
+</div>
+</div>
+
+<footer>
+<div class="wrap">
+  <div class="footer-brand">llm-pricing-api</div>
+  <div>Open source under the MIT license. Prices from <a href="https://github.com/BerriAI/litellm">LiteLLM</a>, also MIT.</div>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="api.html">API reference</a>
+    <a href="api-models.html">Models</a>
+    <a href="api-estimate.html">Estimate</a>
+    <a href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+  </div>
+</div>
+</footer>
+
+</body>
+</html>

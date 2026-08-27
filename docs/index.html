@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>llm-pricing-api — Every LLM price and context window behind one REST API</title>
+<meta name="description" content="Open source REST API over the LiteLLM catalog: 3,214 models from 127 providers, served from memory with no database, plus a cost estimator that returns an auditable breakdown of a single call. MIT, free, self-hostable." />
+<link rel="canonical" href="https://llm-pricing.dev/" />
+<meta name="theme-color" content="#0b0e14" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%235b7cfa'/><text x='16' y='23' font-family='monospace' font-size='17' font-weight='700' fill='%23ffffff' text-anchor='middle'>$</text></svg>" />
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="llm-pricing-api" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:title" content="llm-pricing-api — Every LLM price and context window behind one REST API" />
+<meta property="og:description" content="3,214 models from 127 providers, served from memory with no database, plus a cost estimator that shows its work. Open source, MIT." />
+<meta property="og:url" content="https://llm-pricing.dev/" />
+<meta property="og:image" content="https://llm-pricing.dev/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="llm-pricing-api — every LLM price and context window behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="llm-pricing-api — Every LLM price and context window behind one REST API" />
+<meta name="twitter:description" content="3,214 models from 127 providers, served from memory with no database, plus a cost estimator that shows its work. Open source, MIT." />
+<meta name="twitter:image" content="https://llm-pricing.dev/og-image.png" />
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "llm-pricing-api",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Cross-platform",
+  "description": "Open source REST API over the LiteLLM catalog of LLM model prices and context windows, with an auditable cost estimator.",
+  "url": "https://llm-pricing.dev/",
+  "downloadUrl": "https://github.com/axium-lab/llm-pricing-api",
+  "license": "https://opensource.org/licenses/MIT",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Organization", "name": "Axium", "url": "https://github.com/axium-lab" }
+}
+</script>
+
+<style>
+  :root {
+    --bg: #0b0e14;
+    --bg-soft: #11151f;
+    --panel: #151a26;
+    --border: #232a3a;
+    --text: #e6e9f0;
+    --muted: #9aa4b8;
+    --accent: #7c9cff;
+    --accent-strong: #5b7cfa;
+    --green: #4ade80;
+    --code-bg: #0d1119;
+    --radius: 14px;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 0 24px; }
+
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; }
+  .brand { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+  .brand a { color: var(--text); }
+  .brand a:hover { text-decoration: none; }
+  .brand span { color: var(--accent); }
+  .nav-links { display: flex; gap: 22px; align-items: center; font-size: 15px; }
+  .nav-links a { color: var(--muted); }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
+  .nav-links a.active { color: var(--text); }
+
+  header { padding: 46px 0 8px; }
+  .eyebrow {
+    display: inline-block; font-family: var(--mono); font-size: 13px;
+    color: var(--accent); background: rgba(124,156,255,0.1);
+    border: 1px solid rgba(124,156,255,0.25);
+    padding: 5px 12px; border-radius: 999px; margin-bottom: 20px;
+  }
+  h1 { font-size: clamp(32px, 5.4vw, 50px); line-height: 1.05; margin: 0 0 18px;
+       letter-spacing: -0.035em; font-weight: 800; }
+  h1 span { color: var(--accent); }
+  header .sub { font-size: 19px; color: var(--muted); max-width: 720px; margin: 0; }
+
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin: 26px 0 0; }
+  .btn {
+    display: inline-block; padding: 11px 20px; border-radius: 10px; font-size: 15px; font-weight: 600;
+    background: var(--accent-strong); color: #fff; border: 1px solid var(--accent-strong);
+  }
+  .btn:hover { text-decoration: none; background: #6b8cff; }
+  .btn.ghost { background: transparent; color: var(--text); border-color: var(--border); }
+  .btn.ghost:hover { background: var(--panel); }
+
+  section { padding: 46px 0 8px; scroll-margin-top: 22px; }
+  h2 { font-size: 26px; letter-spacing: -0.02em; margin: 0 0 8px; }
+  h3 { font-size: 17px; margin: 24px 0 8px; }
+  .section-sub { color: var(--muted); margin: 0 0 20px; max-width: 720px; }
+  p { margin: 0 0 14px; }
+
+  code { font-family: var(--mono); font-size: 0.9em; color: var(--accent);
+         background: rgba(124,156,255,0.08); padding: 1px 6px; border-radius: 5px; }
+  code { overflow-wrap: break-word; }
+  pre code { overflow-wrap: normal; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 12px;
+        padding: 18px 20px; overflow-x: auto; font-family: var(--mono);
+        font-size: 13.5px; line-height: 1.7; margin: 0 0 16px; }
+  pre code { color: var(--text); background: none; padding: 0; font-size: inherit; }
+  .tok-key { color: #c792ea; } .tok-str { color: #7fd88f; }
+  .tok-com { color: #5c6675; } .tok-fn { color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--panel);
+          border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+          font-size: 14.5px; margin: 0 0 16px; }
+  th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  thead th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  tbody tr:last-child td { border-bottom: none; }
+  td code, th code { font-size: 13px; }
+  .table-scroll { overflow-x: auto; }
+
+  .method { font-family: var(--mono); font-size: 12px; font-weight: 700; padding: 2px 7px; border-radius: 5px; }
+  .method.get { color: var(--green); background: rgba(74,222,128,0.1); }
+  .method.post { color: var(--accent); background: rgba(124,156,255,0.1); }
+
+  .callout { background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+             border-radius: 10px; padding: 14px 18px; margin: 0 0 16px; color: var(--muted); font-size: 14.5px; }
+  .callout strong { color: var(--text); }
+  .callout.warn { border-left-color: #ffc46b; }
+  .callout.warn strong { color: #ffc46b; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 34px 0 0; }
+  .stat { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+  .stat b { display: block; font-size: 26px; letter-spacing: -0.02em; line-height: 1.2; }
+  .stat span { color: var(--muted); font-size: 13.5px; }
+
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .feature { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .feature h3 { margin: 0 0 6px; font-size: 15.5px; }
+  .feature p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  footer { border-top: 1px solid var(--border); padding: 36px 0 60px; margin-top: 56px;
+           text-align: center; color: var(--muted); font-size: 14.5px; }
+  .footer-brand { font-weight: 600; color: var(--text); }
+  .footer-links { margin-top: 12px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); }
+
+  @media (max-width: 860px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .features { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .nav-links a:not(.gh):not(.active) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<nav>
+  <div class="brand"><a href="/">llm-pricing<span>-api</span></a></div>
+  <div class="nav-links">
+    <a href="api.html">API</a>
+    <a href="api-models.html">Models</a>
+    <a href="api-estimate.html">Estimate</a>
+    <a href="dataset.html">Dataset</a>
+    <a class="gh" href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+  </div>
+</nav>
+</div>
+
+<header>
+<div class="wrap">
+  <div class="eyebrow">MIT · open source · free API</div>
+  <h1>Every LLM price and context window<br />behind one <span>REST API</span></h1>
+  <p class="sub">
+    Answering "what does this call cost?" today means parsing a 1.7 MB JSON file yourself, or paying for a
+    pricing API. This one reads that catalog once at boot, serves it from memory with no database, and prices a
+    single call down to the exact rate key it used.
+  </p>
+  <div class="cta-row">
+    <a class="btn" href="api.html">Read the API reference</a>
+    <a class="btn ghost" href="https://github.com/axium-lab/llm-pricing-api">View on GitHub</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>3,214</b><span>models</span></div>
+    <div class="stat"><b>127</b><span>providers</span></div>
+    <div class="stat"><b>86</b><span>pricing keys understood</span></div>
+    <div class="stat"><b>0</b><span>databases</span></div>
+  </div>
+</div>
+</header>
+
+<section id="receipt">
+<div class="wrap">
+  <h2>A total you can check</h2>
+  <p class="section-sub">
+    Ask for the cost of a call and you get a receipt, not a number. Every line names the literal dataset key it
+    was billed with, so the arithmetic can be verified against the JSON.
+  </p>
+<pre><code><span class="tok-com"># 190k input tokens crosses Anthropic's 200k threshold</span>
+curl -X POST https://api.llm-pricing.dev/v1/estimate -H <span class="tok-str">'content-type: application/json'</span> -d <span class="tok-str">'{
+  "model": "claude-sonnet-4-5",
+  "usage": {
+    "input_tokens": 190000, "output_tokens": 4000,
+    "cache_read_tokens": 20000,
+    "cache_creation_tokens_by_ttl": { "1h": 8000 }
+  }
+}'</span></code></pre>
+<pre><code>input.text         190000 x 0.000006   = 1.14    <span class="tok-com">[input_cost_per_token_above_200k_tokens]</span>
+output.text          4000 x 0.0000225  = 0.09    <span class="tok-com">[output_cost_per_token_above_200k_tokens]</span>
+cache_read.text     20000 x 6e-7       = 0.012   <span class="tok-com">[cache_read_input_token_cost_above_200k_tokens]</span>
+cache_write.1h       8000 x 0.000012   = 0.096   <span class="tok-com">[cache_creation_input_token_cost_above_1hr_above_200k_tokens]</span>
+                                        ------
+                                         1.338 USD</code></pre>
+  <p>
+    The prompt crossed the threshold, so the <strong>whole</strong> request was repriced — output included — and
+    the 1&nbsp;hour cache TTL composed with the long-context axis into that quadruple key. Both decisions come
+    back in <code>resolution</code>, next to the list of every key used.
+    <a href="api-estimate.html">How the estimator resolves rates →</a>
+  </p>
+</div>
+</section>
+
+<section id="start">
+<div class="wrap">
+  <h2>Quick start</h2>
+  <div class="callout warn">
+    <strong>The hosted instance is not live yet.</strong> <code>api.llm-pricing.dev</code> is the address the
+    free instance will answer on; until it is deployed, run it locally or deploy your own. The dataset ships
+    inside the image, so it boots without network.
+  </div>
+<pre><code>git clone https://github.com/axium-lab/llm-pricing-api.git
+cd llm-pricing-api
+bun install
+bun start          <span class="tok-com"># http://localhost:8080</span></code></pre>
+  <h3>Or with Docker</h3>
+<pre><code>docker build -t llm-pricing-api .
+docker run --rm -p 8080:8080 llm-pricing-api</code></pre>
+  <h3>Then ask it something</h3>
+<pre><code><span class="tok-com"># The cheapest chat models with a 1M context window</span>
+curl <span class="tok-str">'localhost:8080/v1/models?mode=chat&amp;min_input_tokens=1000000&amp;sort=input_cost_per_token:asc&amp;fields=id,provider,input_cost_per_token&amp;limit=5'</span>
+
+<span class="tok-com"># One model, every attribute the dataset has for it</span>
+curl <span class="tok-str">'localhost:8080/v1/models/bedrock/us.anthropic.claude-3-5-haiku-20241022-v1:0'</span></code></pre>
+</div>
+</section>
+
+<section id="features">
+<div class="wrap">
+  <h2>What makes it different</h2>
+  <p class="section-sub">Every one of these is a decision taken in the code, not a slogan.</p>
+  <div class="features">
+    <div class="feature">
+      <h3>Auditable, not magic</h3>
+      <p>Each cost line carries <code>rate_key</code> and the quantity it multiplied. A total you cannot check against the source is a total you cannot trust.</p>
+    </div>
+    <div class="feature">
+      <h3>Decimal arithmetic</h3>
+      <p>The catalog ships serialized float noise (<code>1.2999000000000001e-07</code>) and rates as small as <code>1.3e-10</code>. Everything accumulates in <code>Decimal</code>, never in <code>number</code>.</p>
+    </div>
+    <div class="feature">
+      <h3>Free is not unknown</h3>
+      <p>258 models legitimately price output at 0. A missing rate is never billed as zero — unknown usage lands in <code>unpriced[]</code> where you can see it.</p>
+    </div>
+    <div class="feature">
+      <h3>Boots without network</h3>
+      <p>The dataset is versioned and baked into the image, then revalidated with <code>If-None-Match</code>. A <code>304</code> transfers 0 bytes; an unreachable upstream is reported, not fatal.</p>
+    </div>
+    <div class="feature">
+      <h3>Ids that contain slashes</h3>
+      <p>82% of the ids contain a <code>/</code>, 244 contain <code>:</code>, four contain <code>*</code>. The lookup route takes them literally — nothing to escape.</p>
+    </div>
+    <div class="feature">
+      <h3>Errors you can branch on</h3>
+      <p>RFC 9457 <code>problem+json</code> everywhere, with stable slugs: <code>model-not-found</code>, <code>ambiguous-model</code>, <code>model-not-priced</code>, <code>limits-exceeded</code>.</p>
+    </div>
+    <div class="feature">
+      <h3>Typos get a second chance</h3>
+      <p>A 404 comes with suggestions — substring, then suffix, then trigram similarity, which is what rescues <code>claude-sonnet-9-9</code>.</p>
+    </div>
+    <div class="feature">
+      <h3>Stateless and small</h3>
+      <p>Three dependencies, no build step, no database, no background jobs. Restarting the instance is what updates the dataset.</p>
+    </div>
+    <div class="feature">
+      <h3>Honest about its gaps</h3>
+      <p>What the estimator cannot price is written down, not hidden: tiered pricing, web search and DBU rates are <a href="api-estimate.html#limitations">listed as limitations</a>.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="endpoints">
+<div class="wrap">
+  <h2>Endpoints</h2>
+  <p class="section-sub">Ten routes. Everything queryable lives under <code>/v1</code>; <code>/health</code> sits outside it on purpose.</p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method get">GET</span></td><td><a href="api.html#health"><code>/health</code></a></td><td>Liveness and readiness, dataset origin, <code>startup_error</code>.</td></tr>
+      <tr><td><span class="method get">GET</span></td><td><a href="api-models.html#list"><code>/v1/models</code></a></td><td>Listing with filters, sorting, projection and pagination.</td></tr>
+      <tr><td><span class="method get">GET</span></td><td><a href="api-models.html#lookup"><code>/v1/models/*</code></a></td><td>Lookup by id, slashes and colons included.</td></tr>
+      <tr><td><span class="method get">GET</span></td><td><a href="api-models.html#by-id"><code>/v1/models/by-id?id=</code></a></td><td>Lookup by query param, for the one id a path cannot carry.</td></tr>
+      <tr><td><span class="method get">GET</span></td><td><a href="api-models.html#compare"><code>/v1/compare?ids=</code></a></td><td>Side-by-side comparison of several models.</td></tr>
+      <tr><td><span class="method get">GET</span></td><td><a href="api.html#providers"><code>/v1/providers</code></a></td><td>The 127 providers with their model counts.</td></tr>
+      <tr><td><span class="method get">GET</span></td><td><a href="api.html#modes"><code>/v1/modes</code></a></td><td>The 16 modes with their model counts.</td></tr>
+      <tr><td><span class="method get">GET</span></td><td><a href="api.html#attributes"><code>/v1/attributes</code></a></td><td>The 153 attributes, flagging the 86 pricing ones.</td></tr>
+      <tr><td><span class="method get">GET</span></td><td><a href="api.html#meta"><code>/v1/meta</code></a></td><td>Counts, dataset origin, ETag and sha256.</td></tr>
+      <tr><td><span class="method post">POST</span></td><td><a href="api-estimate.html"><code>/v1/estimate</code></a></td><td>Cost of a single call, with a full breakdown.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+</section>
+
+<section id="data">
+<div class="wrap">
+  <h2>Where the data comes from</h2>
+  <p class="section-sub">
+    The catalog is LiteLLM's <code>model_prices_and_context_window.json</code>, MIT licensed, vendored into the
+    repository and redistributed normalized. The prices are the ones LiteLLM publishes — this project does not
+    source them, and it flags the implausible ones rather than correcting them.
+    <a href="dataset.html">How the dataset is loaded, and what it costs to be wrong →</a>
+  </p>
+</div>
+</section>
+
+<footer>
+<div class="wrap">
+  <div class="footer-brand">llm-pricing-api</div>
+  <div>Open source under the MIT license.</div>
+  <div class="footer-links">
+    <a href="api.html">API reference</a>
+    <a href="dataset.html">Dataset</a>
+    <a href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+    <a href="https://github.com/axium-lab/llm-pricing-api/blob/main/LICENSE">License</a>
+  </div>
+</div>
+</footer>
+
+</body>
+</html>

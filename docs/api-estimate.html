@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Estimate API — llm-pricing-api</title>
+<meta name="description" content="Reference for POST /v1/estimate: every usage field and the rate key it maps to, service tiers, context tiers, cache TTLs, the auditable breakdown, all eleven warning codes, unpriced usage, errors, and what the estimator cannot price." />
+<link rel="canonical" href="https://llm-pricing.dev/api-estimate.html" />
+<meta name="theme-color" content="#0b0e14" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%235b7cfa'/><text x='16' y='23' font-family='monospace' font-size='17' font-weight='700' fill='%23ffffff' text-anchor='middle'>$</text></svg>" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="llm-pricing-api" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:title" content="llm-pricing-api — Estimate API" />
+<meta property="og:description" content="Every usage field and the rate key it maps to, service and context tiers, the auditable breakdown, all eleven warning codes, and what the estimator cannot price." />
+<meta property="og:url" content="https://llm-pricing.dev/api-estimate.html" />
+<meta property="og:image" content="https://llm-pricing.dev/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="llm-pricing-api — every LLM price and context window behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="llm-pricing-api — Estimate API" />
+<meta name="twitter:description" content="Every usage field and the rate key it maps to, the auditable breakdown, all eleven warning codes, and what it cannot price." />
+<meta name="twitter:image" content="https://llm-pricing.dev/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "llm-pricing-api — Estimate API",
+  "description": "Reference for POST /v1/estimate: usage fields, tiers, the auditable breakdown, warning codes, errors and limitations.",
+  "url": "https://llm-pricing.dev/api-estimate.html",
+  "author": { "@type": "Organization", "name": "Axium", "url": "https://github.com/axium-lab" },
+  "about": { "@type": "SoftwareApplication", "name": "llm-pricing-api", "url": "https://llm-pricing.dev/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://llm-pricing.dev/" },
+    { "@type": "ListItem", "position": 2, "name": "API reference", "item": "https://llm-pricing.dev/api.html" },
+    { "@type": "ListItem", "position": 3, "name": "Estimate", "item": "https://llm-pricing.dev/api-estimate.html" }
+  ]
+}
+</script>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="wrap">
+<nav>
+  <div class="brand"><a href="/">llm-pricing<span>-api</span></a></div>
+  <div class="nav-links">
+    <a href="api.html">API</a>
+    <a href="api-models.html">Models</a>
+    <a class="active" href="api-estimate.html">Estimate</a>
+    <a href="dataset.html">Dataset</a>
+    <a class="gh" href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+  </div>
+</nav>
+</div>
+
+<header>
+<div class="wrap">
+  <div class="eyebrow">API reference</div>
+  <h1>Estimate</h1>
+  <p class="sub">
+    What one call costs, and why. Every line of the breakdown names the literal dataset key it was billed with,
+    every rate that could not be found is listed instead of being silently treated as zero, and every judgement
+    call the engine made comes back in <code>resolution</code>.
+  </p>
+</div>
+</header>
+
+<div class="wrap">
+<div class="layout">
+
+<aside class="toc">
+  <p class="toc-title">On this page</p>
+  <ul>
+    <li><a href="#request">Request</a></li>
+    <li><a href="#usage">Usage fields</a></li>
+    <li><a href="#tiers">Service tiers</a></li>
+    <li><a href="#context">Context tiers</a></li>
+    <li><a href="#cache">Cache and TTL</a></li>
+    <li><a href="#region">Regional uplift</a></li>
+    <li><a href="#options">Options</a></li>
+  </ul>
+  <p class="toc-group">Response</p>
+  <ul>
+    <li><a href="#response">Shape</a></li>
+    <li><a href="#lines">Cost lines</a></li>
+    <li><a href="#resolution">Resolution</a></li>
+    <li><a href="#warnings">Warnings</a></li>
+    <li><a href="#unpriced">Unpriced</a></li>
+  </ul>
+  <p class="toc-group">Edges</p>
+  <ul>
+    <li><a href="#errors">Errors</a></li>
+    <li><a href="#limitations">Limitations</a></li>
+  </ul>
+</aside>
+
+<main>
+
+<section id="request">
+  <h2>Request</h2>
+  <div class="endpoint"><span class="method post">POST</span> <span class="path">/v1/estimate</span></div>
+  <p>
+    A JSON body with a model and the usage you want priced. Everything else has a default. The schema is
+    <strong>strict</strong>: an unrecognized key is a <code>400</code>, not a silently ignored field — a typo
+    in a usage field would otherwise quietly under-bill.
+  </p>
+<pre><code>curl -X POST localhost:8080/v1/estimate -H <span class="tok-str">'content-type: application/json'</span> -d <span class="tok-str">'{
+  "model": "claude-sonnet-4-5",
+  "usage": {
+    "input_tokens": 190000,
+    "output_tokens": 4000,
+    "cache_read_tokens": 20000,
+    "cache_creation_tokens_by_ttl": { "1h": 8000 }
+  }
+}'</span></code></pre>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Field</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>model</code></td><td>string</td><td><em>required</em></td><td>A dataset id. Resolved exactly first, then case-insensitively.</td></tr>
+      <tr><td><code>provider</code></td><td>string</td><td>—</td><td>Disambiguates an id that matches several entries. See <a href="#errors">409</a>.</td></tr>
+      <tr><td><code>usage</code></td><td>object</td><td><em>required</em></td><td>What was consumed. <a href="#usage">All 33 fields below.</a> May be empty, which prices to 0.</td></tr>
+      <tr><td><code>service_tier</code></td><td><code>standard</code> | <code>batch</code> | <code>priority</code> | <code>flex</code></td><td><code>standard</code></td><td><a href="#tiers">See below.</a></td></tr>
+      <tr><td><code>region_processing</code></td><td><code>global</code> | <code>eu</code> | <code>us</code></td><td><code>global</code></td><td><a href="#region">See below.</a></td></tr>
+      <tr><td><code>options</code></td><td>object</td><td><code>{}</code></td><td>Six switches over how the arithmetic is done. <a href="#options">See below.</a></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Every numeric usage value must be finite and <code>&gt;= 0</code>. The body limit is 256 kB.</p>
+</section>
+
+<section id="usage">
+  <h2>Usage fields</h2>
+  <p class="section-sub">
+    Each field maps to one base rate key. If the model does not declare that key — or a variant of it that
+    fits the tier and TTL — the quantity lands in <a href="#unpriced"><code>unpriced[]</code></a>, never in
+    the total at a made-up rate.
+  </p>
+
+  <h3>Text tokens</h3>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Field</th><th>Base rate key</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>input_tokens</code></td><td><code>input_cost_per_token</code></td><td>—</td></tr>
+      <tr><td><code>output_tokens</code></td><td><code>output_cost_per_token</code></td><td>Reasoning tokens are subtracted from it first.</td></tr>
+      <tr><td><code>reasoning_tokens</code></td><td><code>output_cost_per_reasoning_token</code></td><td>A <strong>subset</strong> of <code>output_tokens</code>, billed as its own line. Almost no model declares a distinct rate, so it usually falls back to the output rate with a warning. Exceeding <code>output_tokens</code> is a <code>400</code>.</td></tr>
+      <tr><td><code>cache_read_tokens</code></td><td><code>cache_read_input_token_cost</code></td><td>—</td></tr>
+      <tr><td><code>cache_creation_tokens</code></td><td><code>cache_creation_input_token_cost</code></td><td>Added to the 5m bucket. <a href="#cache">See below.</a></td></tr>
+      <tr><td><code>cache_creation_tokens_by_ttl</code></td><td>same, with an <code>_above_1hr</code> axis</td><td><code>{"5m"?: n, "1h"?: n}</code>. The 1h bucket gets its own line.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Audio, image and video</h3>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Field</th><th>Base rate key</th></tr></thead>
+    <tbody>
+      <tr><td><code>input_audio_tokens</code></td><td><code>input_cost_per_audio_token</code></td></tr>
+      <tr><td><code>output_audio_tokens</code></td><td><code>output_cost_per_audio_token</code></td></tr>
+      <tr><td><code>cache_read_audio_tokens</code></td><td><code>cache_read_input_audio_token_cost</code></td></tr>
+      <tr><td><code>cache_creation_audio_tokens</code></td><td><code>cache_creation_input_audio_token_cost</code></td></tr>
+      <tr><td><code>input_image_tokens</code></td><td><code>input_cost_per_image_token</code></td></tr>
+      <tr><td><code>output_image_tokens</code></td><td><code>output_cost_per_image_token</code></td></tr>
+      <tr><td><code>output_video_tokens</code></td><td><code>output_cost_per_video_token</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Non-token units</h3>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Field</th><th>Base rate key</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>input_characters</code> / <code>output_characters</code></td><td><code>input_cost_per_character</code> / <code>output_cost_per_character</code></td><td>Some TTS models price per character.</td></tr>
+      <tr><td><code>audio_seconds</code></td><td><code>input_cost_per_second</code></td><td>Transcription. Also bills <code>output_cost_per_second</code> — see <code>transcription_billing</code>.</td></tr>
+      <tr><td><code>output_audio_seconds</code></td><td><code>output_cost_per_second</code></td><td>Used as the output quantity when <code>audio_seconds</code> is present.</td></tr>
+      <tr><td><code>video_seconds</code> / <code>output_video_seconds</code></td><td><code>input_cost_per_video_per_second</code> / <code>output_cost_per_video_per_second</code></td><td>—</td></tr>
+      <tr><td><code>input_images</code> / <code>output_images</code></td><td><code>input_cost_per_image</code> / <code>output_cost_per_image</code></td><td>Image generation is usually priced per image.</td></tr>
+      <tr><td><code>input_pixels</code> / <code>output_pixels</code></td><td><code>input_cost_per_pixel</code> / <code>output_cost_per_pixel</code></td><td>—</td></tr>
+      <tr><td><code>image_dimensions</code></td><td>→ <code>input_cost_per_pixel</code></td><td><code>{width, height, count?}</code>. Multiplied into <code>input_pixels</code> when that is not given explicitly.</td></tr>
+      <tr><td><code>pages</code></td><td><code>ocr_cost_per_page</code></td><td>—</td></tr>
+      <tr><td><code>annotated_pages</code></td><td><code>annotation_cost_per_page</code></td><td>—</td></tr>
+      <tr><td><code>requests</code></td><td><code>input_cost_per_request</code></td><td>—</td></tr>
+      <tr><td><code>queries</code></td><td><code>input_cost_per_query</code></td><td>—</td></tr>
+      <tr><td><code>code_interpreter_sessions</code></td><td><code>code_interpreter_cost_per_session</code></td><td>—</td></tr>
+      <tr><td><code>web_search</code>, <code>search_results</code></td><td><em>none</em></td><td>Accepted and validated, but <strong>never billed</strong>. <a href="#limitations">See limitations.</a></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Examples across modalities</h3>
+<pre><code><span class="tok-com"># Embeddings: input only — 2.5M tokens of text-embedding-3-small</span>
+{ <span class="tok-key">"model"</span>: <span class="tok-str">"text-embedding-3-small"</span>, <span class="tok-key">"usage"</span>: { <span class="tok-key">"input_tokens"</span>: 2500000 } }
+<span class="tok-com"># -> 0.05 USD  [input.text 2500000 x 2e-8]</span>
+
+<span class="tok-com"># Transcription priced per second of audio</span>
+{ <span class="tok-key">"model"</span>: <span class="tok-str">"assemblyai/best"</span>, <span class="tok-key">"usage"</span>: { <span class="tok-key">"audio_seconds"</span>: 3600 } }
+<span class="tok-com"># -> 0.119988 USD  [input.audio_seconds 3600 x 0.00003333, plus output.audio_seconds at 0]</span>
+
+<span class="tok-com"># Image generation, priced per image</span>
+{ <span class="tok-key">"model"</span>: <span class="tok-str">"dall-e-3"</span>, <span class="tok-key">"usage"</span>: { <span class="tok-key">"input_images"</span>: 4 } }
+<span class="tok-com"># -> 0.16 USD  [input.images 4 x 0.04]  + DEPRECATED_MODEL warning</span>
+
+<span class="tok-com"># OCR, priced per page</span>
+{ <span class="tok-key">"model"</span>: <span class="tok-str">"azure_ai/mistral-document-ai-2505"</span>, <span class="tok-key">"usage"</span>: { <span class="tok-key">"pages"</span>: 320 } }
+<span class="tok-com"># -> 0.96 USD  [other.pages 320 x 0.003, rate_key ocr_cost_per_page]</span></code></pre>
+</section>
+
+<section id="tiers">
+  <h2>Service tiers</h2>
+  <p>
+    <code>batch</code>, <code>priority</code> and <code>flex</code> select a rate variant —
+    <code>input_cost_per_token_batches</code>, <code>..._priority</code>, <code>..._flex</code>. OpenAI's batch
+    tier is the familiar case: half price.
+  </p>
+<pre><code>{ <span class="tok-key">"model"</span>: <span class="tok-str">"gpt-4o"</span>, <span class="tok-key">"usage"</span>: { <span class="tok-key">"input_tokens"</span>: 500000, <span class="tok-key">"output_tokens"</span>: 50000 }, <span class="tok-key">"service_tier"</span>: <span class="tok-str">"batch"</span> }
+
+input.text   500000 x 0.00000125 = 0.625  [input_cost_per_token_batches]
+output.text   50000 x 0.000005   = 0.25   [output_cost_per_token_batches]
+                                   -----
+                                    0.875 USD</code></pre>
+  <p>
+    When the model has no rate for the tier you asked for, the estimator <strong>degrades to standard and says
+    so</strong> — it does not fail, and it does not pretend the discount applied. Compare
+    <code>service_tier_requested</code> with <code>service_tier_applied</code> in
+    <a href="#resolution"><code>resolution</code></a>, or look for
+    <code>SERVICE_TIER_NOT_PRICED</code> in the warnings:
+  </p>
+<pre><code>{ <span class="tok-key">"model"</span>: <span class="tok-str">"gpt-4o"</span>, <span class="tok-key">"usage"</span>: { <span class="tok-key">"input_tokens"</span>: 1000, <span class="tok-key">"output_tokens"</span>: 100 }, <span class="tok-key">"service_tier"</span>: <span class="tok-str">"flex"</span> }
+
+<span class="tok-key">"resolution"</span>: { <span class="tok-key">"service_tier_requested"</span>: <span class="tok-str">"flex"</span>, <span class="tok-key">"service_tier_applied"</span>: <span class="tok-str">"standard"</span>, … }
+<span class="tok-key">"warnings"</span>: [
+  { <span class="tok-key">"code"</span>: <span class="tok-str">"SERVICE_TIER_NOT_PRICED"</span>,
+    <span class="tok-key">"message"</span>: <span class="tok-str">"The model has no \"flex\" rate for input_cost_per_token; falling back to standard."</span>,
+    <span class="tok-key">"field"</span>: <span class="tok-str">"input_tokens"</span> }, … ]</code></pre>
+</section>
+
+<section id="context">
+  <h2>Context tiers</h2>
+  <p>
+    Several providers charge more once a prompt crosses a threshold — Anthropic and Google at 200k tokens, for
+    instance. The catalog encodes it as parallel keys: <code>input_cost_per_token_above_200k_tokens</code>.
+  </p>
+  <div class="callout">
+    <strong>The tier is a flag, not a marginal band.</strong> If the request crosses the threshold, the
+    <em>whole</em> request is repriced — output included. The clearest evidence is that the dataset defines
+    <code>output_cost_per_token_above_200k_tokens</code>: an output price gated on an <em>input</em> threshold
+    only makes sense as a flag. Of the 117 threshold pairs in the catalog, 116 have a ratio of exactly 2.0, and
+    Anthropic, Google and OpenAI all document the same scheme.
+  </div>
+  <p>
+    Which tokens count toward the threshold is <code>options.threshold_basis</code>. By default cache reads
+    count too (<code>input_plus_cache</code>), because the provider still has to hold that context — that is
+    why the example below reports 218,000 considered tokens for 190,000 input tokens.
+  </p>
+<pre><code>{ <span class="tok-key">"model"</span>: <span class="tok-str">"claude-sonnet-4-5"</span>,
+  <span class="tok-key">"usage"</span>: { <span class="tok-key">"input_tokens"</span>: 190000, <span class="tok-key">"output_tokens"</span>: 4000,
+             <span class="tok-key">"cache_read_tokens"</span>: 20000, <span class="tok-key">"cache_creation_tokens_by_ttl"</span>: { <span class="tok-key">"1h"</span>: 8000 } } }
+
+<span class="tok-key">"resolution"</span>: {
+  <span class="tok-key">"threshold_basis"</span>: <span class="tok-str">"input_plus_cache"</span>,
+  <span class="tok-key">"threshold_tokens_considered"</span>: 218000,
+  <span class="tok-key">"context_tier_applied"</span>: <span class="tok-str">"above_200k_tokens"</span>,
+  <span class="tok-key">"context_tier_thresholds_available"</span>: [200000]
+}</code></pre>
+  <p>Set <code>threshold_basis: "input_only"</code> to leave cache out of the comparison.</p>
+</section>
+
+<section id="cache">
+  <h2>Cache and TTL</h2>
+  <p>
+    Cache writes are priced by how long the entry lives. <code>_above_1hr</code> is <strong>not</strong> a
+    volume threshold — it is Anthropic's 1&nbsp;hour TTL, and it composes with the context tier, which is how
+    a single line ends up billed with a quadruple key:
+  </p>
+<pre><code>cache_write.1h  8000 x 0.000012 = 0.096  [cache_creation_input_token_cost_above_1hr_above_200k_tokens]</code></pre>
+  <p>
+    <code>cache_creation_tokens</code> and <code>cache_creation_tokens_by_ttl["5m"]</code> are added together
+    into one 5-minute line; the <code>"1h"</code> bucket always gets its own.
+  </p>
+  <p>
+    If the model declares <code>prompt_cache_min_tokens</code> and your cache write is below it, the write is
+    still billed — but you get a <code>CACHE_BELOW_MIN_TOKENS</code> warning saying the provider would not have
+    cached it at all.
+  </p>
+  <p>
+    If your provider reports cache reads <em>inside</em> <code>input_tokens</code> rather than alongside them,
+    set <code>options.cache_tokens_included_in_input: true</code> and the overlap is subtracted instead of
+    billed twice.
+  </p>
+</section>
+
+<section id="region">
+  <h2>Regional uplift</h2>
+  <p>
+    18 models declare <code>regional_processing_uplift_multiplier_eu</code> / <code>_us</code>. Setting
+    <code>region_processing</code> applies it as a <strong>separate surcharge line over the USD subtotal</strong>,
+    rather than by multiplying each rate — so the base rates in the breakdown stay comparable to the catalog.
+  </p>
+<pre><code>{ <span class="tok-key">"model"</span>: <span class="tok-str">"gpt-5.6"</span>, <span class="tok-key">"usage"</span>: { <span class="tok-key">"input_tokens"</span>: 10000, <span class="tok-key">"output_tokens"</span>: 1000 }, <span class="tok-key">"region_processing"</span>: <span class="tok-str">"eu"</span> }
+
+input.text            10000 token x 0.000004 = 0.04   [input_cost_per_token]
+output.text            1000 token x 0.00002  = 0.02   [output_cost_per_token]
+surcharge.region_eu       1 request x 0.1    = 0.006  [regional_processing_uplift_multiplier_eu]
+                                               -----
+                                                0.066 USD</code></pre>
+  <p>A model with no uplift key is unaffected — no line, no warning, same total as <code>global</code>.</p>
+</section>
+
+<section id="options">
+  <h2>Options</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Option</th><th>Values</th><th>Default</th><th>Effect</th></tr></thead>
+    <tbody>
+      <tr><td><code>tier_policy</code></td><td><code>flag</code> | <code>marginal</code></td><td><code>flag</code></td><td><code>flag</code> reprices the whole request once a threshold is crossed. <code>marginal</code> is <a href="#limitations">not implemented</a> and falls through to the base rate.</td></tr>
+      <tr><td><code>threshold_basis</code></td><td><code>input_only</code> | <code>input_plus_cache</code></td><td><code>input_plus_cache</code></td><td>Which tokens count toward the context threshold.</td></tr>
+      <tr><td><code>cache_tokens_included_in_input</code></td><td>boolean</td><td><code>false</code></td><td>When <code>true</code>, <code>cache_read_tokens</code> is subtracted from <code>input_tokens</code> before billing.</td></tr>
+      <tr><td><code>limit_policy</code></td><td><code>error</code> | <code>warn</code> | <code>ignore</code></td><td><code>warn</code></td><td>What to do when usage exceeds a limit the model declares. <code>error</code> turns it into a <a href="#errors"><code>422</code></a>.</td></tr>
+      <tr><td><code>transcription_billing</code></td><td><code>input_only</code> | <code>both</code></td><td><code>both</code></td><td>Whether <code>audio_seconds</code> also bills the model's per-second <em>output</em> rate. <code>whisper-1</code> declares both, and <code>assemblyai/best</code> spelling out <code>output_cost_per_second: 0.0</code> suggests they are meant to be summed.</td></tr>
+      <tr><td><code>round_to</code></td><td>integer 0–20</td><td><code>10</code></td><td>Decimals in <code>totals[currency].rounded</code>. <code>exact</code> is never rounded.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="response">
+  <h2>Response shape</h2>
+<pre><code>{
+  <span class="tok-key">"model"</span>: { <span class="tok-key">"requested"</span>: <span class="tok-str">"claude-sonnet-4-5"</span>, <span class="tok-key">"resolved_key"</span>: <span class="tok-str">"claude-sonnet-4-5"</span>,
+              <span class="tok-key">"provider"</span>: <span class="tok-str">"anthropic"</span>, <span class="tok-key">"mode"</span>: <span class="tok-str">"chat"</span> },
+  <span class="tok-key">"dataset"</span>: { <span class="tok-key">"sha256"</span>: <span class="tok-str">"a5682d2f…"</span>, <span class="tok-key">"loaded_at"</span>: <span class="tok-str">"2026-08-27T06:23:42.602Z"</span> },
+  <span class="tok-key">"totals"</span>: { <span class="tok-key">"USD"</span>: { <span class="tok-key">"exact"</span>: <span class="tok-str">"1.338"</span>, <span class="tok-key">"rounded"</span>: <span class="tok-str">"1.3380000000"</span>, <span class="tok-key">"decimals"</span>: 10 } },
+  <span class="tok-key">"lines"</span>: [ … ],
+  <span class="tok-key">"subtotals"</span>: { <span class="tok-key">"input"</span>: <span class="tok-str">"1.14"</span>, <span class="tok-key">"output"</span>: <span class="tok-str">"0.09"</span>, <span class="tok-key">"cache_read"</span>: <span class="tok-str">"0.012"</span>, <span class="tok-key">"cache_write"</span>: <span class="tok-str">"0.096"</span> },
+  <span class="tok-key">"resolution"</span>: { … },
+  <span class="tok-key">"warnings"</span>: [ … ],
+  <span class="tok-key">"unpriced"</span>: [ … ]
+}</code></pre>
+  <p>
+    <code>dataset.sha256</code> is the digest of the snapshot that produced this answer — pin it if you need
+    two estimates to be comparable. <strong>Every monetary value is a string</strong>, because these are exact
+    decimals and JSON numbers are not.
+  </p>
+  <h3>Totals</h3>
+  <p>
+    <code>totals</code> is keyed by <em>currency</em>, not a single number, because the catalog carries rates
+    in Databricks DBU alongside USD. <code>exact</code> is the unrounded decimal; <code>rounded</code> honours
+    <code>round_to</code>.
+  </p>
+  <p><code>subtotals</code> groups the lines by category: <code>input</code>, <code>output</code>, <code>cache_read</code>, <code>cache_write</code>, <code>surcharge</code>, <code>other</code>.</p>
+</section>
+
+<section id="lines">
+  <h2>Cost lines</h2>
+<pre><code>{
+  <span class="tok-key">"id"</span>: <span class="tok-str">"cache_write.1h"</span>,
+  <span class="tok-key">"label"</span>: <span class="tok-str">"Cache write"</span>,
+  <span class="tok-key">"category"</span>: <span class="tok-str">"cache_write"</span>,
+  <span class="tok-key">"currency"</span>: <span class="tok-str">"USD"</span>,
+  <span class="tok-key">"quantity"</span>: 8000,
+  <span class="tok-key">"unit"</span>: <span class="tok-str">"token"</span>,
+  <span class="tok-key">"rate"</span>: <span class="tok-str">"0.000012"</span>,
+  <span class="tok-key">"rate_key"</span>: <span class="tok-str">"cache_creation_input_token_cost_above_1hr_above_200k_tokens"</span>,
+  <span class="tok-key">"rate_per_units"</span>: 1,
+  <span class="tok-key">"amount"</span>: <span class="tok-str">"0.096"</span>,
+  <span class="tok-key">"notes"</span>: [<span class="tok-str">"Cache write with a 1 hour TTL."</span>, <span class="tok-str">"Long-context rate: 218000 &gt; 200000 tokens (flag tier)."</span>]
+}</code></pre>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>rate_key</code></td><td>The literal key in the dataset. This is the field that makes the total checkable — look it up in <a href="api-models.html#lookup"><code>/v1/models/{id}</code></a> and you will find that exact number.</td></tr>
+      <tr><td><code>rate</code></td><td>The rate as an exact decimal string, exactly as the catalog serialized it.</td></tr>
+      <tr><td><code>rate_per_units</code></td><td>How many units one rate covers. Always 1 except for the <code>_per_1k_*</code> keys, where it is 1000.</td></tr>
+      <tr><td><code>category</code></td><td><code>input</code>, <code>output</code>, <code>cache_read</code>, <code>cache_write</code>, <code>surcharge</code>, <code>other</code>.</td></tr>
+      <tr><td><code>unit</code></td><td><code>token</code>, <code>second</code>, <code>character</code>, <code>image</code>, <code>pixel</code>, <code>page</code>, <code>query</code>, <code>request</code>, <code>session</code>, <code>credit</code>.</td></tr>
+      <tr><td><code>notes</code></td><td>Present only when something non-obvious happened to this line: a TTL axis, a long-context reprice, a transcription output pairing.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="resolution">
+  <h2>Resolution</h2>
+  <p>Every judgement call, in one object — this is what you inspect when a total surprises you.</p>
+<pre><code><span class="tok-key">"resolution"</span>: {
+  <span class="tok-key">"service_tier_requested"</span>: <span class="tok-str">"standard"</span>,
+  <span class="tok-key">"service_tier_applied"</span>: <span class="tok-str">"standard"</span>,
+  <span class="tok-key">"tier_policy"</span>: <span class="tok-str">"flag"</span>,
+  <span class="tok-key">"threshold_basis"</span>: <span class="tok-str">"input_plus_cache"</span>,
+  <span class="tok-key">"threshold_tokens_considered"</span>: 218000,
+  <span class="tok-key">"context_tier_applied"</span>: <span class="tok-str">"above_200k_tokens"</span>,
+  <span class="tok-key">"context_tier_thresholds_available"</span>: [200000],
+  <span class="tok-key">"pricing_mechanism"</span>: <span class="tok-str">"flat_keys"</span>,
+  <span class="tok-key">"rate_keys_used"</span>: [
+    <span class="tok-str">"input_cost_per_token_above_200k_tokens"</span>,
+    <span class="tok-str">"output_cost_per_token_above_200k_tokens"</span>,
+    <span class="tok-str">"cache_read_input_token_cost_above_200k_tokens"</span>,
+    <span class="tok-str">"cache_creation_input_token_cost_above_1hr_above_200k_tokens"</span>
+  ]
+}</code></pre>
+  <p>
+    <code>context_tier_applied</code> is <code>null</code> when no threshold was crossed, and
+    <code>context_tier_thresholds_available</code> tells you whether the model has any thresholds at all.
+    <code>pricing_mechanism</code> is always <code>"flat_keys"</code> today —
+    <a href="#limitations"><code>tiered_pricing</code> is not read</a>.
+  </p>
+</section>
+
+<section id="warnings">
+  <h2>Warnings</h2>
+  <p class="section-sub">
+    Warnings never change the status code. They are how the estimator tells you it made a decision you might
+    disagree with, or that the number is right but the request is not.
+  </p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>SERVICE_TIER_NOT_PRICED</code></td><td>The requested tier has no rate for this key; standard was used instead.</td></tr>
+      <tr><td><code>CONTEXT_TIER_NOT_PRICED</code></td><td>The threshold was crossed but this particular key has no long-context variant; the base rate was used.</td></tr>
+      <tr><td><code>RATE_FALLBACK_APPLIED</code></td><td>A semantic fallback was taken from an explicit table — most often <code>output_cost_per_reasoning_token</code> → <code>output_cost_per_token</code>. Also emitted for a regional uplift.</td></tr>
+      <tr><td><code>ALIAS_KEY_USED</code></td><td>A legacy key name was matched, e.g. <code>input_cost_per_token_cache_hit</code> for a cache read.</td></tr>
+      <tr><td><code>EXCEEDS_MAX_INPUT_TOKENS</code></td><td>Input exceeds the model's declared <code>max_input_tokens</code>. Still priced — under <code>limit_policy: "error"</code> it becomes a <code>422</code>.</td></tr>
+      <tr><td><code>EXCEEDS_MAX_OUTPUT_TOKENS</code></td><td>Same for <code>max_output_tokens</code>.</td></tr>
+      <tr><td><code>SUSPICIOUS_RATE_MAGNITUDE</code></td><td>A rate above roughly $500/MTok. Not corrected — <a href="dataset.html#suspicious">flagged</a>, because a handful of upstream entries are implausible and a few are genuinely that expensive.</td></tr>
+      <tr><td><code>DEPRECATED_MODEL</code></td><td>The model declares a <code>deprecation_date</code> in the past.</td></tr>
+      <tr><td><code>CACHE_BELOW_MIN_TOKENS</code></td><td>The cache write is below <code>prompt_cache_min_tokens</code>; the provider would not have cached it.</td></tr>
+      <tr><td><code>MIXED_CURRENCY_TOTALS</code></td><td>Rates in more than one currency, so the totals are not summable. See the <a href="#limitations">DBU limitation</a>.</td></tr>
+      <tr><td><code>TIERED_PRICING_APPLIED</code></td><td>Declared in the type but never emitted, since <code>tiered_pricing</code> is not read.</td></tr>
+    </tbody>
+  </table>
+  </div>
+<pre><code><span class="tok-com"># wandb/zai-org/GLM-4.5 at $55,000/MTok — served as-is, flagged loudly</span>
+<span class="tok-key">"warnings"</span>: [
+  { <span class="tok-key">"code"</span>: <span class="tok-str">"SUSPICIOUS_RATE_MAGNITUDE"</span>,
+    <span class="tok-key">"message"</span>: <span class="tok-str">"Rate input_cost_per_token=0.055 implies $55000/MTok. Likely an upstream dataset error."</span> } ]</code></pre>
+  <p>
+    <code>o1-pro</code> at $600/MTok is genuinely that expensive and sits in an allowlist, so it produces no
+    warning.
+  </p>
+</section>
+
+<section id="unpriced">
+  <h2>Unpriced usage</h2>
+  <p>
+    The rule that shapes this endpoint: <strong>a missing rate is never billed as 0</strong>. 258 models
+    legitimately declare <code>output_cost_per_token: 0</code>, so "free" and "unknown" have to stay
+    distinguishable. Usage the catalog cannot price is listed here, with the keys that were tried.
+  </p>
+<pre><code>{ <span class="tok-key">"model"</span>: <span class="tok-str">"dashscope/qwen-flash"</span>, <span class="tok-key">"usage"</span>: { <span class="tok-key">"input_tokens"</span>: 1000, <span class="tok-key">"output_tokens"</span>: 100 } }
+
+<span class="tok-key">"totals"</span>: { <span class="tok-key">"USD"</span>: { <span class="tok-key">"exact"</span>: <span class="tok-str">"0"</span>, … } },
+<span class="tok-key">"lines"</span>: [],
+<span class="tok-key">"unpriced"</span>: [
+  { <span class="tok-key">"usage_field"</span>: <span class="tok-str">"input_tokens"</span>,  <span class="tok-key">"quantity"</span>: 1000, <span class="tok-key">"reason"</span>: <span class="tok-str">"NO_RATE_KEY"</span>, <span class="tok-key">"candidate_keys_checked"</span>: [<span class="tok-str">"input_cost_per_token"</span>] },
+  { <span class="tok-key">"usage_field"</span>: <span class="tok-str">"output_tokens"</span>, <span class="tok-key">"quantity"</span>: 100,  <span class="tok-key">"reason"</span>: <span class="tok-str">"NO_RATE_KEY"</span>, <span class="tok-key">"candidate_keys_checked"</span>: [<span class="tok-str">"output_cost_per_token"</span>] }
+]</code></pre>
+  <div class="callout warn">
+    <strong>A total of 0 with a non-empty <code>unpriced[]</code> does not mean the call is free.</strong> It
+    means nothing could be priced. Check <code>unpriced</code> before trusting any total — that model prices
+    only through <code>tiered_pricing</code>, which is not read.
+  </div>
+  <p><code>reason</code> is one of <code>NO_RATE_KEY</code>, <code>MODE_MISMATCH</code> or <code>NON_MONETARY_UNIT</code>; in practice only the first is emitted.</p>
+</section>
+
+<section id="errors">
+  <h2>Errors</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Status</th><th>Slug</th><th>Cause</th></tr></thead>
+    <tbody>
+      <tr><td><span class="status s4">400</span></td><td><code>invalid-request</code></td><td>Schema validation failed. The body carries <code>errors[]</code> with a <code>path</code> and a <code>message</code> per issue.</td></tr>
+      <tr><td><span class="status s4">400</span></td><td><code>invalid-request</code></td><td><code>reasoning_tokens</code> exceeds <code>output_tokens</code>. Checked after the schema, so it carries a <code>detail</code> instead of <code>errors[]</code>.</td></tr>
+      <tr><td><span class="status s4">404</span></td><td><code>model-not-found</code></td><td>No such id. Unlike the GET route, this one carries <strong>no suggestions</strong>.</td></tr>
+      <tr><td><span class="status s4">409</span></td><td><code>ambiguous-model</code></td><td>The id matches several entries. <code>candidates</code> here is a list of <code>{id, provider}</code> objects — pass <code>provider</code> to resolve it.</td></tr>
+      <tr><td><span class="status s4">422</span></td><td><code>model-not-priced</code></td><td>The model exists but has no pricing key at all (97 entries). Carries <code>model: {id, provider, mode}</code>.</td></tr>
+      <tr><td><span class="status s4">422</span></td><td><code>limits-exceeded</code></td><td>Only with <code>limit_policy: "error"</code>. Carries the limit and what you provided.</td></tr>
+      <tr><td><span class="status s5">503</span></td><td><code>not-ready</code></td><td>The dataset is still loading.</td></tr>
+    </tbody>
+  </table>
+  </div>
+<pre><code><span class="tok-com"># A typo in a usage field is a 400, not a silent zero — the schema is strict</span>
+{ <span class="tok-key">"model"</span>: <span class="tok-str">"gpt-4o"</span>, <span class="tok-key">"usage"</span>: { <span class="tok-key">"input_tokens"</span>: 1000, <span class="tok-key">"input_toknes"</span>: 500 } }
+
+{ <span class="tok-key">"type"</span>: <span class="tok-str">"about:blank#invalid-request"</span>, <span class="tok-key">"title"</span>: <span class="tok-str">"The request is not valid."</span>, <span class="tok-key">"status"</span>: 400,
+  <span class="tok-key">"errors"</span>: [{ <span class="tok-key">"path"</span>: <span class="tok-str">"usage"</span>, <span class="tok-key">"message"</span>: <span class="tok-str">"Unrecognized key(s) in object: 'input_toknes'"</span> }] }</code></pre>
+<pre><code><span class="tok-com"># limit_policy: "error" turns the limit warning into a refusal</span>
+{ <span class="tok-key">"type"</span>: <span class="tok-str">"about:blank#limits-exceeded"</span>, <span class="tok-key">"title"</span>: <span class="tok-str">"The limits declared by the model are exceeded."</span>,
+  <span class="tok-key">"status"</span>: 422, <span class="tok-key">"detail"</span>: <span class="tok-str">"5000000 input tokens exceed max_input_tokens=128000."</span>,
+  <span class="tok-key">"max_input_tokens"</span>: 128000, <span class="tok-key">"provided"</span>: 5000000 }</code></pre>
+<pre><code><span class="tok-com"># The model exists, but the catalog publishes no rate for it</span>
+{ <span class="tok-key">"type"</span>: <span class="tok-str">"about:blank#model-not-priced"</span>, <span class="tok-key">"title"</span>: <span class="tok-str">"The model exists but carries no pricing data."</span>,
+  <span class="tok-key">"status"</span>: 422, <span class="tok-key">"detail"</span>: <span class="tok-str">"The dataset publishes no rate for this entry."</span>,
+  <span class="tok-key">"model"</span>: { <span class="tok-key">"id"</span>: <span class="tok-str">"github_copilot/claude-opus-4.5"</span>, <span class="tok-key">"provider"</span>: <span class="tok-str">"github_copilot"</span>, <span class="tok-key">"mode"</span>: <span class="tok-str">"chat"</span> } }</code></pre>
+</section>
+
+<section id="limitations">
+  <h2>What the estimator cannot price</h2>
+  <p class="section-sub">
+    These are accepted inputs or catalog features that currently produce <strong>no cost line</strong>. They are
+    written down rather than hidden, because a silently missing charge is worse than a documented one.
+  </p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Gap</th><th>What actually happens</th></tr></thead>
+    <tbody>
+      <tr><td><code>usage.web_search</code> and <code>usage.search_results</code></td><td>Validated and accepted, then ignored. <code>search_context_cost_per_query</code> — present on 282 models, described in the cost catalog — is never read. The response is <code>200</code>, the search costs nothing, and it does not even appear in <code>unpriced[]</code>.</td></tr>
+      <tr><td><code>options.tier_policy: "marginal"</code></td><td>Does not compute per-band pricing. It resolves to no threshold at all, so the base rate applies and the result equals a request that never crossed the threshold. Only <code>flag</code> is real today.</td></tr>
+      <tr><td><code>tiered_pricing</code></td><td>Not read. The 21 models priced <em>only</em> through it pass the "is it billable" check and answer <code>200</code> with a total of <code>0</code> and all usage in <code>unpriced[]</code>.</td></tr>
+      <tr><td>Databricks DBU rates</td><td><code>input_dbu_cost_per_token</code> and <code>output_dbu_cost_per_token</code> (47 models) are described in the catalog, but no usage field maps to them, so a <code>DBU</code> total is never produced and <code>MIXED_CURRENCY_TOTALS</code> never fires. <code>totals</code> is keyed by currency in anticipation of it.</td></tr>
+      <tr><td>Other catalog keys with no input</td><td><code>citation_cost_per_token</code>, <code>ocr_cost_per_credit</code> and <code>file_search_cost_per_1k_calls</code> are described but have no corresponding <code>usage</code> field.</td></tr>
+      <tr><td>Malformed JSON, or over 256 kB</td><td>Answers <code>500 internal-error</code> rather than <code>400</code> / <code>413</code>.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>
+    If one of these blocks you, the
+    <a href="https://github.com/axium-lab/llm-pricing-api/issues">issue tracker</a> is the place to say so.
+  </p>
+</section>
+
+</main>
+</div>
+</div>
+
+<footer>
+<div class="wrap">
+  <div class="footer-brand">llm-pricing-api</div>
+  <div>Open source under the MIT license.</div>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="api.html">API reference</a>
+    <a href="api-models.html">Models</a>
+    <a href="dataset.html">Dataset</a>
+    <a href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+  </div>
+</div>
+</footer>
+
+</body>
+</html>

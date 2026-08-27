@@ -17,7 +17,6 @@ healthRouter.get('/health', (_req, res) => {
     status: 'ok',
     ready: true,
     models: snapshot.models.length,
-    dataset_age_ms: ageMs,
     dataset: {
       source: snapshot.source,
       etag: snapshot.etag ?? null,
