@@ -45,17 +45,17 @@ const post = (path: string, body: unknown): Promise<TestResponse> =>
   }) as Promise<TestResponse>;
 
 describe('health and meta', () => {
-  test('/health reports 3038 models', async () => {
+  test('/health reports 3214 models', async () => {
     const body = await (await get('/health')).json();
     expect(body.status).toBe('ok');
-    expect(body.models).toBe(3038);
+    expect(body.models).toBe(3214);
     expect(body.dataset.source).toBe('local');
   });
 
   test('/v1/meta exposes the source and the counts', async () => {
     const body = await (await get('/v1/meta')).json();
-    expect(body.models).toBe(3038);
-    expect(body.providers).toBe(123);
+    expect(body.models).toBe(3214);
+    expect(body.providers).toBe(127);
     expect(body.dataset.source).toBe('local');
     expect(body.dataset.upstream_url).toContain('litellm_internal_staging');
   });
@@ -68,7 +68,7 @@ describe('lookup by id — the critical case', () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.id).toBe(id);
-    expect(body.litellm_provider).toBe('bedrock');
+    expect(body.provider).toBe('bedrock');
   });
 
   test('resolves a 4-segment id', async () => {
@@ -124,7 +124,7 @@ describe('lookup by id — the critical case', () => {
 describe('listing and filters', () => {
   test('paginates to 50 by default', async () => {
     const body = await (await get('/v1/models')).json();
-    expect(body.total).toBe(3038);
+    expect(body.total).toBe(3214);
     expect(body.data).toHaveLength(50);
   });
 
@@ -132,7 +132,7 @@ describe('listing and filters', () => {
     const body = await (await get('/v1/models?provider=anthropic&mode=chat&limit=500')).json();
     expect(body.total).toBeGreaterThan(0);
     for (const m of body.data) {
-      expect(m.litellm_provider).toBe('anthropic');
+      expect(m.provider).toBe('anthropic');
       expect(m.mode).toBe('chat');
     }
   });
@@ -160,21 +160,21 @@ describe('listing and filters', () => {
 });
 
 describe('facets', () => {
-  test('/v1/providers returns 123', async () => {
+  test('/v1/providers returns 127', async () => {
     const body = await (await get('/v1/providers')).json();
-    expect(body.total).toBe(123);
+    expect(body.total).toBe(127);
   });
 
   test('/v1/modes counts the models without a mode', async () => {
     const body = await (await get('/v1/modes')).json();
-    expect(body.total).toBe(15);
+    expect(body.total).toBe(16);
     expect(body.models_without_mode).toBe(8);
   });
 
   test('/v1/attributes marks which keys are pricing keys', async () => {
     const body = await (await get('/v1/attributes')).json();
-    expect(body.total).toBe(144);
-    expect(body.pricing_keys).toBe(81);
+    expect(body.total).toBe(153);
+    expect(body.pricing_keys).toBe(86);
   });
 });
 

@@ -1,12 +1,3 @@
-/**
- * Dataset download from upstream, using conditional requests.
- *
- * raw.githubusercontent.com supports ETag/If-None-Match and answers 304 with an empty body, so
- * the periodic refresh transfers nothing while the file is unchanged. That is what keeps the
- * bandwidth negligible even when Cloud Run spins up many instances.
- */
-
-import { createHash } from 'node:crypto';
 import { config } from '../config.ts';
 
 export interface FetchResult {
@@ -14,7 +5,6 @@ export interface FetchResult {
   /** Only present when `status === 'updated'`. */
   body?: string;
   etag?: string;
-  sha256?: string;
 }
 
 export async function fetchDataset(previousEtag?: string): Promise<FetchResult> {
@@ -37,11 +27,11 @@ export async function fetchDataset(previousEtag?: string): Promise<FetchResult> 
     throw new Error(`Upstream responded ${response.status} ${response.statusText}`);
   }
 
-  const body = await response.text();
+  // No hash is computed here: the body is not what gets stored. `parse` rewrites it first, and
+  // the sha256 that matters is the one of the file that actually lands on disk.
   return {
     status: 'updated',
-    body,
+    body: await response.text(),
     etag: response.headers.get('etag') ?? undefined,
-    sha256: createHash('sha256').update(body).digest('hex'),
   };
 }

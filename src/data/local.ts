@@ -16,11 +16,14 @@ export interface LocalDataset {
   /** Absent when there is no sidecar, or when it does not match the JSON on disk. */
   etag?: string;
   sha256: string;
+  /** Which `parse` version produced the JSON on disk. Absent under the same conditions. */
+  parseVersion?: number;
 }
 
 interface DatasetMeta {
   etag?: string;
   sha256: string;
+  parseVersion?: number;
   fetchedAt: string;
 }
 
@@ -34,14 +37,6 @@ export function sha256Of(json: string): string {
   return createHash('sha256').update(json).digest('hex');
 }
 
-/**
- * Returns the dataset on disk, or `null` when there is none.
- *
- * The sidecar's ETag is only trusted when its sha256 matches the JSON actually on disk. A
- * mismatch means the pair got out of sync — a half-finished write, a hand-edited file — and
- * the caller must then download unconditionally. Erring towards one extra download is far
- * cheaper than serving stale data while believing it current.
- */
 export async function readLocalDataset(
   datasetPath: string = config.datasetPath,
 ): Promise<LocalDataset | null> {
@@ -57,7 +52,7 @@ export async function readLocalDataset(
   try {
     const meta = JSON.parse(await readFile(metaPathFor(datasetPath), 'utf8')) as DatasetMeta;
     if (meta.sha256 === sha256) {
-      return { json, etag: meta.etag, sha256 };
+      return { json, etag: meta.etag, sha256, parseVersion: meta.parseVersion };
     }
     console.warn('[dataset] the sidecar does not match the local file; its ETag is discarded');
   } catch {
@@ -78,9 +73,10 @@ export async function writeLocalDataset(
   json: string,
   etag: string | undefined,
   sha256: string,
+  parseVersion: number,
   datasetPath: string = config.datasetPath,
 ): Promise<boolean> {
-  const meta: DatasetMeta = { etag, sha256, fetchedAt: new Date().toISOString() };
+  const meta: DatasetMeta = { etag, sha256, parseVersion, fetchedAt: new Date().toISOString() };
 
   try {
     await mkdir(dirname(datasetPath), { recursive: true });

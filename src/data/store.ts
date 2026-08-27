@@ -11,7 +11,8 @@
 import { config } from '../config.ts';
 import { type ModelEntry, isModelEntry } from '../types.ts';
 import { fetchDataset } from './fetcher.ts';
-import { readLocalDataset, writeLocalDataset } from './local.ts';
+import { type LocalDataset, readLocalDataset, sha256Of, writeLocalDataset } from './local.ts';
+import { PARSE_VERSION, parse } from './parse.ts';
 
 export type DatasetSource = 'local' | 'upstream';
 
@@ -57,7 +58,7 @@ function buildSnapshot(
     if (bucket) bucket.push(model);
     else byLowerId.set(lower, [model]);
 
-    push(byProvider, model.litellm_provider, model);
+    push(byProvider, model.provider, model);
     if (typeof model.mode === 'string') push(byMode, model.mode, model);
 
     for (const attr of Object.keys(value)) {
@@ -83,6 +84,16 @@ function push<T>(map: Map<string, T[]>, key: string, value: T): void {
   const bucket = map.get(key);
   if (bucket) bucket.push(value);
   else map.set(key, [value]);
+}
+
+
+function normalize(local: LocalDataset): { json: string; sha256: string; stale: boolean } {
+  if (local.parseVersion === PARSE_VERSION) {
+    return { json: local.json, sha256: local.sha256, stale: false };
+  }
+
+  const json = parse(local.json);
+  return { json, sha256: sha256Of(json), stale: true };
 }
 
 class Store {
@@ -118,16 +129,31 @@ class Store {
       const result = await fetchDataset(local?.etag);
 
       if (result.status === 'not_modified' && local) {
+        const normalized = normalize(local);
         // Atomic swap: the snapshot is built whole before the reference is replaced.
-        this.#snapshot = buildSnapshot(local.json, 'local', local.etag, local.sha256);
+        this.#snapshot = buildSnapshot(normalized.json, 'local', local.etag, normalized.sha256);
         this.lastError = null;
+        // The bytes are current but their shape is not: bring the file forward so the next boot
+        // finds it normalized. The ETag still identifies the upstream resource, so it is kept.
+        if (normalized.stale) {
+          await writeLocalDataset(
+            normalized.json,
+            local.etag,
+            normalized.sha256,
+            PARSE_VERSION,
+            datasetPath,
+          );
+        }
         return;
       }
 
       if (result.status === 'updated') {
-        this.#snapshot = buildSnapshot(result.body!, 'upstream', result.etag, result.sha256);
+        const json = parse(result.body!);
+        const sha256 = sha256Of(json);
+
+        this.#snapshot = buildSnapshot(json, 'upstream', result.etag, sha256);
         this.lastError = null;
-        await writeLocalDataset(result.body!, result.etag, result.sha256!, datasetPath);
+        await writeLocalDataset(json, result.etag, sha256, PARSE_VERSION, datasetPath);
         return;
       }
 
@@ -142,7 +168,8 @@ class Store {
       }
 
       try {
-        this.#snapshot = buildSnapshot(local.json, 'local', local.etag, local.sha256);
+        const normalized = normalize(local);
+        this.#snapshot = buildSnapshot(normalized.json, 'local', local.etag, normalized.sha256);
       } catch (localError) {
         const localMessage = localError instanceof Error ? localError.message : String(localError);
         throw new Error(

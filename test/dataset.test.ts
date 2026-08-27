@@ -6,8 +6,11 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { metaPathFor, readLocalDataset, writeLocalDataset } from '../src/data/local.ts';
+import { PARSE_VERSION, parse } from '../src/data/parse.ts';
 import { Store } from '../src/data/store.ts';
 
+// The fixtures are in upstream's shape (`litellm_provider`); what lands on disk is `parse` of
+// them. Keeping both apart is the point: it is the only way to see the boundary being applied.
 const FIXTURE = JSON.stringify({
   'gpt-4o': { litellm_provider: 'openai', mode: 'chat', input_cost_per_token: 0.0000025 },
 });
@@ -15,6 +18,9 @@ const UPSTREAM = JSON.stringify({
   'gpt-4o': { litellm_provider: 'openai', mode: 'chat', input_cost_per_token: 0.0000025 },
   'claude-opus-5': { litellm_provider: 'anthropic', mode: 'chat', input_cost_per_token: 0.000005 },
 });
+
+const NORMALIZED_FIXTURE = parse(FIXTURE);
+const NORMALIZED_UPSTREAM = parse(UPSTREAM);
 
 const sha = (s: string) => createHash('sha256').update(s).digest('hex');
 
@@ -42,12 +48,15 @@ function mockUpstream(responder: () => Response | Promise<Response>): void {
   }) as typeof fetch;
 }
 
-async function seedLocal(json: string, meta?: { etag?: string; sha256?: string }): Promise<void> {
+async function seedLocal(
+  json: string,
+  meta?: { etag?: string; sha256?: string; parseVersion?: number },
+): Promise<void> {
   await writeFile(datasetPath, json, 'utf8');
   if (meta) {
     await writeFile(
       metaPathFor(datasetPath),
-      JSON.stringify({ ...meta, fetchedAt: new Date().toISOString() }),
+      JSON.stringify({ parseVersion: PARSE_VERSION, ...meta, fetchedAt: new Date().toISOString() }),
       'utf8',
     );
   }
@@ -63,6 +72,7 @@ describe('readLocalDataset', () => {
     const local = await readLocalDataset(datasetPath);
     expect(local?.etag).toBe('"abc123"');
     expect(local?.sha256).toBe(sha(FIXTURE));
+    expect(local?.parseVersion).toBe(PARSE_VERSION);
   });
 
   test('discards the ETag when the sidecar is out of sync', async () => {
@@ -70,6 +80,7 @@ describe('readLocalDataset', () => {
     const local = await readLocalDataset(datasetPath);
     expect(local?.json).toBe(FIXTURE);
     expect(local?.etag).toBeUndefined();
+    expect(local?.parseVersion).toBeUndefined();
   });
 
   test('serves the file with no ETag when there is no sidecar', async () => {
@@ -82,21 +93,27 @@ describe('readLocalDataset', () => {
 
 describe('writeLocalDataset', () => {
   test('writes the JSON and the sidecar, leaving no temp files behind', async () => {
-    expect(await writeLocalDataset(UPSTREAM, '"new"', sha(UPSTREAM), datasetPath)).toBe(true);
+    expect(
+      await writeLocalDataset(UPSTREAM, '"new"', sha(UPSTREAM), PARSE_VERSION, datasetPath),
+    ).toBe(true);
 
     expect(await readFile(datasetPath, 'utf8')).toBe(UPSTREAM);
     const meta = JSON.parse(await readFile(metaPathFor(datasetPath), 'utf8'));
     expect(meta.etag).toBe('"new"');
     expect(meta.sha256).toBe(sha(UPSTREAM));
+    expect(meta.parseVersion).toBe(PARSE_VERSION);
     expect(meta.fetchedAt).toBeString();
 
     const written = await readLocalDataset(datasetPath);
     expect(written?.etag).toBe('"new"');
+    expect(written?.parseVersion).toBe(PARSE_VERSION);
   });
 
   test('is not fatal when the path cannot be written', async () => {
     const unwritable = join('/proc/definitely-not-writable', 'dataset.json');
-    expect(await writeLocalDataset(UPSTREAM, '"new"', sha(UPSTREAM), unwritable)).toBe(false);
+    expect(
+      await writeLocalDataset(UPSTREAM, '"new"', sha(UPSTREAM), PARSE_VERSION, unwritable),
+    ).toBe(false);
   });
 });
 
@@ -109,7 +126,7 @@ describe('boot resolution', () => {
   };
 
   test('a 304 keeps the local copy and transfers nothing', async () => {
-    await seedLocal(FIXTURE, { etag: '"current"', sha256: sha(FIXTURE) });
+    await seedLocal(NORMALIZED_FIXTURE, { etag: '"current"', sha256: sha(NORMALIZED_FIXTURE) });
     mockUpstream(() => new Response(null, { status: 304 }));
 
     const store = await boot();
@@ -118,21 +135,60 @@ describe('boot resolution', () => {
     expect(store.snapshot.etag).toBe('"current"');
     expect(store.snapshot.models).toHaveLength(1);
     expect(store.lastError).toBeNull();
+    // Already normalized: the file is left exactly as it was.
+    expect(await readFile(datasetPath, 'utf8')).toBe(NORMALIZED_FIXTURE);
   });
 
-  test('a 200 replaces the local copy and persists the new ETag', async () => {
-    await seedLocal(FIXTURE, { etag: '"old"', sha256: sha(FIXTURE) });
+  test('a 200 stores the normalized dataset and persists the new ETag', async () => {
+    await seedLocal(NORMALIZED_FIXTURE, { etag: '"old"', sha256: sha(NORMALIZED_FIXTURE) });
     mockUpstream(() => new Response(UPSTREAM, { status: 200, headers: { etag: '"fresh"' } }));
 
     const store = await boot();
     expect(store.snapshot.source).toBe('upstream');
     expect(store.snapshot.models).toHaveLength(2);
-    expect(await readFile(datasetPath, 'utf8')).toBe(UPSTREAM);
+
+    // What upstream sent is NOT what is stored: `parse` runs in between.
+    expect(await readFile(datasetPath, 'utf8')).toBe(NORMALIZED_UPSTREAM);
+    expect(store.snapshot.byProvider.get('anthropic')).toHaveLength(1);
 
     // The sidecar must now describe what actually sits on disk, or the next boot re-downloads.
     const reread = await readLocalDataset(datasetPath);
     expect(reread?.etag).toBe('"fresh"');
-    expect(reread?.json).toBe(UPSTREAM);
+    expect(reread?.json).toBe(NORMALIZED_UPSTREAM);
+    expect(reread?.sha256).toBe(sha(NORMALIZED_UPSTREAM));
+    expect(reread?.parseVersion).toBe(PARSE_VERSION);
+  });
+
+  test('a 304 over a copy written by an older parse normalizes it and rewrites the file', async () => {
+    // The shape upstream had before edit 1 existed, with a sidecar that predates versioning.
+    await seedLocal(FIXTURE, { etag: '"current"', sha256: sha(FIXTURE), parseVersion: undefined });
+    mockUpstream(() => new Response(null, { status: 304 }));
+
+    const store = await boot();
+    // The ETag is still ours, so nothing was transferred.
+    expect(lastRequestHeaders['If-None-Match']).toBe('"current"');
+    expect(store.snapshot.source).toBe('local');
+    expect(store.snapshot.models).toHaveLength(1);
+    expect(store.snapshot.models[0]!.provider).toBe('openai');
+
+    // Brought forward on disk too, sidecar included, so the next boot has nothing to redo.
+    expect(await readFile(datasetPath, 'utf8')).toBe(NORMALIZED_FIXTURE);
+    const reread = await readLocalDataset(datasetPath);
+    expect(reread?.etag).toBe('"current"');
+    expect(reread?.parseVersion).toBe(PARSE_VERSION);
+  });
+
+  test('normalizes an older local copy in memory when upstream is unreachable', async () => {
+    await seedLocal(FIXTURE, { etag: '"current"', sha256: sha(FIXTURE), parseVersion: undefined });
+    mockUpstream(() => {
+      throw new Error('connect ECONNREFUSED');
+    });
+
+    const store = await boot();
+    expect(store.snapshot.models[0]!.provider).toBe('openai');
+    expect(store.lastError).toContain('ECONNREFUSED');
+    // A degraded boot does not touch the file.
+    expect(await readFile(datasetPath, 'utf8')).toBe(FIXTURE);
   });
 
   test('an out-of-sync sidecar forces an unconditional download', async () => {
@@ -154,7 +210,7 @@ describe('boot resolution', () => {
   });
 
   test('an unreachable upstream falls back to the local copy and records the error', async () => {
-    await seedLocal(FIXTURE, { etag: '"current"', sha256: sha(FIXTURE) });
+    await seedLocal(NORMALIZED_FIXTURE, { etag: '"current"', sha256: sha(NORMALIZED_FIXTURE) });
     mockUpstream(() => {
       throw new Error('connect ECONNREFUSED');
     });
@@ -166,7 +222,7 @@ describe('boot resolution', () => {
   });
 
   test('an upstream 500 also falls back to the local copy', async () => {
-    await seedLocal(FIXTURE, { etag: '"current"', sha256: sha(FIXTURE) });
+    await seedLocal(NORMALIZED_FIXTURE, { etag: '"current"', sha256: sha(NORMALIZED_FIXTURE) });
     mockUpstream(() => new Response('boom', { status: 500, statusText: 'Server Error' }));
 
     const store = await boot();

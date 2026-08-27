@@ -2,7 +2,7 @@
 
 REST API over the LiteLLM catalog of [LLM model prices and context windows](https://github.com/BerriAI/litellm).
 
-Serves **3038 models** from **123 providers** out of memory, with no database. The dataset ships
+Serves **3214 models** from **127 providers** out of memory, with no database. The dataset ships
 with the image and is revalidated against upstream once, at boot, with a conditional request
 (`If-None-Match`), so an instance whose copy is already current transfers **0 bytes**.
 
@@ -27,16 +27,32 @@ test/    tests
 
 `data/model_prices_and_context_window.json` is the source of truth: it is versioned, baked into
 the image, and read at boot. Next to it, `model_prices_and_context_window.meta.json` persists the
-`{ etag, sha256, fetchedAt }` of the last download — a file has no ETag of its own, the server
-issues it, so it has to be stored explicitly.
+`{ etag, sha256, parseVersion, fetchedAt }` of the last download — a file has no ETag of its own,
+the server issues it, so it has to be stored explicitly.
+
+The dataset is downloaded verbatim but **not stored verbatim**: it goes through `parse`
+(`src/data/parse.ts`) right before being written to disk, and that file is what everything else
+reads. So `parse` is the single boundary between upstream's shape and ours — there is no second
+place where field names get adjusted, and the snapshot, the indexes and the API responses all see
+the normalized dataset. The edits are numbered and applied in order:
+
+1. `litellm_provider` → **`provider`**, which is the name the API already used on the way in (the
+   `?provider=` filter and the `provider` field of `/v1/estimate`).
+
+`parse` is idempotent, and `parseVersion` in the sidecar records which version produced the file.
+A boot that finds an older version normalizes the copy and writes it back — no ETag is wasted,
+since it identifies the upstream resource and not our bytes. `sha256` describes the **normalized**
+JSON, which is what the sidecar has to match.
 
 On boot the instance:
 
 1. Reads both files and checks that the sidecar's `sha256` matches the JSON on disk. A mismatch
    means the pair got out of sync, and the ETag is discarded.
 2. Sends a conditional `GET` to `UPSTREAM_URL` with `If-None-Match`.
-   - **304** — the local copy is current. Nothing is transferred.
-   - **200** — upstream is newer. It is served and written back to disk, sidecar included.
+   - **304** — the local copy is current. Nothing is transferred (and if it predates the current
+     `parse`, it is normalized and written back).
+   - **200** — upstream is newer. It goes through `parse`, and the result is served and written
+     back to disk, sidecar included.
    - **error or timeout** — the local copy is served and the reason is reported in `/health` as
      `startup_error`. The service boots without network.
 3. Fails only when there is neither a usable local copy nor a reachable upstream.
@@ -67,9 +83,9 @@ lasts only for the life of the instance; it is the copy in the image that makes 
 | `GET` | `/v1/models` | Listing with filters and pagination. |
 | `GET` | `/v1/models/by-id?id=` | Lookup by query param (for ids not representable in a path). |
 | `GET` | `/v1/models/*` | Lookup by id, accepts ids containing `/`. |
-| `GET` | `/v1/providers` | 123 providers with their counts. |
-| `GET` | `/v1/modes` | 15 modes with their counts. |
-| `GET` | `/v1/attributes` | 144 attributes, flagging the 81 pricing ones. |
+| `GET` | `/v1/providers` | 127 providers with their counts. |
+| `GET` | `/v1/modes` | 16 modes with their counts. |
+| `GET` | `/v1/attributes` | 153 attributes, flagging the 86 pricing ones. |
 | `GET` | `/v1/meta` | Counts, source, ETag and sha256 of the dataset. |
 | `GET` | `/v1/compare?ids=a,b,c` | Side-by-side comparison of several models. |
 | `POST` | `/v1/estimate` | Cost calculation for a single call. |
@@ -118,8 +134,8 @@ Configurable through `options.tier_policy`.
 **`_above_1hr` is not a volume threshold**, it is Anthropic's 1 hour cache TTL, and it composes
 with the context tier (hence the quadruple key in the example above).
 
-**A missing rate is never billed as 0.** 249 models legitimately declare
-`output_cost_per_token: 0.0`, so "free" and "unknown" stay distinguishable: the unknown ones go
+**A missing rate is never billed as 0.** 259 models legitimately declare
+`output_cost_per_token: 0`, so "free" and "unknown" stay distinguishable: the unknown ones go
 to `unpriced[]`.
 
 **Decimal arithmetic, not `number`.** The dataset ships floating point noise already serialized
@@ -133,7 +149,9 @@ sits in the allowlist.
 
 ## Dataset details that shape the design
 
-- **2471 of 3038 ids (81%) contain a `/`**, and one of them ends in `/`
+- The dataset field is **`provider`**, not `litellm_provider`: it is renamed on the way in (see
+  *How the dataset is loaded*), so that is the name in the responses too.
+- **81% of the ids contain a `/`**, and one of them ends in `/`
   (`fireworks_ai/accounts/fireworks/models/`). Since Express drops the trailing slash, that one is
   only reachable through `/v1/models/by-id`.
 - 4 ids contain a literal `*`; 244 contain `:`.

@@ -88,10 +88,10 @@ function resolveModel(id: string, provider?: string): { model?: ModelEntry; ambi
   const { byId, byLowerId } = store.snapshot;
 
   const exact = byId.get(id);
-  if (exact && (!provider || exact.litellm_provider === provider)) return { model: exact };
+  if (exact && (!provider || exact.provider === provider)) return { model: exact };
 
   const candidates = (byLowerId.get(id.toLowerCase()) ?? []).filter(
-    (m) => !provider || m.litellm_provider === provider,
+    (m) => !provider || m.provider === provider,
   );
   if (candidates.length === 0) return {};
   if (candidates.length > 1) return { ambiguous: candidates };
@@ -117,7 +117,7 @@ estimateRouter.post('/estimate', (req, res) => {
   if (ambiguous) {
     return problem(res, 409, 'ambiguous-model', 'The identifier is ambiguous.', {
       detail: 'Pass "provider" to disambiguate.',
-      candidates: ambiguous.map((m) => ({ id: m.id, provider: m.litellm_provider })),
+      candidates: ambiguous.map((m) => ({ id: m.id, provider: m.provider })),
     });
   }
 
@@ -130,7 +130,7 @@ estimateRouter.post('/estimate', (req, res) => {
   if (!hasAnyPricing(model)) {
     return problem(res, 422, 'model-not-priced', 'The model exists but carries no pricing data.', {
       detail: 'The dataset publishes no rate for this entry.',
-      model: { id: model.id, provider: model.litellm_provider, mode: model.mode ?? null },
+      model: { id: model.id, provider: model.provider, mode: model.mode ?? null },
     });
   }
 
@@ -166,7 +166,7 @@ estimateRouter.post('/estimate', (req, res) => {
     model: {
       requested: body.model,
       resolved_key: model.id,
-      provider: model.litellm_provider,
+      provider: model.provider,
       mode: model.mode ?? null,
     },
     dataset: { sha256: snapshot.sha256 ?? null, loaded_at: snapshot.loadedAt },

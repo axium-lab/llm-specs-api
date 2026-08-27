@@ -56,7 +56,7 @@ export function listModels(all: ModelEntry[], query: ListQuery): ListResult {
 
   if (query.provider) {
     const wanted = new Set(splitList(query.provider).map((s) => s.toLowerCase()));
-    result = result.filter((m) => wanted.has(m.litellm_provider.toLowerCase()));
+    result = result.filter((m) => wanted.has(m.provider.toLowerCase()));
   }
 
   if (query.mode) {

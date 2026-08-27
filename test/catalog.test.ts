@@ -13,8 +13,8 @@ const dataset = raw as Record<string, unknown>;
 const models = Object.entries(dataset).filter(([k, v]) => isModelEntry(k, v));
 
 describe('cost key catalog', () => {
-  test('the dataset holds 3038 real models', () => {
-    expect(models.length).toBe(3038);
+  test('the dataset holds 3214 real models', () => {
+    expect(models.length).toBe(3214);
   });
 
   test('excludes sample_spec and fallback_generalizations', () => {
