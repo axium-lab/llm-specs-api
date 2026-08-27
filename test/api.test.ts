@@ -259,3 +259,25 @@ describe('errors', () => {
     expect(res.headers.get('content-type')).toContain('application/problem+json');
   });
 });
+
+describe('CORS', () => {
+  test('a GET carries the wildcard origin', async () => {
+    const res = await get('/v1/models?limit=1');
+    expect(res.headers.get('access-control-allow-origin')).toBe('*');
+  });
+
+  // The estimate endpoint sends a JSON content-type, so browsers preflight it.
+  test('the preflight for POST /v1/estimate is answered', async () => {
+    const res = await fetch(new URL('/v1/estimate', base).toString(), {
+      method: 'OPTIONS',
+      headers: {
+        origin: 'https://example.com',
+        'access-control-request-method': 'POST',
+        'access-control-request-headers': 'content-type',
+      },
+    });
+    expect(res.status).toBe(204);
+    expect(res.headers.get('access-control-allow-origin')).toBe('*');
+    expect(res.headers.get('access-control-allow-headers')).toContain('content-type');
+  });
+});

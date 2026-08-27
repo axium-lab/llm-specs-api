@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express, { type Express, type NextFunction, type Request, type Response } from 'express';
 import { store } from './data/store.ts';
 import { problem } from './lib/problem.ts';
@@ -9,6 +10,7 @@ import { modelsRouter } from './routes/models.ts';
 export function createApp(): Express {
   const app = express();
   app.disable('x-powered-by');
+  app.use(cors());
   app.use(express.json({ limit: '256kb' }));
 
   app.use(healthRouter);
