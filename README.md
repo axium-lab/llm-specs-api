@@ -118,7 +118,13 @@ bun install
 bun start          # http://localhost:8080
 ```
 
-Or with Docker:
+Or straight from the published image — nothing to build, and the dataset is already inside:
+
+```bash
+docker run --rm -p 8080:8080 ghcr.io/axium-lab/llm-specs-api:latest
+```
+
+To build it yourself instead:
 
 ```bash
 docker build -t llm-specs-api .
@@ -168,6 +174,27 @@ Everything is optional — the service runs out of the box.
 | `MAX_LIMIT` | `500` | Ceiling for `limit`; a larger value is clamped, not rejected. |
 
 Positive integers only — a malformed value fails the boot instead of being silently ignored.
+
+## Deploy with Docker Compose
+
+Every [release](https://github.com/axium-lab/llm-specs-api/releases) ships a `docker-compose.yml` with the
+image pinned to that exact version:
+
+```bash
+curl -LO https://github.com/axium-lab/llm-specs-api/releases/latest/download/docker-compose.yml
+docker compose up -d
+curl localhost:8080/health
+```
+
+Images are published for `linux/amd64` and `linux/arm64` at
+[`ghcr.io/axium-lab/llm-specs-api`](https://github.com/axium-lab/llm-specs-api/pkgs/container/llm-specs-api),
+tagged `X.Y.Z`, `X.Y` and `latest`. A pre-release is never tagged `latest`.
+
+The compose file declares a **named volume** over `/app/data`, and it matters: the dataset travels inside the
+image and the service rewrites it when upstream has something newer, so without the volume every restart
+throws that update away and starts again from the copy baked in at build time. It has to be a *named* volume —
+Docker seeds one from the image on first use, whereas an empty bind mount would hide the dataset and leave the
+service with nothing to serve.
 
 ## Deploying to Cloud Run
 

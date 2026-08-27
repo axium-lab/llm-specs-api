@@ -1,0 +1,33 @@
+services:
+  llm-specs-api:
+    image: ghcr.io/axium-lab/llm-specs-api:latest
+    container_name: llm-specs-api
+    restart: unless-stopped
+
+    ports:
+      - "8080:8080"
+    volumes:
+      - dataset:/app/data
+    environment:
+      # PORT: 8080
+      # DATASET_PATH: /app/data/model_prices_and_context_window.json
+      # UPSTREAM_URL: https://raw.githubusercontent.com/BerriAI/litellm/refs/heads/litellm_internal_staging/model_prices_and_context_window.json
+      # FETCH_TIMEOUT_MS: 30000
+      # DEFAULT_LIMIT: 50
+      # MAX_LIMIT: 500
+      NODE_ENV: production
+
+    # The image is bun-on-debian-slim: no curl, no wget. Bun itself is the client.
+    healthcheck:
+      test:
+        - CMD
+        - bun
+        - -e
+        - "fetch('http://localhost:' + (process.env.PORT || 8080) + '/health').then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+volumes:
+  dataset:

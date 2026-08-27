@@ -1,0 +1,177 @@
+name: Release
+
+# Publishes a release when you push a tag:
+#
+#   git tag v1.2.3 && git push origin v1.2.3
+#
+# The tag drives everything, so the version it names has to be the version the repo
+# actually declares: the guard job refuses to publish otherwise. Order matters below
+# — the image is pushed before the release is created, so a release never announces
+# an image that does not exist. Authentication uses the automatic GITHUB_TOKEN; no
+# manual secrets involved.
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  guard:
+    name: Check the tag
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+      prerelease: ${{ steps.check.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: The tag must match package.json, and be unreleased
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          PKG="$(jq -r .version package.json)"
+
+          if [ "$VERSION" != "$PKG" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME means version $VERSION, but package.json says $PKG. Bump package.json to $VERSION, commit, then move the tag: git tag -f $GITHUB_REF_NAME && git push -f origin $GITHUB_REF_NAME"
+            exit 1
+          fi
+
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "::error::Release $GITHUB_REF_NAME already exists. Delete it first (gh release delete $GITHUB_REF_NAME) if you mean to republish it."
+            exit 1
+          fi
+
+          # A hyphen is what semver uses for pre-release identifiers: 1.2.3-rc.1.
+          case "$VERSION" in
+            *-*) PRERELEASE=true ;;
+            *)   PRERELEASE=false ;;
+          esac
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
+          echo "Releasing $VERSION (prerelease: $PRERELEASE)"
+
+  # The gate the tag trigger does not give us for free: a tag can point at any
+  # commit, including one that never passed CI on a branch.
+  verify:
+    name: Quality gate
+    needs: guard
+    uses: ./.github/workflows/ci.yml
+
+  publish-image:
+    name: Publish image to GHCR
+    needs: [guard, verify]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # QEMU + Buildx enable the multi-arch (amd64 + arm64) build.
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract image tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          # `latest` is what people pull without thinking, so a pre-release must
+          # never become it.
+          tags: |
+            type=semver,pattern={{version}},value=${{ needs.guard.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.guard.outputs.version }}
+            type=raw,value=latest,enable=${{ needs.guard.outputs.prerelease == 'false' }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  github-release:
+    name: Create GitHub release
+    needs: [guard, publish-image]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # Release notes come from the matching CHANGELOG section when there is one;
+      # otherwise GitHub generates them from the commits since the last tag.
+      - name: Extract release notes from CHANGELOG
+        id: notes
+        env:
+          VERSION: ${{ needs.guard.outputs.version }}
+        run: |
+          awk -v ver="$VERSION" '
+            $0 ~ "^## \\[" ver "\\]" { found = 1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md > release-notes.md || true
+
+          if grep -q '[^[:space:]]' release-notes.md 2>/dev/null; then
+            echo "from_changelog=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No CHANGELOG section for $VERSION — generating notes from commits."
+            echo "from_changelog=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # The compose file in the repo tracks `latest`; the one people download from a
+      # release must pin the version they downloaded it from.
+      - name: Build the compose asset
+        env:
+          VERSION: ${{ needs.guard.outputs.version }}
+        run: |
+          mkdir -p dist
+          sed -e "s|llm-specs-api:latest|llm-specs-api:$VERSION|" \
+              -e "s|^# llm-specs-api — ready to run\.$|# llm-specs-api v$VERSION — ready to run, pinned to this release.|" \
+              deploy/docker-compose.yml > dist/docker-compose.yml
+
+          if ! grep -q "llm-specs-api:$VERSION" dist/docker-compose.yml; then
+            echo "::error::The image tag in deploy/docker-compose.yml was not pinned to $VERSION. Did the image name change?"
+            exit 1
+          fi
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.guard.outputs.version }}
+          PRERELEASE: ${{ needs.guard.outputs.prerelease }}
+          FROM_CHANGELOG: ${{ steps.notes.outputs.from_changelog }}
+        run: |
+          ARGS=(--title "v$VERSION")
+
+          if [ "$FROM_CHANGELOG" = "true" ]; then
+            ARGS+=(--notes-file release-notes.md)
+          else
+            ARGS+=(--generate-notes)
+          fi
+
+          if [ "$PRERELEASE" = "true" ]; then
+            ARGS+=(--prerelease)
+          fi
+
+          gh release create "v$VERSION" "${ARGS[@]}" \
+            'dist/docker-compose.yml#docker-compose.yml'

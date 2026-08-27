@@ -5,7 +5,7 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.0]
 
 ### Added
 
@@ -14,6 +14,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   the cost estimator, and how the dataset is loaded.
 - `CONTRIBUTING.md` and this changelog.
 - `license`, `author`, `repository`, `homepage`, `bugs` and `keywords` in `package.json`.
+- Continuous integration on every push and pull request: typecheck, the full test suite, a Docker build and a
+  smoke test against a running container.
+- Releases from a tag push. `git push origin vX.Y.Z` runs CI, publishes a multi-arch (amd64 + arm64) image to
+  `ghcr.io/axium-lab/llm-specs-api` tagged `X.Y.Z`, `X.Y` and `latest`, and creates the GitHub release with
+  the notes from this file. The tag has to match the version in `package.json` or the release is refused, and
+  a pre-release never takes over `latest`.
+- `deploy/docker-compose.yml`, attached to every release with the image pinned to that exact version. A named
+  volume over `/app/data` keeps the dataset the service refreshes at boot across container restarts.
 
 ### Fixed
 

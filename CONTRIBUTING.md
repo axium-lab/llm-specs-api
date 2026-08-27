@@ -75,3 +75,31 @@ say in the description what you ran to convince yourself it works.
   --screenshot="$PWD/docs/og-image.png" --window-size=1200,630 --default-background-color=0b0e14ff \
   "file://$PWD/docs/og-image.html"
 ```
+
+## Releasing
+
+A release is a tag push. Everything else — tests, the multi-arch image on GHCR, the GitHub release, its notes
+and the pinned `docker-compose.yml` attached to it — follows from that, in
+[`.github/workflows/release.yml`](.github/workflows/release.yml).
+
+1. Move the `## [Unreleased]` heading in `CHANGELOG.md` to `## [X.Y.Z]`. This is where the release notes come
+   from; without a matching section they fall back to a list of commits.
+2. Set the same `X.Y.Z` as `version` in `package.json`.
+3. Commit and push to `main`, and wait for CI to go green.
+4. Tag it and push the tag:
+
+   ```bash
+   git tag vX.Y.Z && git push origin vX.Y.Z
+   ```
+
+Two things that will bite you otherwise:
+
+- **The tag and `package.json` must agree.** The workflow refuses to publish a `v1.2.3` tag while
+  `package.json` says something else, rather than shipping an image whose version is a lie. Skipping step 2 is
+  the mistake this catches.
+- **The tag must point at a commit that already contains the workflow.** Actions only runs what exists in the
+  tagged tree, so a tag on an older commit does nothing at all.
+
+Pre-releases work the same way, with the semver hyphen in both places (`v1.2.3-rc.1` and `1.2.3-rc.1`). They
+are marked as pre-releases on GitHub and never take over the `latest` image tag.
+

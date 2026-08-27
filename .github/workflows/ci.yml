@@ -1,0 +1,65 @@
+name: CI
+
+# Typecheck, tests and a real container boot. Runs on every push to main and every
+# pull request, and is also called by the Release workflow as its quality gate, so a
+# tag can never publish an image that does not pass these jobs.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # Superseded PR pushes are worth cancelling; a release gate is not.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    name: Typecheck & tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      # The hard rule of this repo: every endpoint and every pricing rule keeps a
+      # test that proves it. These run against the vendored dataset, no network.
+      - name: Tests
+        run: bun test
+
+  docker:
+    name: Docker build & smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t llm-specs-api .
+
+      # The compose file shipped with every release lives in the repo, so a typo in
+      # it fails here rather than in someone else's `docker compose up`.
+      - name: Validate the release compose file
+        run: docker compose -f deploy/docker-compose.yml config -q
+
+      # /health answers 503 until the dataset is loaded, and boot revalidates the
+      # baked-in copy upstream, so the wait is generous on purpose.
+      - name: Smoke test
+        run: |
+          docker run -d --rm --name specs -p 8080:8080 llm-specs-api
+          timeout 60 bash -c 'until curl -sf http://localhost:8080/health > /dev/null; do sleep 1; done'
+          curl -sf 'http://localhost:8080/v1/models?limit=1' > /dev/null
+          curl -sf 'http://localhost:8080/v1/models/claude-sonnet-4-5' > /dev/null
+          docker stop specs
+
+      - name: Container logs
+        if: failure()
+        run: docker logs specs || true
