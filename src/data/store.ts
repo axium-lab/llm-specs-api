@@ -3,11 +3,17 @@
  *
  * There is no database: this is read-only data that changes rarely, and on Cloud Run every
  * instance is ephemeral. A DB would add latency and one more service without buying anything.
+ *
+ * The source of truth is the file on disk (see `local.ts`). Every instance revalidates it
+ * against upstream once, at boot, and serves whatever it has from memory afterwards.
  */
 
 import { config } from '../config.ts';
 import { type ModelEntry, isModelEntry } from '../types.ts';
 import { fetchDataset } from './fetcher.ts';
+import { readLocalDataset, writeLocalDataset } from './local.ts';
+
+export type DatasetSource = 'local' | 'upstream';
 
 export interface Snapshot {
   models: ModelEntry[];
@@ -17,12 +23,19 @@ export interface Snapshot {
   byProvider: Map<string, ModelEntry[]>;
   byMode: Map<string, ModelEntry[]>;
   attributeCounts: Map<string, number>;
+  /** Where the bytes in this snapshot came from on this boot. */
+  source: DatasetSource;
   etag?: string;
   sha256?: string;
   loadedAt: string;
 }
 
-function buildSnapshot(json: string, etag?: string, sha256?: string): Snapshot {
+function buildSnapshot(
+  json: string,
+  source: DatasetSource = 'local',
+  etag?: string,
+  sha256?: string,
+): Snapshot {
   const parsed = JSON.parse(json) as Record<string, unknown>;
 
   const models: ModelEntry[] = [];
@@ -59,6 +72,7 @@ function buildSnapshot(json: string, etag?: string, sha256?: string): Snapshot {
     byProvider,
     byMode,
     attributeCounts,
+    source,
     etag,
     sha256,
     loadedAt: new Date().toISOString(),
@@ -71,18 +85,10 @@ function push<T>(map: Map<string, T[]>, key: string, value: T): void {
   else map.set(key, [value]);
 }
 
-export interface RefreshOutcome {
-  status: 'updated' | 'not_modified' | 'failed';
-  error?: string;
-  models?: number;
-}
-
 class Store {
   #snapshot: Snapshot | null = null;
-  #timer: ReturnType<typeof setInterval> | null = null;
 
-  lastRefreshAt: string | null = null;
-  lastRefreshStatus: RefreshOutcome['status'] | null = null;
+  /** Populated when upstream could not be reached but a local copy carried the boot. */
   lastError: string | null = null;
 
   get ready(): boolean {
@@ -96,63 +102,65 @@ class Store {
   }
 
   /**
-   * Refreshes from upstream. On failure it keeps the previous copy: the API never returns an
-   * error because of a failed refresh, it just serves slightly older data.
+   * Loads the dataset once, at boot.
+   *
+   * The local file is read first, and its persisted ETag drives a conditional request: a 304
+   * means the local copy is current and nothing is transferred. Only a genuinely newer upstream
+   * is downloaded, and it is then written back to disk.
+   *
+   * Fails only when there is neither a local copy nor a reachable upstream. Anything else —
+   * timeouts, 5xx, DNS — degrades to serving the local file with the error recorded.
    */
-  async refresh(): Promise<RefreshOutcome> {
-    try {
-      const result = await fetchDataset(this.#snapshot?.etag);
-      this.lastRefreshAt = new Date().toISOString();
+  async init(datasetPath: string = config.datasetPath): Promise<void> {
+    const local = await readLocalDataset(datasetPath);
 
-      if (result.status === 'not_modified') {
-        this.lastRefreshStatus = 'not_modified';
+    try {
+      const result = await fetchDataset(local?.etag);
+
+      if (result.status === 'not_modified' && local) {
+        // Atomic swap: the snapshot is built whole before the reference is replaced.
+        this.#snapshot = buildSnapshot(local.json, 'local', local.etag, local.sha256);
         this.lastError = null;
-        return { status: 'not_modified', models: this.#snapshot?.models.length };
+        return;
       }
 
-      // Atomic swap: the snapshot is built whole before the reference is replaced.
-      this.#snapshot = buildSnapshot(result.body!, result.etag, result.sha256);
-      this.lastRefreshStatus = 'updated';
-      this.lastError = null;
-      return { status: 'updated', models: this.#snapshot.models.length };
+      if (result.status === 'updated') {
+        this.#snapshot = buildSnapshot(result.body!, 'upstream', result.etag, result.sha256);
+        this.lastError = null;
+        await writeLocalDataset(result.body!, result.etag, result.sha256!, datasetPath);
+        return;
+      }
+
+      // A 304 without a local copy: the ETag we sent cannot have been ours. Treat it as a
+      // failed revalidation rather than pretending we have data.
+      throw new Error('Upstream answered 304 but there is no local dataset to serve');
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.lastRefreshAt = new Date().toISOString();
-      this.lastRefreshStatus = 'failed';
+
+      if (!local) {
+        throw new Error(`Could not load the initial dataset: ${message}`);
+      }
+
+      try {
+        this.#snapshot = buildSnapshot(local.json, 'local', local.etag, local.sha256);
+      } catch (localError) {
+        const localMessage = localError instanceof Error ? localError.message : String(localError);
+        throw new Error(
+          `Upstream failed (${message}) and the local dataset is unusable: ${localMessage}`,
+        );
+      }
       this.lastError = message;
-      return { status: 'failed', error: message };
     }
-  }
-
-  /** Initial load. Fails loudly: without data there is no point in accepting traffic. */
-  async init(): Promise<void> {
-    const outcome = await this.refresh();
-    if (outcome.status === 'failed') {
-      throw new Error(`Could not load the initial dataset: ${outcome.error}`);
-    }
-  }
-
-  startAutoRefresh(): void {
-    if (this.#timer) return;
-    this.#timer = setInterval(() => {
-      void this.refresh();
-    }, config.refreshIntervalMs);
-    this.#timer.unref?.();
-  }
-
-  stopAutoRefresh(): void {
-    if (!this.#timer) return;
-    clearInterval(this.#timer);
-    this.#timer = null;
   }
 
   /** Injects an already materialized dataset. Tests only. */
   loadFromString(json: string): void {
     this.#snapshot = buildSnapshot(json);
-    this.lastRefreshStatus = 'updated';
-    this.lastRefreshAt = this.#snapshot.loadedAt;
+    this.lastError = null;
   }
 }
 
 export const store = new Store();
-export { buildSnapshot };
+
+// The class is exported so tests can work on a throwaway instance instead of the singleton.
+export { Store, buildSnapshot };

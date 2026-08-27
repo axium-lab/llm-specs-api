@@ -49,13 +49,15 @@ describe('health and meta', () => {
     const body = await (await get('/health')).json();
     expect(body.status).toBe('ok');
     expect(body.models).toBe(3038);
+    expect(body.dataset.source).toBe('local');
   });
 
   test('/v1/meta exposes the source and the counts', async () => {
     const body = await (await get('/v1/meta')).json();
     expect(body.models).toBe(3038);
     expect(body.providers).toBe(123);
-    expect(body.dataset.source).toContain('litellm_internal_staging');
+    expect(body.dataset.source).toBe('local');
+    expect(body.dataset.upstream_url).toContain('litellm_internal_staging');
   });
 });
 

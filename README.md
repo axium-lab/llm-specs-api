@@ -2,9 +2,9 @@
 
 REST API over the LiteLLM catalog of [LLM model prices and context windows](https://github.com/BerriAI/litellm).
 
-Serves **3038 models** from **123 providers** out of memory, with no database. The dataset is
-downloaded from upstream at boot and refreshed in the background with conditional requests
-(`If-None-Match`), so a refresh with no changes transfers **0 bytes**.
+Serves **3038 models** from **123 providers** out of memory, with no database. The dataset ships
+with the image and is revalidated against upstream once, at boot, with a conditional request
+(`If-None-Match`), so an instance whose copy is already current transfers **0 bytes**.
 
 ## Getting started
 
@@ -18,13 +18,32 @@ bun run typecheck
 ## Layout
 
 ```
-data/    copy of the dataset — today it is only used as a test fixture
+data/    the dataset and its .meta.json sidecar — the source of truth
 src/     API code
 test/    tests
 ```
 
-The runtime **does not read `data/`**: it downloads the dataset from upstream at boot. The local
-copy exists so the tests do not depend on the network.
+## How the dataset is loaded
+
+`data/model_prices_and_context_window.json` is the source of truth: it is versioned, baked into
+the image, and read at boot. Next to it, `model_prices_and_context_window.meta.json` persists the
+`{ etag, sha256, fetchedAt }` of the last download — a file has no ETag of its own, the server
+issues it, so it has to be stored explicitly.
+
+On boot the instance:
+
+1. Reads both files and checks that the sidecar's `sha256` matches the JSON on disk. A mismatch
+   means the pair got out of sync, and the ETag is discarded.
+2. Sends a conditional `GET` to `UPSTREAM_URL` with `If-None-Match`.
+   - **304** — the local copy is current. Nothing is transferred.
+   - **200** — upstream is newer. It is served and written back to disk, sidecar included.
+   - **error or timeout** — the local copy is served and the reason is reported in `/health` as
+     `startup_error`. The service boots without network.
+3. Fails only when there is neither a usable local copy nor a reachable upstream.
+
+There is no background refresh and no admin endpoint: **restarting or redeploying the instance is
+what updates the dataset**. On Cloud Run the filesystem is an ephemeral tmpfs, so a write-back
+lasts only for the life of the instance; it is the copy in the image that makes cold boots cheap.
 
 > **If you mount a Cloud Storage bucket**, do not mount it over `data/`: GCS FUSE hides whatever
 > sits below the mount point, just like any Linux `mount`, and you would lose the file baked into
@@ -35,17 +54,16 @@ copy exists so the tests do not depend on the network.
 | Variable | Default | Notes |
 |---|---|---|
 | `PORT` | `8080` | Injected by Cloud Run. |
+| `DATASET_PATH` | `data/model_prices_and_context_window.json` | The source of truth. The sidecar path is derived from it. |
 | `UPSTREAM_URL` | `litellm_internal_staging` branch | See *Upstream risk*. |
-| `REFRESH_INTERVAL_MS` | `3600000` (1 h) | |
-| `FETCH_TIMEOUT_MS` | `30000` | |
-| `ADMIN_TOKEN` | — | Unset, `POST /admin/refresh` answers 404. |
+| `FETCH_TIMEOUT_MS` | `30000` | A timeout is not fatal: the local copy is served. |
 | `DEFAULT_LIMIT` / `MAX_LIMIT` | `50` / `500` | |
 
 ## Endpoints
 
 | Method | Path | Description |
 |---|---|---|
-| `GET` | `/health` | Status and cache age. |
+| `GET` | `/health` | Status, dataset age, source and `startup_error`. |
 | `GET` | `/v1/models` | Listing with filters and pagination. |
 | `GET` | `/v1/models/by-id?id=` | Lookup by query param (for ids not representable in a path). |
 | `GET` | `/v1/models/*` | Lookup by id, accepts ids containing `/`. |
@@ -55,7 +73,6 @@ copy exists so the tests do not depend on the network.
 | `GET` | `/v1/meta` | Counts, source, ETag and sha256 of the dataset. |
 | `GET` | `/v1/compare?ids=a,b,c` | Side-by-side comparison of several models. |
 | `POST` | `/v1/estimate` | Cost calculation for a single call. |
-| `POST` | `/admin/refresh` | Manual refresh (requires `Authorization: Bearer`). |
 
 Filters for `/v1/models`: `provider`, `mode`, `q`, any `supports_*`, `min_input_tokens`,
 `max_input_cost`, `sort=field:asc|desc`, `fields`, `limit`, `offset`.
@@ -127,9 +144,10 @@ sits in the allowlist.
 ## Upstream risk
 
 By default we point at `litellm_internal_staging`, an **internal** branch: it can be force-pushed,
-carry unvalidated data or disappear. If a refresh fails the in-memory copy is kept, but **a cold
-start with upstream down leaves the API with no data** (there is no local fallback). For
-production, consider `main` through `UPSTREAM_URL`.
+carry unvalidated data or disappear. A cold start with upstream down is survivable — the copy in
+the image is served and `/health` reports `startup_error` — but the branch going away silently
+means every boot keeps shipping whatever version was last baked in. For production, consider
+`main` through `UPSTREAM_URL`.
 
 ## Deploying to Cloud Run
 
@@ -138,5 +156,7 @@ gcloud run deploy llm-pricing-api --source . --region europe-west1 \
   --min-instances 1 --cpu-boost --allow-unauthenticated
 ```
 
-`--min-instances 1` avoids re-downloading 1.7 MB on every cold start and removes the scenario of
-booting while GitHub is down.
+`--min-instances 1` is no longer load-bearing: a cold start revalidates the copy in the image with
+`If-None-Match` and, on a 304, transfers nothing — and a boot while GitHub is down now serves the
+local dataset instead of failing. Keep it if you care about cold-start latency, drop it if you
+care about idle cost.

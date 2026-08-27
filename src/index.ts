@@ -2,12 +2,19 @@ import { createApp } from './app.ts';
 import { config } from './config.ts';
 import { store } from './data/store.ts';
 
-// No traffic until the dataset is there: with no local fallback, booting without data is useless.
-console.log(`[boot] downloading dataset from ${config.upstreamUrl}`);
-await store.init();
-console.log(`[boot] dataset loaded: ${store.snapshot.models.length} models`);
+// No traffic until the dataset is there. The local file is the source of truth; upstream is
+// only consulted to see whether it has something newer.
+console.log(`[boot] loading dataset from ${config.datasetPath}`);
 
-store.startAutoRefresh();
+await store.init();
+
+const { source, models, etag } = store.snapshot;
+if (store.lastError) {
+  console.warn(`[boot] upstream unreachable (${store.lastError}); serving the local dataset`);
+}
+console.log(
+  `[boot] dataset loaded from ${source}: ${models.length} models, etag ${etag ?? 'unknown'}`,
+);
 
 const server = createApp().listen(config.port, () => {
   console.log(`[boot] listening on :${config.port}`);
@@ -17,7 +24,6 @@ const server = createApp().listen(config.port, () => {
 for (const signal of ['SIGTERM', 'SIGINT'] as const) {
   process.on(signal, () => {
     console.log(`[shutdown] ${signal} received`);
-    store.stopAutoRefresh();
     server.close(() => process.exit(0));
   });
 }

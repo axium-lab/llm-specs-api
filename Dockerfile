@@ -11,6 +11,10 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY package.json tsconfig.json ./
 COPY src ./src
 
+# The dataset is the source of truth and ships with the image, so the service boots without
+# network. Owned by `bun` because the runtime rewrites it when upstream has something newer.
+COPY --chown=bun:bun data ./data
+
 # Cloud Run injects PORT; 8080 is its default value.
 ENV PORT=8080
 EXPOSE 8080

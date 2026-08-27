@@ -40,16 +40,12 @@ facetsRouter.get('/meta', (_req, res) => {
     modes: snapshot.byMode.size,
     attributes: snapshot.attributeCounts.size,
     dataset: {
-      source: config.upstreamUrl,
+      source: snapshot.source,
+      upstream_url: config.upstreamUrl,
       etag: snapshot.etag ?? null,
       sha256: snapshot.sha256 ?? null,
       loaded_at: snapshot.loadedAt,
-    },
-    refresh: {
-      last_attempt_at: store.lastRefreshAt,
-      last_status: store.lastRefreshStatus,
-      last_error: store.lastError,
-      interval_ms: config.refreshIntervalMs,
+      startup_error: store.lastError,
     },
   });
 });
