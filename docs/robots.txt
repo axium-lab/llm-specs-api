@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://llm-pricing.dev/sitemap.xml
+Sitemap: https://llm-specs.axium-lab.com/sitemap.xml

@@ -1,10 +1,10 @@
-# llm-pricing-api — peticiones de prueba para la extensión REST Client de VS Code
+# llm-specs-api — peticiones de prueba para la extensión REST Client de VS Code
 # (humao.rest-client). Pulsa "Send Request" sobre cualquier bloque separado por ###.
 #
 #   bun run dev     # levanta el servicio en http://localhost:8080
 
 @baseUrl = http://localhost:8080
-# @baseUrl = https://llm-pricing-api-xxxxxxxx.europe-west1.run.app
+# @baseUrl = https://api-llm-specs.axium-lab.com
 
 @contentType = application/json
 

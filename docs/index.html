@@ -3,39 +3,39 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>llm-pricing-api — Every LLM price and context window behind one REST API</title>
-<meta name="description" content="Open source REST API over the LiteLLM catalog: 3,214 models from 127 providers, served from memory with no database, plus a cost estimator that returns an auditable breakdown of a single call. MIT, free, self-hostable." />
-<link rel="canonical" href="https://llm-pricing.dev/" />
+<title>llm-specs-api — Every LLM's price, context window and capabilities behind one REST API</title>
+<meta name="description" content="Prices, context windows and capabilities for 3,214 LLMs from 127 providers: one REST API, served from memory with no database, plus a cost estimator that returns an auditable breakdown of a single call. MIT, free, self-hostable." />
+<link rel="canonical" href="https://llm-specs.axium-lab.com/" />
 <meta name="theme-color" content="#0b0e14" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%235b7cfa'/><text x='16' y='23' font-family='monospace' font-size='17' font-weight='700' fill='%23ffffff' text-anchor='middle'>$</text></svg>" />
 
 <!-- Open Graph / social -->
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="llm-pricing-api" />
+<meta property="og:site_name" content="llm-specs-api" />
 <meta property="og:locale" content="en_US" />
-<meta property="og:title" content="llm-pricing-api — Every LLM price and context window behind one REST API" />
+<meta property="og:title" content="llm-specs-api — Every LLM's price, context window and capabilities behind one REST API" />
 <meta property="og:description" content="3,214 models from 127 providers, served from memory with no database, plus a cost estimator that shows its work. Open source, MIT." />
-<meta property="og:url" content="https://llm-pricing.dev/" />
-<meta property="og:image" content="https://llm-pricing.dev/og-image.png" />
+<meta property="og:url" content="https://llm-specs.axium-lab.com/" />
+<meta property="og:image" content="https://llm-specs.axium-lab.com/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="llm-pricing-api — every LLM price and context window behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." />
+<meta property="og:image:alt" content="llm-specs-api — every LLM's price, context window and capabilities behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="llm-pricing-api — Every LLM price and context window behind one REST API" />
+<meta name="twitter:title" content="llm-specs-api — Every LLM's price, context window and capabilities behind one REST API" />
 <meta name="twitter:description" content="3,214 models from 127 providers, served from memory with no database, plus a cost estimator that shows its work. Open source, MIT." />
-<meta name="twitter:image" content="https://llm-pricing.dev/og-image.png" />
+<meta name="twitter:image" content="https://llm-specs.axium-lab.com/og-image.png" />
 
 <!-- Structured data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "llm-pricing-api",
+  "name": "llm-specs-api",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Cross-platform",
-  "description": "Open source REST API over the LiteLLM catalog of LLM model prices and context windows, with an auditable cost estimator.",
-  "url": "https://llm-pricing.dev/",
-  "downloadUrl": "https://github.com/axium-lab/llm-pricing-api",
+  "description": "Open source REST API serving prices, context windows and capabilities for 3,214 LLMs, with an auditable cost estimator.",
+  "url": "https://llm-specs.axium-lab.com/",
+  "downloadUrl": "https://github.com/axium-lab/llm-specs-api",
   "license": "https://opensource.org/licenses/MIT",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "author": { "@type": "Organization", "name": "Axium", "url": "https://github.com/axium-lab" }
@@ -164,13 +164,13 @@
 
 <div class="wrap">
 <nav>
-  <div class="brand"><a href="/">llm-pricing<span>-api</span></a></div>
+  <div class="brand"><a href="/">llm-specs<span>-api</span></a></div>
   <div class="nav-links">
     <a href="api.html">API</a>
     <a href="api-models.html">Models</a>
     <a href="api-estimate.html">Estimate</a>
     <a href="dataset.html">Dataset</a>
-    <a class="gh" href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+    <a class="gh" href="https://github.com/axium-lab/llm-specs-api">GitHub</a>
   </div>
 </nav>
 </div>
@@ -178,15 +178,15 @@
 <header>
 <div class="wrap">
   <div class="eyebrow">MIT · open source · free API</div>
-  <h1>Every LLM price and context window<br />behind one <span>REST API</span></h1>
+  <h1>Every LLM's price, context window<br />and capabilities behind one <span>REST API</span></h1>
   <p class="sub">
-    Answering "what does this call cost?" today means parsing a 1.7 MB JSON file yourself, or paying for a
-    pricing API. This one reads that catalog once at boot, serves it from memory with no database, and prices a
-    single call down to the exact rate key it used.
+    Picking a model means checking four things at once: what it costs, how much context it takes, what it can
+    do, and whether it is about to be deprecated. That lives in a 1.7 MB JSON file. This one reads it once at
+    boot, serves it from memory with no database, and prices a single call down to the exact rate key it used.
   </p>
   <div class="cta-row">
     <a class="btn" href="api.html">Read the API reference</a>
-    <a class="btn ghost" href="https://github.com/axium-lab/llm-pricing-api">View on GitHub</a>
+    <a class="btn ghost" href="https://github.com/axium-lab/llm-specs-api">View on GitHub</a>
   </div>
   <div class="stats">
     <div class="stat"><b>3,214</b><span>models</span></div>
@@ -205,7 +205,7 @@
     was billed with, so the arithmetic can be verified against the JSON.
   </p>
 <pre><code><span class="tok-com"># 190k input tokens crosses Anthropic's 200k threshold</span>
-curl -X POST https://api.llm-pricing.dev/v1/estimate -H <span class="tok-str">'content-type: application/json'</span> -d <span class="tok-str">'{
+curl -X POST https://api-llm-specs.axium-lab.com/v1/estimate -H <span class="tok-str">'content-type: application/json'</span> -d <span class="tok-str">'{
   "model": "claude-sonnet-4-5",
   "usage": {
     "input_tokens": 190000, "output_tokens": 4000,
@@ -232,17 +232,17 @@ cache_write.1h       8000 x 0.000012   = 0.096   <span class="tok-com">[cache_cr
 <div class="wrap">
   <h2>Quick start</h2>
   <div class="callout warn">
-    <strong>The hosted instance is not live yet.</strong> <code>api.llm-pricing.dev</code> is the address the
+    <strong>The hosted instance is not live yet.</strong> <code>api-llm-specs.axium-lab.com</code> is the address the
     free instance will answer on; until it is deployed, run it locally or deploy your own. The dataset ships
     inside the image, so it boots without network.
   </div>
-<pre><code>git clone https://github.com/axium-lab/llm-pricing-api.git
-cd llm-pricing-api
+<pre><code>git clone https://github.com/axium-lab/llm-specs-api.git
+cd llm-specs-api
 bun install
 bun start          <span class="tok-com"># http://localhost:8080</span></code></pre>
   <h3>Or with Docker</h3>
-<pre><code>docker build -t llm-pricing-api .
-docker run --rm -p 8080:8080 llm-pricing-api</code></pre>
+<pre><code>docker build -t llm-specs-api .
+docker run --rm -p 8080:8080 llm-specs-api</code></pre>
   <h3>Then ask it something</h3>
 <pre><code><span class="tok-com"># The cheapest chat models with a 1M context window</span>
 curl <span class="tok-str">'localhost:8080/v1/models?mode=chat&amp;min_input_tokens=1000000&amp;sort=input_cost_per_token:asc&amp;fields=id,provider,input_cost_per_token&amp;limit=5'</span>
@@ -335,13 +335,13 @@ curl <span class="tok-str">'localhost:8080/v1/models/bedrock/us.anthropic.claude
 
 <footer>
 <div class="wrap">
-  <div class="footer-brand">llm-pricing-api</div>
+  <div class="footer-brand">llm-specs-api</div>
   <div>Open source under the MIT license.</div>
   <div class="footer-links">
     <a href="api.html">API reference</a>
     <a href="dataset.html">Dataset</a>
-    <a href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
-    <a href="https://github.com/axium-lab/llm-pricing-api/blob/main/LICENSE">License</a>
+    <a href="https://github.com/axium-lab/llm-specs-api">GitHub</a>
+    <a href="https://github.com/axium-lab/llm-specs-api/blob/main/LICENSE">License</a>
   </div>
 </div>
 </footer>

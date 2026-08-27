@@ -9,7 +9,7 @@ export interface FetchResult {
 
 export async function fetchDataset(previousEtag?: string): Promise<FetchResult> {
   const headers: Record<string, string> = {
-    'User-Agent': 'llm-pricing-api',
+    'User-Agent': 'llm-specs-api',
     Accept: 'application/json, text/plain',
   };
   if (previousEtag) headers['If-None-Match'] = previousEtag;

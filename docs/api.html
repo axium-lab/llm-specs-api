@@ -3,36 +3,36 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>API reference — llm-pricing-api</title>
-<meta name="description" content="API reference for llm-pricing-api: base URL, versioning, the RFC 9457 error envelope with every type slug, pagination, and the health, meta, providers, modes and attributes endpoints." />
-<link rel="canonical" href="https://llm-pricing.dev/api.html" />
+<title>API reference — llm-specs-api</title>
+<meta name="description" content="API reference for llm-specs-api: base URL, versioning, the RFC 9457 error envelope with every type slug, pagination, and the health, meta, providers, modes and attributes endpoints." />
+<link rel="canonical" href="https://llm-specs.axium-lab.com/api.html" />
 <meta name="theme-color" content="#0b0e14" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%235b7cfa'/><text x='16' y='23' font-family='monospace' font-size='17' font-weight='700' fill='%23ffffff' text-anchor='middle'>$</text></svg>" />
 
 <meta property="og:type" content="article" />
-<meta property="og:site_name" content="llm-pricing-api" />
+<meta property="og:site_name" content="llm-specs-api" />
 <meta property="og:locale" content="en_US" />
-<meta property="og:title" content="llm-pricing-api — API reference" />
+<meta property="og:title" content="llm-specs-api — API reference" />
 <meta property="og:description" content="Base URL, versioning, the RFC 9457 error envelope with every type slug, pagination, and the health, meta, providers, modes and attributes endpoints." />
-<meta property="og:url" content="https://llm-pricing.dev/api.html" />
-<meta property="og:image" content="https://llm-pricing.dev/og-image.png" />
+<meta property="og:url" content="https://llm-specs.axium-lab.com/api.html" />
+<meta property="og:image" content="https://llm-specs.axium-lab.com/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="llm-pricing-api — every LLM price and context window behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." />
+<meta property="og:image:alt" content="llm-specs-api — every LLM's price, context window and capabilities behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="llm-pricing-api — API reference" />
+<meta name="twitter:title" content="llm-specs-api — API reference" />
 <meta name="twitter:description" content="Base URL, versioning, the RFC 9457 error envelope with every type slug, pagination, and the facet endpoints." />
-<meta name="twitter:image" content="https://llm-pricing.dev/og-image.png" />
+<meta name="twitter:image" content="https://llm-specs.axium-lab.com/og-image.png" />
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "TechArticle",
-  "headline": "llm-pricing-api — API reference",
+  "headline": "llm-specs-api — API reference",
   "description": "Base URL, versioning, the RFC 9457 error envelope with every type slug, pagination, and the health, meta, providers, modes and attributes endpoints.",
-  "url": "https://llm-pricing.dev/api.html",
+  "url": "https://llm-specs.axium-lab.com/api.html",
   "author": { "@type": "Organization", "name": "Axium", "url": "https://github.com/axium-lab" },
-  "about": { "@type": "SoftwareApplication", "name": "llm-pricing-api", "url": "https://llm-pricing.dev/" }
+  "about": { "@type": "SoftwareApplication", "name": "llm-specs-api", "url": "https://llm-specs.axium-lab.com/" }
 }
 </script>
 <script type="application/ld+json">
@@ -40,8 +40,8 @@
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://llm-pricing.dev/" },
-    { "@type": "ListItem", "position": 2, "name": "API reference", "item": "https://llm-pricing.dev/api.html" }
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://llm-specs.axium-lab.com/" },
+    { "@type": "ListItem", "position": 2, "name": "API reference", "item": "https://llm-specs.axium-lab.com/api.html" }
   ]
 }
 </script>
@@ -51,13 +51,13 @@
 
 <div class="wrap">
 <nav>
-  <div class="brand"><a href="/">llm-pricing<span>-api</span></a></div>
+  <div class="brand"><a href="/">llm-specs<span>-api</span></a></div>
   <div class="nav-links">
     <a class="active" href="api.html">API</a>
     <a href="api-models.html">Models</a>
     <a href="api-estimate.html">Estimate</a>
     <a href="dataset.html">Dataset</a>
-    <a class="gh" href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+    <a class="gh" href="https://github.com/axium-lab/llm-specs-api">GitHub</a>
   </div>
 </nav>
 </div>
@@ -116,7 +116,7 @@
 <section id="base">
   <h2>Base URL</h2>
   <div class="callout warn">
-    <strong>The hosted instance is not live yet.</strong> <code>https://api.llm-pricing.dev</code> is the
+    <strong>The hosted instance is not live yet.</strong> <code>https://api-llm-specs.axium-lab.com</code> is the
     address the free instance will answer on. Until it is deployed, run your own — the examples below use
     <code>localhost:8080</code>, which is what <code>bun start</code> gives you.
   </div>
@@ -125,7 +125,7 @@
     the version prefix</strong>, on purpose: it has to answer while the dataset is still loading, and a
     liveness probe should not have to know about API versions.
   </p>
-<pre><code>https://api.llm-pricing.dev/v1/models      <span class="tok-com"># hosted (not live yet)</span>
+<pre><code>https://api-llm-specs.axium-lab.com/v1/models      <span class="tok-com"># hosted (not live yet)</span>
 http://localhost:8080/v1/models            <span class="tok-com"># bun start</span>
 http://localhost:8080/health               <span class="tok-com"># note: no /v1</span></code></pre>
   <p>
@@ -379,14 +379,14 @@ http://localhost:8080/health               <span class="tok-com"># note: no /v1<
 
 <footer>
 <div class="wrap">
-  <div class="footer-brand">llm-pricing-api</div>
+  <div class="footer-brand">llm-specs-api</div>
   <div>Open source under the MIT license.</div>
   <div class="footer-links">
     <a href="/">Home</a>
     <a href="api-models.html">Models</a>
     <a href="api-estimate.html">Estimate</a>
     <a href="dataset.html">Dataset</a>
-    <a href="https://github.com/axium-lab/llm-pricing-api">GitHub</a>
+    <a href="https://github.com/axium-lab/llm-specs-api">GitHub</a>
   </div>
 </div>
 </footer>

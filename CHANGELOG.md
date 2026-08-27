@@ -15,10 +15,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `CONTRIBUTING.md` and this changelog.
 - `license`, `author`, `repository`, `homepage`, `bugs` and `keywords` in `package.json`.
 
+### Fixed
+
+- `cors` and `@types/cors` were imported by `src/app.ts` but never declared in `package.json`; they only
+  survived in `bun.lock`, so a lockfile regeneration would have dropped them and broken the boot.
+
 ### Changed
 
+- **Renamed the project from `llm-pricing-api` to `llm-specs-api`.** Only one of the ten endpoints prices a
+  call; the other nine serve catalog data — providers, modes, context windows, 34 `supports_*` capability
+  flags, modalities and deprecation dates — and price keys are 56 % of the distinct attributes but only 24 % of
+  the actual field occurrences. The site moves to `llm-specs.axium-lab.com` and the hosted API to
+  `api-llm-specs.axium-lab.com`. **No HTTP surface changed**: routes, headers, RFC 9457 type slugs and response
+  fields — including `pricing_keys` in `/v1/attributes` — are untouched, so clients need no change.
 - `README.md` rewritten for an open source audience. The dataset lifecycle, the pricing decisions and the
-  upstream risk notes moved to [`docs/dataset.html`](https://llm-pricing.dev/dataset.html), in full.
+  upstream risk notes moved to [`docs/dataset.html`](https://llm-specs.axium-lab.com/dataset.html), in full.
 - Corrected two counts that no longer matched the dataset: 258 (not 259) models declare
   `output_cost_per_token: 0`, and 82 % (not 81 %) of the ids contain a `/`.
 

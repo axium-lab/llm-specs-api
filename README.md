@@ -1,22 +1,22 @@
 <p align="center">
-  <a href="https://llm-pricing.dev">
-    <img src="docs/og-image.png" alt="llm-pricing-api — every LLM price and context window behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." width="820" />
+  <a href="https://llm-specs.axium-lab.com">
+    <img src="docs/og-image.png" alt="llm-specs-api — every LLM's price, context window and capabilities behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." width="820" />
   </a>
 </p>
 
-# llm-pricing-api
+# llm-specs-api
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Every LLM price and context window behind one REST API — and a cost estimator that shows its work.**
+**Every LLM's price, context window and capabilities behind one REST API — and a cost estimator that shows its work.**
 
-Answering "what does this call cost?" today means either parsing a 1.7 MB JSON file yourself or paying for a
-pricing API. This service reads that catalog once at boot and serves **3,214 models from 127 providers** out of
-memory, with no database — filtered, sorted, compared — and prices a single call down to the exact rate key it
-used.
+Picking a model means checking four things at once: what it costs, how much context it takes, what it can do,
+and whether it is about to be deprecated. That lives in a 1.7 MB JSON file you have to parse yourself. This
+service reads it once at boot and serves **3,214 models from 127 providers** out of memory, with no database —
+filtered, sorted, compared — and prices a single call down to the exact rate key it used.
 
 ```bash
-curl https://api.llm-pricing.dev/v1/models/claude-sonnet-4-5
+curl https://api-llm-specs.axium-lab.com/v1/models/claude-sonnet-4-5
 ```
 
 Ask for a model and you get everything the catalog knows about it — every rate, including the ones that only
@@ -47,7 +47,7 @@ Or ask a question of the whole catalog — a provider, a mode, a price ceiling, 
 just the fields you care about:
 
 ```bash
-curl 'https://api.llm-pricing.dev/v1/models?provider=anthropic&mode=chat&sort=input_cost_per_token:desc&fields=id,input_cost_per_token,output_cost_per_token,max_input_tokens&limit=3'
+curl 'https://api-llm-specs.axium-lab.com/v1/models?provider=anthropic&mode=chat&sort=input_cost_per_token:desc&fields=id,input_cost_per_token,output_cost_per_token,max_input_tokens&limit=3'
 ```
 
 ```json
@@ -64,7 +64,7 @@ curl 'https://api.llm-pricing.dev/v1/models?provider=anthropic&mode=chat&sort=in
 ```
 
 `total` is the size of the filtered set before the page is cut, and 126 more providers' worth of models are one
-`provider=` away. [Every filter, sort and projection →](https://llm-pricing.dev/api-models.html)
+`provider=` away. [Every filter, sort and projection →](https://llm-specs.axium-lab.com/api-models.html)
 
 ### And what a call actually costs
 
@@ -83,14 +83,14 @@ cache_write.1h       8000 x 0.000012   = 0.096   [cache_creation_input_token_cos
 
 That prompt crossed the 200k threshold, so the **whole** request was repriced — output included — and the 1 hour
 cache TTL composed with it into that quadruple key. Both are decisions the estimator makes explicitly and
-reports back in `resolution`. [The estimator in full →](https://llm-pricing.dev/api-estimate.html)
+reports back in `resolution`. [The estimator in full →](https://llm-specs.axium-lab.com/api-estimate.html)
 
-> **⚠️ Hosted instance — not live yet.** `https://api.llm-pricing.dev` is the address the free instance will
-> answer on; it is not deployed at the time of writing. Until then, run it locally or deploy your own — it is
-> one `docker run` away, and the dataset ships inside the image.
+> **⚠️ Hosted instance — not live yet.** `https://api-llm-specs.axium-lab.com` is the address the free
+> instance will answer on; it is not deployed at the time of writing. Until then, run it locally or deploy
+> your own — it is one `docker run` away, and the dataset ships inside the image.
 
-**📖 [Full API reference at llm-pricing.dev](https://llm-pricing.dev/api.html)** — every endpoint, parameter,
-response shape and error, with the numbers taken from real responses.
+**📖 [Full API reference at llm-specs.axium-lab.com](https://llm-specs.axium-lab.com/api.html)** — every
+endpoint, parameter, response shape and error, with the numbers taken from real responses.
 
 ## Why
 
@@ -112,8 +112,8 @@ response shape and error, with the numbers taken from real responses.
 Requires [Bun](https://bun.sh).
 
 ```bash
-git clone https://github.com/axium-lab/llm-pricing-api.git
-cd llm-pricing-api
+git clone https://github.com/axium-lab/llm-specs-api.git
+cd llm-specs-api
 bun install
 bun start          # http://localhost:8080
 ```
@@ -121,8 +121,8 @@ bun start          # http://localhost:8080
 Or with Docker:
 
 ```bash
-docker build -t llm-pricing-api .
-docker run --rm -p 8080:8080 llm-pricing-api
+docker build -t llm-specs-api .
+docker run --rm -p 8080:8080 llm-specs-api
 ```
 
 Then ask it something:
@@ -139,20 +139,20 @@ curl 'localhost:8080/v1/models/bedrock/us.anthropic.claude-3-5-haiku-20241022-v1
 
 | Method | Path | Description |
 |---|---|---|
-| `GET` | [`/health`](https://llm-pricing.dev/api.html#health) | Liveness and readiness, dataset origin and `startup_error`. |
-| `GET` | [`/v1/models`](https://llm-pricing.dev/api-models.html#list) | Listing with filters, sorting, projection and pagination. |
-| `GET` | [`/v1/models/*`](https://llm-pricing.dev/api-models.html#lookup) | Lookup by id — accepts ids containing `/`, `:` and `*`. |
-| `GET` | [`/v1/models/by-id?id=`](https://llm-pricing.dev/api-models.html#by-id) | Lookup by query param, for the one id a path cannot carry. |
-| `GET` | [`/v1/compare?ids=a,b,c`](https://llm-pricing.dev/api-models.html#compare) | Side-by-side comparison of several models. |
-| `GET` | [`/v1/providers`](https://llm-pricing.dev/api.html#providers) | The 127 providers with their model counts. |
-| `GET` | [`/v1/modes`](https://llm-pricing.dev/api.html#modes) | The 16 modes with their model counts. |
-| `GET` | [`/v1/attributes`](https://llm-pricing.dev/api.html#attributes) | The 153 attributes, flagging the 86 pricing ones. |
-| `GET` | [`/v1/meta`](https://llm-pricing.dev/api.html#meta) | Counts, dataset origin, ETag and sha256. |
-| `POST` | [`/v1/estimate`](https://llm-pricing.dev/api-estimate.html) | Cost of a single call, with a full breakdown. |
+| `GET` | [`/health`](https://llm-specs.axium-lab.com/api.html#health) | Liveness and readiness, dataset origin and `startup_error`. |
+| `GET` | [`/v1/models`](https://llm-specs.axium-lab.com/api-models.html#list) | Listing with filters, sorting, projection and pagination. |
+| `GET` | [`/v1/models/*`](https://llm-specs.axium-lab.com/api-models.html#lookup) | Lookup by id — accepts ids containing `/`, `:` and `*`. |
+| `GET` | [`/v1/models/by-id?id=`](https://llm-specs.axium-lab.com/api-models.html#by-id) | Lookup by query param, for the one id a path cannot carry. |
+| `GET` | [`/v1/compare?ids=a,b,c`](https://llm-specs.axium-lab.com/api-models.html#compare) | Side-by-side comparison of several models. |
+| `GET` | [`/v1/providers`](https://llm-specs.axium-lab.com/api.html#providers) | The 127 providers with their model counts. |
+| `GET` | [`/v1/modes`](https://llm-specs.axium-lab.com/api.html#modes) | The 16 modes with their model counts. |
+| `GET` | [`/v1/attributes`](https://llm-specs.axium-lab.com/api.html#attributes) | The 153 attributes, flagging the 86 pricing ones. |
+| `GET` | [`/v1/meta`](https://llm-specs.axium-lab.com/api.html#meta) | Counts, dataset origin, ETag and sha256. |
+| `POST` | [`/v1/estimate`](https://llm-specs.axium-lab.com/api-estimate.html) | Cost of a single call, with a full breakdown. |
 
 Filters for `/v1/models`: `provider`, `mode`, `q`, any of the 37 `supports_*` keys, `min_input_tokens`,
 `max_input_cost`, `sort=field:asc|desc`, `fields`, `limit`, `offset`.
-[Full parameter reference →](https://llm-pricing.dev/api-models.html)
+[Full parameter reference →](https://llm-specs.axium-lab.com/api-models.html)
 
 ## Configuration
 
@@ -162,7 +162,7 @@ Everything is optional — the service runs out of the box.
 |---|---|---|
 | `PORT` | `8080` | Injected by Cloud Run. |
 | `DATASET_PATH` | `data/model_prices_and_context_window.json` | The source of truth. The sidecar path is derived from it. |
-| `UPSTREAM_URL` | LiteLLM's `litellm_internal_staging` branch | Revalidation target. See [Upstream risk](https://llm-pricing.dev/dataset.html#upstream). |
+| `UPSTREAM_URL` | LiteLLM's `litellm_internal_staging` branch | Revalidation target. See [Upstream risk](https://llm-specs.axium-lab.com/dataset.html#upstream). |
 | `FETCH_TIMEOUT_MS` | `30000` | A timeout is not fatal: the local copy is served. |
 | `DEFAULT_LIMIT` | `50` | Default page size of `/v1/models`. |
 | `MAX_LIMIT` | `500` | Ceiling for `limit`; a larger value is clamped, not rejected. |
@@ -172,7 +172,7 @@ Positive integers only — a malformed value fails the boot instead of being sil
 ## Deploying to Cloud Run
 
 ```bash
-gcloud run deploy llm-pricing-api --source . --region europe-west1 \
+gcloud run deploy llm-specs-api --source . --region europe-west1 \
   --min-instances 1 --cpu-boost --allow-unauthenticated
 ```
 
@@ -203,8 +203,8 @@ The catalog is LiteLLM's [`model_prices_and_context_window.json`](https://github
 licensed, vendored into `data/` and redistributed **normalized**: `src/data/parse.ts` renames
 `litellm_provider` to `provider` on the way in, and that is the only place where upstream's shape is adjusted.
 The prices are the ones LiteLLM publishes — this project does not source, correct or negotiate them, and
-[flags the implausible ones](https://llm-pricing.dev/dataset.html#suspicious) rather than fixing them.
-[How the dataset is loaded →](https://llm-pricing.dev/dataset.html)
+[flags the implausible ones](https://llm-specs.axium-lab.com/dataset.html#suspicious) rather than fixing them.
+[How the dataset is loaded →](https://llm-specs.axium-lab.com/dataset.html)
 
 ## Development
 

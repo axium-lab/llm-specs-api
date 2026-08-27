@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "llm-pricing-api",
+      "name": "llm-specs-api",
       "dependencies": {
         "cors": "2.8.6",
         "decimal.js": "10.4.3",
