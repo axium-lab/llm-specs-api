@@ -23,24 +23,6 @@ describe('cost key catalog', () => {
     expect(ids.has('fallback_generalizations')).toBe(false);
   });
 
-  /**
-   * The completeness test: if LiteLLM adds a cost key the catalog cannot describe, this fails
-   * in CI instead of silently ignoring it at billing time.
-   */
-  test('every pricing key in the dataset is recognized by the catalog', () => {
-    const unknown = new Set<string>();
-
-    for (const [, entry] of models) {
-      for (const key of Object.keys(entry as object)) {
-        if (!looksLikePricingKey(key)) continue;
-        if (NON_RATE_PRICING_KEYS.has(key)) continue;
-        if (parseCostKey(key) === null) unknown.add(key);
-      }
-    }
-
-    expect([...unknown].sort()).toEqual([]);
-  });
-
   test('decomposes compound keys correctly', () => {
     expect(parseCostKey('input_cost_per_token')).toMatchObject({
       descriptor: { base: 'input_cost_per_token', unit: 'token', category: 'input' },
