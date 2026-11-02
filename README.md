@@ -6,6 +6,9 @@
 
 # llm-specs-api
 
+[![CI](https://github.com/axium-lab/llm-specs-api/actions/workflows/ci.yml/badge.svg)](https://github.com/axium-lab/llm-specs-api/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/axium-lab/llm-specs-api)](https://github.com/axium-lab/llm-specs-api/releases)
+[![Docker image](https://img.shields.io/badge/ghcr.io-axium--lab%2Fllm--specs--api-blue?logo=docker)](https://github.com/axium-lab/llm-specs-api/pkgs/container/llm-specs-api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **Every LLM's price, context window and capabilities behind one REST API — and a cost estimator that shows its work.**
