@@ -1,0 +1,64 @@
+name: Refresh dataset
+
+# Keeps the vendored dataset in `data/` current. Once a day (or on demand) it revalidates the
+# local copy against upstream through the service's own boot path, and when upstream has
+# something newer it runs the test suite against it and commits the result to `main`.
+#
+# A push made with GITHUB_TOKEN never triggers other workflows — that is GitHub's guard against
+# loops — so CI would not run on the commit this job makes. The tests therefore run here, before
+# the commit, and a dataset that breaks them is never committed.
+on:
+  schedule:
+    # 06:17 UTC. Jobs scheduled on the hour queue behind everyone else's and can slip by a lot.
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-dataset
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    name: Revalidate and commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # Exits non-zero when upstream cannot be reached, so an outage or a vanished branch shows
+      # up as a failed run instead of a quiet night with no commit.
+      - name: Revalidate against upstream
+        run: bun scripts/refresh-dataset.ts
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git diff --quiet -- data/; then
+            echo "Dataset unchanged, nothing to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git --no-pager diff --stat -- data/
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Tests against the new dataset
+        if: steps.diff.outputs.changed == 'true'
+        run: bun test
+
+      - name: Commit and push
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git commit -m "chore(data): refresh dataset from upstream ($(date -u +%Y-%m-%d))"
+          git push

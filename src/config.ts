@@ -25,13 +25,14 @@ export const config = {
     fileURLToPath(new URL('../data/model_prices_and_context_window.json', import.meta.url)),
 
   /**
-   * The `litellm_internal_staging` branch, by explicit project decision. It is an internal
-   * branch: it may be force-pushed or disappear. Configurable through the environment so it can
-   * be repointed without a redeploy.
+   * LiteLLM's `main` branch. The project started on `litellm_internal_staging`, an internal
+   * branch that was ahead of `main`, until it was deleted in late 2026 and every boot began
+   * revalidating against a 404. Configurable through the environment so it can be repointed
+   * without a redeploy.
    */
   upstreamUrl:
     process.env.UPSTREAM_URL ??
-    'https://raw.githubusercontent.com/BerriAI/litellm/refs/heads/litellm_internal_staging/model_prices_and_context_window.json',
+    'https://raw.githubusercontent.com/BerriAI/litellm/refs/heads/main/model_prices_and_context_window.json',
 
   fetchTimeoutMs: int('FETCH_TIMEOUT_MS', 30_000),
 

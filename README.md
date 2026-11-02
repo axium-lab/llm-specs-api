@@ -168,7 +168,7 @@ Everything is optional — the service runs out of the box.
 |---|---|---|
 | `PORT` | `8080` | Injected by Cloud Run. |
 | `DATASET_PATH` | `data/model_prices_and_context_window.json` | The source of truth. The sidecar path is derived from it. |
-| `UPSTREAM_URL` | LiteLLM's `litellm_internal_staging` branch | Revalidation target. See [Upstream risk](https://llm-specs.axium-lab.com/dataset.html#upstream). |
+| `UPSTREAM_URL` | LiteLLM's `main` branch | Revalidation target. See [Upstream risk](https://llm-specs.axium-lab.com/dataset.html#upstream). |
 | `FETCH_TIMEOUT_MS` | `30000` | A timeout is not fatal: the local copy is served. |
 | `DEFAULT_LIMIT` | `50` | Default page size of `/v1/models`. |
 | `MAX_LIMIT` | `500` | Ceiling for `limit`; a larger value is clamped, not rejected. |
@@ -231,6 +231,8 @@ licensed, vendored into `data/` and redistributed **normalized**: `src/data/pars
 `litellm_provider` to `provider` on the way in, and that is the only place where upstream's shape is adjusted.
 The prices are the ones LiteLLM publishes — this project does not source, correct or negotiate them, and
 [flags the implausible ones](https://llm-specs.axium-lab.com/dataset.html#suspicious) rather than fixing them.
+A [scheduled workflow](.github/workflows/refresh-dataset.yml) revalidates the vendored copy against upstream
+every day and commits it when it changed, so a fresh clone carries yesterday's prices at worst.
 [How the dataset is loaded →](https://llm-specs.axium-lab.com/dataset.html)
 
 ## Development

@@ -57,7 +57,7 @@ describe('health and meta', () => {
     expect(body.models).toBe(3214);
     expect(body.providers).toBe(127);
     expect(body.dataset.source).toBe('local');
-    expect(body.dataset.upstream_url).toContain('litellm_internal_staging');
+    expect(body.dataset.upstream_url).toContain('/refs/heads/main/');
   });
 });
 

@@ -246,16 +246,19 @@
 <section id="upstream">
   <h2>Upstream risk</h2>
   <p>
-    <code>UPSTREAM_URL</code> defaults to LiteLLM's <code>litellm_internal_staging</code> branch. That is an
-    <strong>internal</strong> branch: it can be force-pushed, carry unvalidated data, or disappear.
+    <code>UPSTREAM_URL</code> defaults to LiteLLM's <code>main</code> branch. It did not always: the project
+    started on <code>litellm_internal_staging</code>, an internal branch that ran ahead of <code>main</code>,
+    until LiteLLM deleted it and every boot began revalidating against a 404. The service kept working — that
+    is what the local copy is for — but nothing looked broken either.
   </p>
   <p>
-    A cold start with upstream down is survivable — the copy in the image is served and <code>/health</code>
-    reports <code>startup_error</code>. The quieter failure is the branch going away for good: every boot then
-    keeps shipping whatever version was last baked into the image, without anything looking broken. Watch
-    <code>startup_error</code> and <code>dataset.loaded_at</code> if that matters to you.
+    That is the quiet failure to watch for. A cold start with upstream down is survivable: the copy in the
+    image is served and <code>/health</code> reports <code>startup_error</code>. Upstream going away for good
+    means every boot keeps shipping whatever version was last baked into the image. Watch
+    <code>startup_error</code> and <code>dataset.loaded_at</code> if that matters to you, and keep the
+    scheduled refresh workflow green: it fails loudly on exactly this.
   </p>
-  <p>For production, consider pointing at <code>main</code> instead:</p>
+  <p>To follow a different branch or fork, point the variable at its raw URL:</p>
 <pre><code>UPSTREAM_URL=https://raw.githubusercontent.com/BerriAI/litellm/refs/heads/main/model_prices_and_context_window.json</code></pre>
 </section>
 

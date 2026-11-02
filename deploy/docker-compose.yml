@@ -11,7 +11,7 @@ services:
     environment:
       # PORT: 8080
       # DATASET_PATH: /app/data/model_prices_and_context_window.json
-      # UPSTREAM_URL: https://raw.githubusercontent.com/BerriAI/litellm/refs/heads/litellm_internal_staging/model_prices_and_context_window.json
+      # UPSTREAM_URL: https://raw.githubusercontent.com/BerriAI/litellm/refs/heads/main/model_prices_and_context_window.json
       # FETCH_TIMEOUT_MS: 30000
       # DEFAULT_LIMIT: 50
       # MAX_LIMIT: 500
