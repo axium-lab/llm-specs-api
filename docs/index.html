@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>llm-specs-api — Every LLM's price, context window and capabilities behind one REST API</title>
-<meta name="description" content="Prices, context windows and capabilities for 3,214 LLMs from 127 providers: one REST API, served from memory with no database, plus a cost estimator that returns an auditable breakdown of a single call. MIT, free, self-hostable." />
+<meta name="description" content="Prices, context windows and capabilities for 3,000+ LLMs from 100+ providers: one REST API, served from memory with no database, plus a cost estimator that returns an auditable breakdown of a single call. MIT, free, self-hostable." />
 <link rel="canonical" href="https://llm-specs.axium-lab.com/" />
 <meta name="theme-color" content="#0b0e14" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%235b7cfa'/><text x='16' y='23' font-family='monospace' font-size='17' font-weight='700' fill='%23ffffff' text-anchor='middle'>$</text></svg>" />
@@ -14,15 +14,15 @@
 <meta property="og:site_name" content="llm-specs-api" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:title" content="llm-specs-api — Every LLM's price, context window and capabilities behind one REST API" />
-<meta property="og:description" content="3,214 models from 127 providers, served from memory with no database, plus a cost estimator that shows its work. Open source, MIT." />
+<meta property="og:description" content="3,000+ models from 100+ providers, served from memory with no database, plus a cost estimator that shows its work. Open source, MIT." />
 <meta property="og:url" content="https://llm-specs.axium-lab.com/" />
 <meta property="og:image" content="https://llm-specs.axium-lab.com/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="llm-specs-api — every LLM's price, context window and capabilities behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." />
+<meta property="og:image:alt" content="llm-specs-api — every LLM's price, context window and capabilities behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,000+ models from 100+ providers, served from memory with no database." />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="llm-specs-api — Every LLM's price, context window and capabilities behind one REST API" />
-<meta name="twitter:description" content="3,214 models from 127 providers, served from memory with no database, plus a cost estimator that shows its work. Open source, MIT." />
+<meta name="twitter:description" content="3,000+ models from 100+ providers, served from memory with no database, plus a cost estimator that shows its work. Open source, MIT." />
 <meta name="twitter:image" content="https://llm-specs.axium-lab.com/og-image.png" />
 
 <!-- Structured data -->
@@ -33,7 +33,7 @@
   "name": "llm-specs-api",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Cross-platform",
-  "description": "Open source REST API serving prices, context windows and capabilities for 3,214 LLMs, with an auditable cost estimator.",
+  "description": "Open source REST API serving prices, context windows and capabilities for 3,000+ LLMs, with an auditable cost estimator.",
   "url": "https://llm-specs.axium-lab.com/",
   "downloadUrl": "https://github.com/axium-lab/llm-specs-api",
   "license": "https://opensource.org/licenses/MIT",
@@ -189,8 +189,8 @@
     <a class="btn ghost" href="https://github.com/axium-lab/llm-specs-api">View on GitHub</a>
   </div>
   <div class="stats">
-    <div class="stat"><b>3,214</b><span>models</span></div>
-    <div class="stat"><b>127</b><span>providers</span></div>
+    <div class="stat"><b>3,000+</b><span>models</span></div>
+    <div class="stat"><b>100+</b><span>providers</span></div>
     <div class="stat"><b>86</b><span>pricing keys understood</span></div>
     <div class="stat"><b>0</b><span>databases</span></div>
   </div>
@@ -310,7 +310,7 @@ curl <span class="tok-str">'localhost:8080/v1/models/bedrock/us.anthropic.claude
       <tr><td><span class="method get">GET</span></td><td><a href="api-models.html#lookup"><code>/v1/models/*</code></a></td><td>Lookup by id, slashes and colons included.</td></tr>
       <tr><td><span class="method get">GET</span></td><td><a href="api-models.html#by-id"><code>/v1/models/by-id?id=</code></a></td><td>Lookup by query param, for the one id a path cannot carry.</td></tr>
       <tr><td><span class="method get">GET</span></td><td><a href="api-models.html#compare"><code>/v1/compare?ids=</code></a></td><td>Side-by-side comparison of several models.</td></tr>
-      <tr><td><span class="method get">GET</span></td><td><a href="api.html#providers"><code>/v1/providers</code></a></td><td>The 127 providers with their model counts.</td></tr>
+      <tr><td><span class="method get">GET</span></td><td><a href="api.html#providers"><code>/v1/providers</code></a></td><td>Every provider with its model count.</td></tr>
       <tr><td><span class="method get">GET</span></td><td><a href="api.html#modes"><code>/v1/modes</code></a></td><td>The 16 modes with their model counts.</td></tr>
       <tr><td><span class="method get">GET</span></td><td><a href="api.html#attributes"><code>/v1/attributes</code></a></td><td>The 153 attributes, flagging the 86 pricing ones.</td></tr>
       <tr><td><span class="method get">GET</span></td><td><a href="api.html#meta"><code>/v1/meta</code></a></td><td>Counts, dataset origin, ETag and sha256.</td></tr>

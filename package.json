@@ -1,7 +1,7 @@
 {
   "name": "llm-specs-api",
   "version": "1.1.0",
-  "description": "Prices, context windows and capabilities for 3,214 LLMs — one REST API, no database, plus a cost estimator that shows its work",
+  "description": "Prices, context windows and capabilities for 3,000+ LLMs — one REST API, no database, plus a cost estimator that shows its work",
   "license": "MIT",
   "author": "Luis Peris",
   "homepage": "https://llm-specs.axium-lab.com",

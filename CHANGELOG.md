@@ -15,6 +15,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- The test suite no longer depends on the vendored dataset. HTTP and pricing tests run over
+  `test/fixtures/dataset.ts`, a hand-written dataset that carries every id shape and pricing shape the tests
+  need; `test/snapshot.test.ts` is the one file that reads `data/`, and it only checks invariants that hold for
+  any version of it. The previous suite pinned model counts and named real models, so the first refresh from
+  upstream failed 16 tests.
+- The pricing engine's handling of a key that carries both a context tier and a service tier
+  (`input_cost_per_token_above_272k_tokens_batches`) is now covered by a test. Upstream started publishing
+  such keys; the old suite asserted they never existed.
 - `UPSTREAM_URL` now defaults to LiteLLM's `main` branch. The previous default, `litellm_internal_staging`,
   was deleted upstream and every boot had been revalidating against a 404 while silently serving the
   vendored copy.

@@ -22,12 +22,19 @@ test that fails before it and passes after it will be asked for one.
 
 Concretely:
 
-- HTTP behaviour → `test/api.test.ts`, which mounts `createApp()` on an ephemeral port against the real dataset.
-- A pricing rule → `test/estimate.test.ts`. Its fixtures are golden values worked out by hand against the JSON,
-  with the arithmetic written in a comment. Keep that habit: a fixture nobody can re-derive is not a test.
-- A new cost key → nothing, usually. `test/catalog.test.ts` walks the whole dataset and fails when a pricing key
-  appears that `parseCostKey` cannot describe. That test is the tripwire for upstream adding a key we would
-  otherwise silently ignore when billing; when it fires, describe the key in `src/pricing/catalog.ts`.
+- HTTP behaviour → `test/api.test.ts`, which mounts `createApp()` on an ephemeral port over
+  `test/fixtures/dataset.ts`, a hand-written dataset with every id shape that has ever bitten the router.
+- A pricing rule → `test/estimate.test.ts`, over the same fixture. Its expectations are golden values worked
+  out by hand, with the arithmetic written in a comment. Keep that habit: a value nobody can re-derive is not
+  a test. If the rule needs a shape the fixture lacks, add an entry there and say what it is for.
+- The cost key grammar → `test/catalog.test.ts`, pure unit tests over `parseCostKey` and `buildCostKey`.
+- The vendored dataset → `test/snapshot.test.ts`, the one file that reads `data/`. It checks invariants that
+  must hold for any version of the file (normalized, indexed consistently, every model priceable without a
+  crash) and is what gates the daily refresh commit.
+
+**Never name a real model, provider or count in a test.** `data/` is refreshed from upstream every day by
+`.github/workflows/refresh-dataset.yml`; a test pinned to `claude-sonnet-4-5` or to "3,214 models" fails on
+the next refresh for reasons that have nothing to do with the code. Put the shape you need in the fixture.
 
 ## How the code is laid out
 

@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://llm-specs.axium-lab.com">
-    <img src="docs/og-image.png" alt="llm-specs-api — every LLM's price, context window and capabilities behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,214 models from 127 providers, served from memory with no database." width="820" />
+    <img src="docs/og-image.png" alt="llm-specs-api — every LLM's price, context window and capabilities behind one REST API. A curl to /v1/models/claude-sonnet-4-5 returning the model's rates, context window and capability flags. 3,000+ models from 100+ providers, served from memory with no database." width="820" />
   </a>
 </p>
 
@@ -12,7 +12,7 @@
 
 Picking a model means checking four things at once: what it costs, how much context it takes, what it can do,
 and whether it is about to be deprecated. That lives in a 1.7 MB JSON file you have to parse yourself. This
-service reads it once at boot and serves **3,214 models from 127 providers** out of memory, with no database —
+service reads it once at boot and serves **3,000+ models from 100+ providers** out of memory, with no database —
 filtered, sorted, compared — and prices a single call down to the exact rate key it used.
 
 ```bash
@@ -150,7 +150,7 @@ curl 'localhost:8080/v1/models/bedrock/us.anthropic.claude-3-5-haiku-20241022-v1
 | `GET` | [`/v1/models/*`](https://llm-specs.axium-lab.com/api-models.html#lookup) | Lookup by id — accepts ids containing `/`, `:` and `*`. |
 | `GET` | [`/v1/models/by-id?id=`](https://llm-specs.axium-lab.com/api-models.html#by-id) | Lookup by query param, for the one id a path cannot carry. |
 | `GET` | [`/v1/compare?ids=a,b,c`](https://llm-specs.axium-lab.com/api-models.html#compare) | Side-by-side comparison of several models. |
-| `GET` | [`/v1/providers`](https://llm-specs.axium-lab.com/api.html#providers) | The 127 providers with their model counts. |
+| `GET` | [`/v1/providers`](https://llm-specs.axium-lab.com/api.html#providers) | Every provider with its model count. |
 | `GET` | [`/v1/modes`](https://llm-specs.axium-lab.com/api.html#modes) | The 16 modes with their model counts. |
 | `GET` | [`/v1/attributes`](https://llm-specs.axium-lab.com/api.html#attributes) | The 153 attributes, flagging the 86 pricing ones. |
 | `GET` | [`/v1/meta`](https://llm-specs.axium-lab.com/api.html#meta) | Counts, dataset origin, ETag and sha256. |
