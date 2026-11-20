@@ -3,7 +3,8 @@
         "cache_creation_input_audio_token_cost": 4e-7,
         "cache_read_input_audio_token_cost": 4e-7,
         "cache_read_input_token_cost": 4e-7,
-        "deprecation_date": "2027-06-25",
+        "successor_model": "azure/gpt-live-1",
+        "deprecation_date": "2027-07-31",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_audio_token": 0.000032,
         "input_cost_per_image_token": 0.000005,
@@ -44,7 +45,8 @@
         "cache_creation_input_audio_token_cost": 3e-7,
         "cache_read_input_audio_token_cost": 3e-7,
         "cache_read_input_token_cost": 6e-8,
-        "deprecation_date": "2027-06-25",
+        "successor_model": "azure/gpt-live-1",
+        "deprecation_date": "2027-07-31",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_audio_token": 0.00001,
         "input_cost_per_image_token": 8e-7,
@@ -82,6 +84,8 @@
         "supports_reasoning": true
     },
     "azure/gpt-realtime-translate-2026-05-06": {
+        "deprecation_date": "2027-11-09",
+        "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_second": 0.0005666666666666667,
         "provider": "azure",
         "max_input_tokens": 32000,
@@ -124,6 +128,9 @@
         "supports_native_streaming": true
     },
     "azure/gpt-realtime-whisper-2026-05-06": {
+        "successor_model": "azure/gpt-live-transcribe",
+        "deprecation_date": "2027-11-09",
+        "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_second": 0.0002833333333333333,
         "provider": "azure",
         "mode": "audio_transcription",
@@ -212,6 +219,7 @@
         "vector_store_cost_per_gb_per_day": 0
     },
     "1024-x-1024/50-steps/bedrock/amazon.nova-canvas-v1:0": {
+        "successor_model": "amazon.titan-image-generator-v1",
         "deprecation_date": "2026-09-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "provider": "bedrock",
@@ -373,6 +381,7 @@
         "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-ai21-labs-jamba-1-5-large.md"
     },
     "ai21.jamba-1-5-mini-v1:0": {
+        "successor_model": "ai21.jamba-instruct-v1:0",
         "deprecation_date": "2026-11-26",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-ai21-labs-jamba-1-5-mini.md",
         "input_cost_per_token": 2e-7,
@@ -543,6 +552,7 @@
         "supports_vision": true
     },
     "amazon.nova-canvas-v1:0": {
+        "successor_model": "amazon.titan-image-generator-v1",
         "deprecation_date": "2026-09-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "provider": "bedrock",
@@ -552,6 +562,7 @@
         "supports_nova_canvas_image_edit": true
     },
     "us.amazon.nova-canvas-v1:0": {
+        "successor_model": "amazon.titan-image-generator-v1",
         "deprecation_date": "2026-09-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "provider": "bedrock",
@@ -575,6 +586,7 @@
         "supports_pdf_input": true
     },
     "us.writer.palmyra-x5-v1:0": {
+        "successor_model": "writer.palmyra-vision-7b",
         "deprecation_date": "2027-03-21",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-writer-palmyra-x5.md",
         "input_cost_per_token": 6e-7,
@@ -602,6 +614,7 @@
         "supports_pdf_input": true
     },
     "writer.palmyra-x5-v1:0": {
+        "successor_model": "writer.palmyra-vision-7b",
         "deprecation_date": "2027-03-21",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-writer-palmyra-x5.md",
         "input_cost_per_token": 6e-7,
@@ -967,6 +980,7 @@
         "mode": "image_generation"
     },
     "amazon.titan-image-generator-v2": {
+        "successor_model": "amazon.nova-canvas-v1:0",
         "deprecation_date": "2026-06-30",
         "input_cost_per_image": 0,
         "output_cost_per_image": 0.008,
@@ -975,6 +989,7 @@
         "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-titan-image-generator-g1-v2.html"
     },
     "amazon.titan-image-generator-v2:0": {
+        "successor_model": "amazon.nova-canvas-v1:0",
         "deprecation_date": "2026-06-30",
         "input_cost_per_image": 0,
         "output_cost_per_image": 0.008,
@@ -1092,6 +1107,7 @@
         "supports_video_input": true
     },
     "eu.twelvelabs.pegasus-1-2-v1:0": {
+        "successor_model": "twelvelabs.pegasus-1-5-v1:0",
         "deprecation_date": "2027-03-22",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-twelvelabs-pegasus-v1-2.md",
         "input_cost_per_video_per_second": 0.00049,
@@ -3882,7 +3898,7 @@
     "azure/codex-mini": {
         "cache_read_input_token_cost": 3.75e-7,
         "successor_model": "azure/gpt-5.1-codex-mini",
-        "deprecation_date": "2026-11-15",
+        "deprecation_date": "2026-11-17",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_token": 0.0000015,
         "provider": "azure",
@@ -4204,6 +4220,7 @@
         "cache_creation_input_token_cost": 0.000005,
         "cache_creation_input_token_cost_above_1hr": 0.000008,
         "cache_read_input_token_cost": 2e-7,
+        "successor_model": "azure_ai/claude-fable-5-2",
         "deprecation_date": "2027-09-18",
         "supports_adaptive_thinking": true,
         "thinking_always_on": true,
@@ -4399,6 +4416,7 @@
         "source": "https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/"
     },
     "azure_ai/gpt-oss-120b": {
+        "successor_model": "azure_ai/gpt-6.1-terra",
         "deprecation_date": "2027-09-15",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 1.5e-7,
@@ -4716,6 +4734,7 @@
     },
     "azure_ai/gpt-chat-latest": {
         "cache_read_input_token_cost": 5e-7,
+        "successor_model": "azure_ai/gpt-6.1-sol",
         "deprecation_date": "2027-05-18",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 0.000005,
@@ -4751,6 +4770,7 @@
     "azure_ai/gpt-image-2": {
         "cache_read_input_image_token_cost": 0.000002,
         "cache_read_input_token_cost": 0.00000125,
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-10-21",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_image_token": 0.000008,
@@ -4767,7 +4787,8 @@
     },
     "azure_ai/codex-mini": {
         "cache_read_input_token_cost": 3.75e-7,
-        "deprecation_date": "2026-11-15",
+        "successor_model": "azure/gpt-5.1-codex-mini",
+        "deprecation_date": "2026-11-17",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 0.0000015,
         "provider": "azure_ai",
@@ -4797,6 +4818,7 @@
         "supports_vision": true
     },
     "azure_ai/whisper": {
+        "successor_model": "azure/gpt-live-transcribe",
         "deprecation_date": "2026-12-15",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_second": 0.0001,
@@ -4997,6 +5019,7 @@
         "supports_minimal_reasoning_effort": true
     },
     "azure_ai/gpt-5.4-pro": {
+        "successor_model": "azure/gpt-5.5-pro",
         "deprecation_date": "2027-09-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "cache_read_input_token_cost": 0.000003,
@@ -5043,6 +5066,7 @@
         "supports_minimal_reasoning_effort": true
     },
     "azure_ai/gpt-5.4-pro-2026-03-05": {
+        "successor_model": "azure/gpt-5.5-pro",
         "deprecation_date": "2027-09-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "cache_read_input_token_cost": 0.000003,
@@ -5264,6 +5288,7 @@
         "supports_minimal_reasoning_effort": false
     },
     "azure_ai/model_router": {
+        "successor_model": "azure_ai/MAI-Thinking-1",
         "deprecation_date": "2027-05-20",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 1.4e-7,
@@ -5276,6 +5301,7 @@
         "comment": "Flat cost of $0.14 per M input tokens for Azure AI Foundry Model Router infrastructure. Use pattern: azure_ai/model_router/<deployment-name> where deployment-name is your Azure deployment (e.g., azure-model-router)"
     },
     "azure_ai/model-router": {
+        "successor_model": "azure_ai/MAI-Thinking-1",
         "deprecation_date": "2027-05-20",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 1.4e-7,
@@ -5831,6 +5857,7 @@
         "supports_vision": true
     },
     "azure/global-standard/gpt-4o-mini": {
+        "successor_model": "azure/gpt-6-luna",
         "deprecation_date": "2027-04-14",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_token": 1.5e-7,
@@ -5893,6 +5920,7 @@
         "supports_vision": true
     },
     "azure/global/gpt-5.1": {
+        "successor_model": "azure/gpt-6-sol",
         "deprecation_date": "2027-07-13",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "cache_read_input_token_cost": 1.25e-7,
@@ -5941,6 +5969,7 @@
         "source": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20'Foundry%20Models'%20and%20armRegionName%20eq%20'eastus'%20and%20priceType%20eq%20'Consumption'"
     },
     "azure/global/gpt-5.1-codex": {
+        "successor_model": "azure/gpt-5.6-sol",
         "deprecation_date": "2027-05-15",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "cache_read_input_token_cost": 1.25e-7,
@@ -5973,6 +6002,7 @@
         "supports_vision": true
     },
     "azure/global/gpt-5.1-codex-mini": {
+        "successor_model": "azure/gpt-5.6-terra",
         "deprecation_date": "2027-05-15",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "cache_read_input_token_cost": 2.5e-8,
@@ -6942,7 +6972,8 @@
         "cache_read_input_audio_token_cost": 4e-7,
         "cache_read_input_image_token_cost": 5e-7,
         "cache_read_input_token_cost": 4e-7,
-        "deprecation_date": "2027-06-25",
+        "successor_model": "azure/gpt-live-1",
+        "deprecation_date": "2027-07-31",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_audio_token": 0.000032,
         "input_cost_per_image_token": 0.000005,
@@ -6983,7 +7014,8 @@
         "cache_read_input_audio_token_cost": 3e-7,
         "cache_read_input_image_token_cost": 8e-8,
         "cache_read_input_token_cost": 6e-8,
-        "deprecation_date": "2027-06-25",
+        "successor_model": "azure/gpt-live-1",
+        "deprecation_date": "2027-07-31",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_audio_token": 0.00001,
         "input_cost_per_image_token": 8e-7,
@@ -7162,7 +7194,7 @@
     },
     "azure/gpt-4o-transcribe": {
         "successor_model": "azure/gpt-live-transcribe",
-        "deprecation_date": "2026-10-15",
+        "deprecation_date": "2027-02-26",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_audio_token": 0.000006,
         "input_cost_per_token": 0.0000025,
@@ -7193,7 +7225,9 @@
         ]
     },
     "azure/gpt-realtime-whisper": {
-        "deprecation_date": "2027-05-06",
+        "successor_model": "azure/gpt-live-transcribe",
+        "deprecation_date": "2027-11-09",
+        "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_second": 0.0002833333333333333,
         "provider": "azure",
         "max_input_tokens": 32000,
@@ -9168,6 +9202,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.000025,
         "cache_read_input_token_cost": 0.000001,
         "cache_read_input_token_cost_above_272k_tokens": 0.000002,
+        "successor_model": "azure/gpt-6.1-sol",
         "deprecation_date": "2028-01-11",
         "input_cost_per_token": 0.00001,
         "input_cost_per_token_above_272k_tokens": 0.00002,
@@ -9223,6 +9258,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.000025,
         "cache_read_input_token_cost": 0.000001,
         "cache_read_input_token_cost_above_272k_tokens": 0.000002,
+        "successor_model": "azure/gpt-6.1-sol",
         "deprecation_date": "2028-01-11",
         "input_cost_per_token": 0.00001,
         "input_cost_per_token_above_272k_tokens": 0.00002,
@@ -9283,6 +9319,7 @@
         "cache_read_input_token_cost_above_272k_tokens": 2e-8,
         "cache_read_input_token_cost_above_272k_tokens_flex": 1e-8,
         "cache_read_input_token_cost_flex": 5e-9,
+        "successor_model": "azure_ai/gpt-6.1-terra",
         "deprecation_date": "2028-03-11",
         "input_cost_per_token": 1e-7,
         "input_cost_per_token_above_272k_tokens": 2e-7,
@@ -9338,6 +9375,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 2.5e-7,
         "cache_read_input_token_cost": 1e-8,
         "cache_read_input_token_cost_above_272k_tokens": 2e-8,
+        "successor_model": "azure_ai/gpt-6.1-terra",
         "deprecation_date": "2028-03-11",
         "input_cost_per_token": 1e-7,
         "input_cost_per_token_above_272k_tokens": 2e-7,
@@ -9398,6 +9436,7 @@
         "cache_read_input_token_cost_above_272k_tokens": 4e-7,
         "cache_read_input_token_cost_above_272k_tokens_priority": 8e-7,
         "cache_read_input_token_cost_priority": 4e-7,
+        "successor_model": "azure_ai/gpt-6.1-sol",
         "deprecation_date": "2028-03-11",
         "input_cost_per_token": 0.000002,
         "input_cost_per_token_above_272k_tokens": 0.000004,
@@ -9462,6 +9501,7 @@
         "cache_read_input_token_cost_above_272k_tokens": 4e-7,
         "cache_read_input_token_cost_above_272k_tokens_priority": 8e-7,
         "cache_read_input_token_cost_priority": 4e-7,
+        "successor_model": "azure_ai/gpt-6.1-sol",
         "deprecation_date": "2028-03-11",
         "input_cost_per_token": 0.000002,
         "input_cost_per_token_above_272k_tokens": 0.000004,
@@ -9518,6 +9558,9 @@
         "cache_creation_input_token_cost_above_272k_tokens_flex": 0.0000025
     },
     "azure/gpt-6.1-terra": {
+        "successor_model": "azure/gpt-5.6-terra",
+        "deprecation_date": "2027-10-26",
+        "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "cache_creation_input_token_cost": 0.00000125,
         "cache_creation_input_token_cost_above_272k_tokens": 0.0000025,
         "cache_read_input_token_cost": 5e-8,
@@ -9572,6 +9615,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.000005,
         "cache_read_input_token_cost": 1e-7,
         "cache_read_input_token_cost_above_272k_tokens": 2e-7,
+        "successor_model": "azure/gpt-5.6",
         "deprecation_date": "2028-03-11",
         "input_cost_per_token": 0.000002,
         "input_cost_per_token_above_272k_tokens": 0.000004,
@@ -9631,6 +9675,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.000005,
         "cache_read_input_token_cost": 1e-7,
         "cache_read_input_token_cost_above_272k_tokens": 2e-7,
+        "successor_model": "azure/gpt-5.6",
         "deprecation_date": "2028-03-11",
         "input_cost_per_token": 0.000002,
         "input_cost_per_token_above_272k_tokens": 0.000004,
@@ -9683,6 +9728,9 @@
         "cache_creation_input_token_cost_above_272k_tokens_flex": 0.0000025
     },
     "azure/us/gpt-6.1-terra": {
+        "successor_model": "azure/us/gpt-5.6-terra",
+        "deprecation_date": "2027-10-26",
+        "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "cache_creation_input_token_cost": 0.000001375,
         "cache_creation_input_token_cost_above_272k_tokens": 0.00000275,
         "cache_read_input_token_cost": 5.5e-8,
@@ -9734,6 +9782,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.0000055,
         "cache_read_input_token_cost": 1.1e-7,
         "cache_read_input_token_cost_above_272k_tokens": 2.2e-7,
+        "successor_model": "azure/us/gpt-5.6",
         "deprecation_date": "2028-03-11",
         "input_cost_per_token": 0.0000022,
         "input_cost_per_token_above_272k_tokens": 0.0000044,
@@ -9778,6 +9827,9 @@
         "supports_xhigh_reasoning_effort": true
     },
     "azure/eu/gpt-6.1-terra": {
+        "successor_model": "azure/eu/gpt-5.6-terra",
+        "deprecation_date": "2027-10-26",
+        "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "cache_creation_input_token_cost": 0.0000015,
         "cache_creation_input_token_cost_above_272k_tokens": 0.000003,
         "cache_read_input_token_cost": 6e-8,
@@ -9829,6 +9881,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.000006,
         "cache_read_input_token_cost": 1.2e-7,
         "cache_read_input_token_cost_above_272k_tokens": 2.4e-7,
+        "successor_model": "azure/eu/gpt-5.6",
         "deprecation_date": "2028-03-11",
         "input_cost_per_token": 0.0000024,
         "input_cost_per_token_above_272k_tokens": 0.0000048,
@@ -9873,6 +9926,9 @@
         "supports_xhigh_reasoning_effort": true
     },
     "azure/apac/gpt-6.1-terra": {
+        "successor_model": "azure/gpt-5.6-terra",
+        "deprecation_date": "2027-10-26",
+        "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "cache_creation_input_token_cost": 0.0000015,
         "cache_creation_input_token_cost_above_272k_tokens": 0.000003,
         "cache_read_input_token_cost": 6e-8,
@@ -9924,6 +9980,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.000006,
         "cache_read_input_token_cost": 1.2e-7,
         "cache_read_input_token_cost_above_272k_tokens": 2.4e-7,
+        "successor_model": "azure/gpt-5.6",
         "deprecation_date": "2028-03-11",
         "input_cost_per_token": 0.0000024,
         "input_cost_per_token_above_272k_tokens": 0.0000048,
@@ -9969,6 +10026,7 @@
     },
     "azure/gpt-chat-latest": {
         "cache_read_input_token_cost": 5e-7,
+        "successor_model": "azure/gpt-6.2-sol",
         "deprecation_date": "2027-05-18",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_token": 0.000005,
@@ -10006,6 +10064,7 @@
     },
     "azure/chat-latest": {
         "cache_read_input_token_cost": 5e-7,
+        "successor_model": "azure/gpt-6.2-sol",
         "deprecation_date": "2027-05-18",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_token": 0.000005,
@@ -10266,6 +10325,7 @@
         "supports_minimal_reasoning_effort": false
     },
     "azure/us/gpt-6-astra": {
+        "successor_model": "azure/us/gpt-6.1-sol",
         "deprecation_date": "2028-01-11",
         "cache_creation_input_token_cost": 0.00001375,
         "cache_creation_input_token_cost_above_272k_tokens": 0.0000275,
@@ -10314,6 +10374,7 @@
         "supports_xhigh_reasoning_effort": true
     },
     "azure/us/gpt-6-luna": {
+        "successor_model": "azure_ai/gpt-6.1-terra",
         "deprecation_date": "2028-03-11",
         "cache_creation_input_token_cost": 1.375e-7,
         "cache_creation_input_token_cost_above_272k_tokens": 2.75e-7,
@@ -10362,6 +10423,7 @@
         "supports_xhigh_reasoning_effort": true
     },
     "azure/us/gpt-6-sol": {
+        "successor_model": "azure_ai/gpt-6.1-sol",
         "deprecation_date": "2028-03-11",
         "cache_creation_input_token_cost": 0.00000275,
         "cache_creation_input_token_cost_above_272k_tokens": 0.0000055,
@@ -10419,6 +10481,7 @@
     },
     "azure/us/gpt-chat-latest": {
         "cache_read_input_token_cost": 5.5e-7,
+        "successor_model": "azure/us/gpt-6.2-sol",
         "deprecation_date": "2027-05-18",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_token": 0.0000055,
@@ -11485,7 +11548,7 @@
     "azure/gpt-image-1": {
         "cache_read_input_image_token_cost": 0.0000025,
         "cache_read_input_token_cost": 0.00000125,
-        "deprecation_date": "2026-10-23",
+        "deprecation_date": "2026-10-28",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "successor_model": "azure/gpt-image-1.5",
         "input_cost_per_image_token": 0.00001,
@@ -11521,7 +11584,8 @@
         "source": "https://azure.microsoft.com/en-us/pricing/details/azure-openai/"
     },
     "azure/high/1024-x-1024/gpt-image-1": {
-        "deprecation_date": "2026-10-23",
+        "successor_model": "azure/gpt-image-2.5-sunburst",
+        "deprecation_date": "2026-10-28",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 1.59263611e-7,
         "provider": "azure",
@@ -11532,7 +11596,8 @@
         ]
     },
     "azure/high/1024-x-1536/gpt-image-1": {
-        "deprecation_date": "2026-10-23",
+        "successor_model": "azure/gpt-image-2.5-sunburst",
+        "deprecation_date": "2026-10-28",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 1.58945719e-7,
         "provider": "azure",
@@ -11543,7 +11608,8 @@
         ]
     },
     "azure/high/1536-x-1024/gpt-image-1": {
-        "deprecation_date": "2026-10-23",
+        "successor_model": "azure/gpt-image-2.5-sunburst",
+        "deprecation_date": "2026-10-28",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 1.58945719e-7,
         "provider": "azure",
@@ -11554,7 +11620,8 @@
         ]
     },
     "azure/low/1024-x-1024/gpt-image-1": {
-        "deprecation_date": "2026-10-23",
+        "successor_model": "azure/gpt-image-2.5-sunburst",
+        "deprecation_date": "2026-10-28",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 1.0490417e-8,
         "provider": "azure",
@@ -11565,7 +11632,8 @@
         ]
     },
     "azure/low/1024-x-1536/gpt-image-1": {
-        "deprecation_date": "2026-10-23",
+        "successor_model": "azure/gpt-image-2.5-sunburst",
+        "deprecation_date": "2026-10-28",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 1.0172526e-8,
         "provider": "azure",
@@ -11576,7 +11644,8 @@
         ]
     },
     "azure/low/1536-x-1024/gpt-image-1": {
-        "deprecation_date": "2026-10-23",
+        "successor_model": "azure/gpt-image-2.5-sunburst",
+        "deprecation_date": "2026-10-28",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 1.0172526e-8,
         "provider": "azure",
@@ -11587,7 +11656,8 @@
         ]
     },
     "azure/medium/1024-x-1024/gpt-image-1": {
-        "deprecation_date": "2026-10-23",
+        "successor_model": "azure/gpt-image-2.5-sunburst",
+        "deprecation_date": "2026-10-28",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 4.0054321e-8,
         "provider": "azure",
@@ -11598,7 +11668,8 @@
         ]
     },
     "azure/medium/1024-x-1536/gpt-image-1": {
-        "deprecation_date": "2026-10-23",
+        "successor_model": "azure/gpt-image-2.5-sunburst",
+        "deprecation_date": "2026-10-28",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 4.0054321e-8,
         "provider": "azure",
@@ -11609,7 +11680,8 @@
         ]
     },
     "azure/medium/1536-x-1024/gpt-image-1": {
-        "deprecation_date": "2026-10-23",
+        "successor_model": "azure/gpt-image-2.5-sunburst",
+        "deprecation_date": "2026-10-28",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 4.0054321e-8,
         "provider": "azure",
@@ -11622,6 +11694,7 @@
     "azure/gpt-image-1-mini": {
         "cache_read_input_image_token_cost": 2.5e-7,
         "cache_read_input_token_cost": 2e-7,
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-04-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_image_token": 0.0000025,
@@ -11673,6 +11746,7 @@
     },
     "azure/gpt-image-2": {
         "cache_read_input_image_token_cost": 0.000002,
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-10-21",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "cache_read_input_token_cost": 0.00000125,
@@ -11691,6 +11765,7 @@
     },
     "azure/gpt-image-2.5-flare": {
         "cache_read_input_image_token_cost": 0.000002,
+        "successor_model": "azure/gpt-image-2",
         "deprecation_date": "2027-09-09",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "cache_read_input_token_cost": 0.00000125,
@@ -11709,6 +11784,7 @@
     },
     "azure/gpt-image-2.5-sunburst": {
         "cache_read_input_image_token_cost": 0.000002,
+        "successor_model": "azure/gpt-image-2",
         "deprecation_date": "2027-09-09",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "cache_read_input_token_cost": 0.00000125,
@@ -11728,6 +11804,7 @@
     "azure/gpt-image-2-2026-04-21": {
         "cache_read_input_image_token_cost": 0.000002,
         "cache_read_input_token_cost": 0.00000125,
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-10-21",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_token": 0.000005,
@@ -11744,6 +11821,7 @@
         "supports_pdf_input": true
     },
     "azure/low/1024-x-1024/gpt-image-1-mini": {
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-04-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 2.0751953125e-9,
@@ -11755,6 +11833,7 @@
         ]
     },
     "azure/low/1024-x-1536/gpt-image-1-mini": {
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-04-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 2.0751953125e-9,
@@ -11766,6 +11845,7 @@
         ]
     },
     "azure/low/1536-x-1024/gpt-image-1-mini": {
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-04-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 2.0345052083e-9,
@@ -11777,6 +11857,7 @@
         ]
     },
     "azure/medium/1024-x-1024/gpt-image-1-mini": {
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-04-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 8.056640625e-9,
@@ -11788,6 +11869,7 @@
         ]
     },
     "azure/medium/1024-x-1536/gpt-image-1-mini": {
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-04-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 8.056640625e-9,
@@ -11799,6 +11881,7 @@
         ]
     },
     "azure/medium/1536-x-1024/gpt-image-1-mini": {
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-04-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 7.9752604167e-9,
@@ -11810,6 +11893,7 @@
         ]
     },
     "azure/high/1024-x-1024/gpt-image-1-mini": {
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-04-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 3.173828125e-8,
@@ -11821,6 +11905,7 @@
         ]
     },
     "azure/high/1024-x-1536/gpt-image-1-mini": {
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-04-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 3.173828125e-8,
@@ -11832,6 +11917,7 @@
         ]
     },
     "azure/high/1536-x-1024/gpt-image-1-mini": {
+        "successor_model": "gpt-image-2.6-sunburst",
         "deprecation_date": "2027-04-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_pixel": 3.1575520833e-8,
@@ -13425,6 +13511,7 @@
         "alias_of": "azure_ai/FW-Kimi-K3"
     },
     "azure_ai/FW-MiniMax-M2.5": {
+        "successor_model": "azure_ai/FW-MiniMax-M3",
         "deprecation_date": "2027-07-01",
         "cache_read_input_token_cost": 3.3e-8,
         "input_cost_per_token": 3.3e-7,
@@ -13543,6 +13630,7 @@
         "max_input_tokens": 32000
     },
     "azure_ai/MAI-Image-2.5-Pro": {
+        "successor_model": "azure_ai/MAI-Image-2.6",
         "deprecation_date": "2026-10-01",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_image_token": 0.000008,
@@ -13597,6 +13685,7 @@
         "supports_tool_choice": true
     },
     "azure_ai/Llama-4-Maverick-17B-128E-Instruct-FP8": {
+        "successor_model": "azure_ai/Llama-4-Scout-17B-16E-Instruct",
         "deprecation_date": "2026-11-19",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 2.5e-7,
@@ -13856,6 +13945,7 @@
         "supports_tool_choice": true
     },
     "azure_ai/deepseek-v4-pro": {
+        "successor_model": "azure_ai/deepseek-v4.1-flash-1017",
         "deprecation_date": "2028-02-20",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 0.00000174,
@@ -14051,6 +14141,7 @@
         "supports_web_search": true
     },
     "azure_ai/grok-4-1-fast-non-reasoning": {
+        "successor_model": "azure_ai/grok-4.7",
         "deprecation_date": "2027-05-19",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 2e-7,
@@ -14067,6 +14158,7 @@
         "supports_web_search": true
     },
     "azure_ai/grok-4-1-fast-reasoning": {
+        "successor_model": "azure_ai/grok-4.7",
         "deprecation_date": "2027-05-19",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 2e-7,
@@ -14088,6 +14180,7 @@
         "supports_web_search": true
     },
     "azure_ai/grok-code-fast-1": {
+        "successor_model": "azure_ai/grok-4.7",
         "deprecation_date": "2027-01-31",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 2e-7,
@@ -14135,6 +14228,7 @@
         "supports_prompt_caching": true
     },
     "azure_ai/kimi-k2.6": {
+        "successor_model": "azure_ai/kimi-k3.1-pro",
         "deprecation_date": "2027-04-16",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 9.5e-7,
@@ -14547,6 +14641,7 @@
         "supports_response_schema": true
     },
     "bedrock/ap-south-1/meta.llama3-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md",
         "input_cost_per_token": 0.00000318,
@@ -14558,6 +14653,7 @@
         "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md"
     },
     "bedrock/ap-south-1/meta.llama3-8b-instruct-v1:0": {
+        "successor_model": "meta.llama2-13b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-8b-instruct.md",
         "input_cost_per_token": 3.6e-7,
@@ -14803,6 +14899,7 @@
         "supports_vision": false
     },
     "bedrock/ca-central-1/meta.llama3-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md",
         "input_cost_per_token": 0.00000305,
@@ -14814,6 +14911,7 @@
         "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md"
     },
     "bedrock/ca-central-1/meta.llama3-8b-instruct-v1:0": {
+        "successor_model": "meta.llama2-13b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-8b-instruct.md",
         "input_cost_per_token": 3.5e-7,
@@ -15055,6 +15153,7 @@
         "supports_vision": false
     },
     "bedrock/eu-west-1/meta.llama3-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md",
         "input_cost_per_token": 0.00000286,
@@ -15066,6 +15165,7 @@
         "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md"
     },
     "bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0": {
+        "successor_model": "meta.llama2-13b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-8b-instruct.md",
         "input_cost_per_token": 3.2e-7,
@@ -15140,6 +15240,7 @@
         "supports_vision": false
     },
     "bedrock/eu-west-2/meta.llama3-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md",
         "input_cost_per_token": 0.00000345,
@@ -15151,6 +15252,7 @@
         "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md"
     },
     "bedrock/eu-west-2/meta.llama3-8b-instruct-v1:0": {
+        "successor_model": "meta.llama2-13b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-8b-instruct.md",
         "input_cost_per_token": 3.9e-7,
@@ -15251,6 +15353,7 @@
         "source": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/index.json"
     },
     "bedrock/eu-west-3/mistral.mistral-7b-instruct-v0:2": {
+        "successor_model": "bedrock/eu-west-1/mistral.ministral-3-8b-instruct",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mistral-7b-instruct.md",
         "input_cost_per_token": 2e-7,
@@ -15273,6 +15376,7 @@
         "supports_function_calling": true
     },
     "bedrock/eu-west-3/mistral.mixtral-8x7b-instruct-v0:1": {
+        "successor_model": "mistral/mistral-small-2603",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mixtral-8x7b-instruct.md",
         "input_cost_per_token": 5.9e-7,
@@ -15355,10 +15459,12 @@
         "supports_vision": true,
         "cache_read_input_token_cost": 3e-7,
         "cache_creation_input_token_cost": 0.00000375,
+        "successor_model": "anthropic.claude-sonnet-5-5",
         "deprecation_date": "2026-11-13",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html"
     },
     "bedrock/sa-east-1/meta.llama3-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md",
         "input_cost_per_token": 0.00000445,
@@ -15370,6 +15476,7 @@
         "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md"
     },
     "bedrock/sa-east-1/meta.llama3-8b-instruct-v1:0": {
+        "successor_model": "meta.llama2-13b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-8b-instruct.md",
         "input_cost_per_token": 5e-7,
@@ -15582,6 +15689,7 @@
         "supports_tool_choice": true
     },
     "bedrock/us-east-1/meta.llama3-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md",
         "input_cost_per_token": 0.00000265,
@@ -15593,6 +15701,7 @@
         "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md"
     },
     "bedrock/us-east-1/meta.llama3-8b-instruct-v1:0": {
+        "successor_model": "meta.llama2-13b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-8b-instruct.md",
         "input_cost_per_token": 3e-7,
@@ -15604,6 +15713,7 @@
         "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-8b-instruct.md"
     },
     "bedrock/us-east-1/mistral.mistral-7b-instruct-v0:2": {
+        "successor_model": "mistral.ministral-3-8b-instruct",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mistral-7b-instruct.md",
         "input_cost_per_token": 1.5e-7,
@@ -15626,6 +15736,7 @@
         "supports_function_calling": true
     },
     "bedrock/us-east-1/mistral.mixtral-8x7b-instruct-v0:1": {
+        "successor_model": "mistral/mistral-small-2603",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mixtral-8x7b-instruct.md",
         "input_cost_per_token": 4.5e-7,
@@ -16137,6 +16248,7 @@
         }
     },
     "bedrock/us-gov-west-1/meta.llama3-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-05-09",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 0.00000265,
@@ -16149,6 +16261,7 @@
         "supports_pdf_input": true
     },
     "bedrock/us-gov-west-1/meta.llama3-8b-instruct-v1:0": {
+        "successor_model": "meta.llama2-13b-chat-v1",
         "deprecation_date": "2027-05-09",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 3e-7,
@@ -16161,6 +16274,7 @@
         "supports_pdf_input": true
     },
     "bedrock/us-west-1/meta.llama3-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md",
         "input_cost_per_token": 0.00000265,
@@ -16172,6 +16286,7 @@
         "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md"
     },
     "bedrock/us-west-1/meta.llama3-8b-instruct-v1:0": {
+        "successor_model": "meta.llama2-13b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-8b-instruct.md",
         "input_cost_per_token": 3e-7,
@@ -16262,6 +16377,7 @@
         "supports_tool_choice": true
     },
     "bedrock/us-west-2/mistral.mistral-7b-instruct-v0:2": {
+        "successor_model": "mistral.ministral-3-8b-instruct",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mistral-7b-instruct.md",
         "input_cost_per_token": 1.5e-7,
@@ -16284,6 +16400,7 @@
         "supports_function_calling": true
     },
     "bedrock/us-west-2/mistral.mixtral-8x7b-instruct-v0:1": {
+        "successor_model": "mistral/mistral-small-2603",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mixtral-8x7b-instruct.md",
         "input_cost_per_token": 4.5e-7,
@@ -16892,6 +17009,7 @@
         "output_cost_per_token_above_200k_tokens": 0.0000225,
         "cache_creation_input_token_cost_above_200k_tokens": 0.0000075,
         "cache_read_input_token_cost_above_200k_tokens": 6e-7,
+        "successor_model": "anthropic.claude-sonnet-5-5",
         "deprecation_date": "2027-04-08",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-4-5.md",
         "provider": "bedrock",
@@ -26215,6 +26333,7 @@
         "supports_vision": true,
         "cache_read_input_token_cost": 3e-7,
         "cache_creation_input_token_cost": 0.00000375,
+        "successor_model": "eu.anthropic.claude-sonnet-5-5",
         "deprecation_date": "2026-11-13",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html"
     },
@@ -26235,6 +26354,7 @@
         "supports_vision": true,
         "cache_read_input_token_cost": 3e-7,
         "cache_creation_input_token_cost": 0.00000375,
+        "successor_model": "eu.anthropic.claude-sonnet-5-5",
         "deprecation_date": "2026-11-13",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html"
     },
@@ -26256,6 +26376,7 @@
         "supports_vision": true,
         "cache_read_input_token_cost": 3e-7,
         "cache_creation_input_token_cost": 0.00000375,
+        "successor_model": "eu.anthropic.claude-sonnet-5-5",
         "deprecation_date": "2026-11-13",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html"
     },
@@ -26413,6 +26534,7 @@
         }
     },
     "eu.meta.llama3-2-1b-instruct-v1:0": {
+        "successor_model": "bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-1b-instruct.md",
         "input_cost_per_token": 1.3e-7,
@@ -26426,6 +26548,7 @@
         "supports_tool_choice": false
     },
     "eu.meta.llama3-2-3b-instruct-v1:0": {
+        "successor_model": "bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-3b-instruct.md",
         "input_cost_per_token": 1.9e-7,
@@ -35439,6 +35562,7 @@
         "supports_minimal_reasoning_effort": false
     },
     "chatgpt/gpt-5.3-codex-spark": {
+        "successor_model": "chatgpt/gpt-5.1-codex-mini",
         "deprecation_date": "2026-09-14",
         "deprecation_source": "https://developers.openai.com/codex/models",
         "provider": "chatgpt",
@@ -35863,6 +35987,7 @@
         "output_cost_per_token": 0.000002
     },
     "google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 9e-8,
@@ -35885,6 +36010,7 @@
         "supports_vision": true
     },
     "google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.3e-7,
@@ -35907,6 +36033,7 @@
         "supports_vision": true
     },
     "google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4e-8,
@@ -43175,6 +43302,7 @@
         "source": "https://aws.amazon.com/bedrock/pricing/"
     },
     "meta.llama3-1-405b-instruct-v1:0": {
+        "successor_model": "meta.llama4-maverick-17b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 0.0000024,
@@ -43188,6 +43316,7 @@
         "supports_tool_choice": false
     },
     "meta.llama3-1-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 7.2e-7,
@@ -43203,6 +43332,7 @@
         "supports_tool_choice": false
     },
     "meta.llama3-1-8b-instruct-v1:0": {
+        "successor_model": "meta.llama2-13b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.2e-7,
@@ -43218,6 +43348,7 @@
         "supports_tool_choice": false
     },
     "meta.llama3-2-11b-instruct-v1:0": {
+        "successor_model": "meta.llama4-scout-17b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.6e-7,
@@ -43232,6 +43363,7 @@
         "supports_vision": true
     },
     "meta.llama3-2-1b-instruct-v1:0": {
+        "successor_model": "meta.llama3-1-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-1b-instruct.md",
         "input_cost_per_token": 1e-7,
@@ -43245,6 +43377,7 @@
         "supports_tool_choice": false
     },
     "meta.llama3-2-3b-instruct-v1:0": {
+        "successor_model": "meta.llama3-1-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-3b-instruct.md",
         "input_cost_per_token": 1.5e-7,
@@ -43258,6 +43391,7 @@
         "supports_tool_choice": false
     },
     "meta.llama3-2-90b-instruct-v1:0": {
+        "successor_model": "meta.llama4-maverick-17b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 7.2e-7,
@@ -43272,6 +43406,7 @@
         "supports_vision": true
     },
     "meta.llama3-3-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 7.2e-7,
@@ -43287,6 +43422,7 @@
         "supports_tool_choice": false
     },
     "meta.llama3-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md",
         "input_cost_per_token": 0.00000265,
@@ -43298,6 +43434,7 @@
         "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-70b-instruct.md"
     },
     "meta.llama3-8b-instruct-v1:0": {
+        "successor_model": "meta.llama2-13b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-8b-instruct.md",
         "input_cost_per_token": 3e-7,
@@ -43993,6 +44130,7 @@
         }
     },
     "mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4e-7,
@@ -44100,6 +44238,7 @@
         "supports_vision": true
     },
     "mistral.mistral-7b-instruct-v0:2": {
+        "successor_model": "mistral.ministral-3-8b-instruct",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mistral-7b-instruct.md",
         "input_cost_per_token": 1.5e-7,
@@ -44166,6 +44305,7 @@
         "supports_function_calling": true
     },
     "mistral.mixtral-8x7b-instruct-v0:1": {
+        "successor_model": "mistral/mistral-small-2603",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mixtral-8x7b-instruct.md",
         "input_cost_per_token": 4.5e-7,
@@ -44178,6 +44318,7 @@
         "supports_tool_choice": true
     },
     "mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4e-8,
@@ -44218,6 +44359,7 @@
         "supports_native_structured_output": true
     },
     "bedrock/ap-southeast-2/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.12e-8,
@@ -44258,6 +44400,7 @@
         "supports_native_structured_output": true
     },
     "bedrock/ap-northeast-1/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -44298,6 +44441,7 @@
         "supports_native_structured_output": true
     },
     "bedrock/eu-west-2/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 6e-8,
@@ -45514,6 +45658,7 @@
         "alias_of": "moonshot/kimi-k3"
     },
     "moonshot/moonshot-v1-128k": {
+        "successor_model": "moonshot/kimi-k3.1-pro",
         "deprecation_date": "2026-08-31",
         "input_cost_per_token": 0.000002,
         "provider": "moonshot",
@@ -45527,6 +45672,7 @@
         "supports_tool_choice": true
     },
     "moonshot/moonshot-v1-128k-vision-preview": {
+        "successor_model": "moonshot/kimi-k3.1-pro",
         "deprecation_date": "2026-08-31",
         "input_cost_per_token": 0.000002,
         "provider": "moonshot",
@@ -45541,6 +45687,7 @@
         "supports_vision": true
     },
     "moonshot/moonshot-v1-32k": {
+        "successor_model": "moonshot/kimi-k3.1-pro",
         "deprecation_date": "2026-08-31",
         "input_cost_per_token": 0.000001,
         "provider": "moonshot",
@@ -45554,6 +45701,7 @@
         "supports_tool_choice": true
     },
     "moonshot/moonshot-v1-32k-vision-preview": {
+        "successor_model": "moonshot/kimi-k3.1-pro",
         "deprecation_date": "2026-08-31",
         "input_cost_per_token": 0.000001,
         "provider": "moonshot",
@@ -45568,6 +45716,7 @@
         "supports_vision": true
     },
     "moonshot/moonshot-v1-8k": {
+        "successor_model": "moonshot/kimi-k3.1-pro",
         "deprecation_date": "2026-08-31",
         "input_cost_per_token": 2e-7,
         "provider": "moonshot",
@@ -45581,6 +45730,7 @@
         "supports_tool_choice": true
     },
     "moonshot/moonshot-v1-8k-vision-preview": {
+        "successor_model": "moonshot/kimi-k3.1-pro",
         "deprecation_date": "2026-08-31",
         "input_cost_per_token": 2e-7,
         "provider": "moonshot",
@@ -45595,6 +45745,7 @@
         "supports_vision": true
     },
     "moonshot/moonshot-v1-auto": {
+        "successor_model": "moonshot/kimi-k3.1-pro",
         "deprecation_date": "2026-08-31",
         "input_cost_per_token": 0.000002,
         "provider": "moonshot",
@@ -45760,6 +45911,7 @@
         "supports_vision": false
     },
     "multimodalembedding": {
+        "successor_model": "gemini-embedding-2",
         "deprecation_date": "2027-04-01",
         "deprecation_source": "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
         "input_cost_per_character": 2e-7,
@@ -45785,6 +45937,7 @@
         "supports_embedding_image_input": true
     },
     "multimodalembedding@001": {
+        "successor_model": "gemini-embedding-2",
         "deprecation_date": "2027-04-01",
         "deprecation_source": "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
         "input_cost_per_character": 2e-7,
@@ -49086,6 +49239,7 @@
         "supports_reasoning": true
     },
     "qwen.qwen3-coder-480b-a35b-v1:0": {
+        "successor_model": "qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html",
         "input_cost_per_token": 4.5e-7,
@@ -49118,6 +49272,7 @@
         "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-235b-a22b-2507.html"
     },
     "qwen.qwen3-coder-30b-a3b-v1:0": {
+        "successor_model": "qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.5e-7,
@@ -51408,6 +51563,7 @@
         "source": "https://docs.mistral.ai/capabilities/code_generation/"
     },
     "text-embedding-004": {
+        "successor_model": "gemini-embedding-2",
         "deprecation_date": "2027-04-01",
         "deprecation_source": "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
         "input_cost_per_character": 2.5e-8,
@@ -51420,6 +51576,7 @@
         "source": "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models"
     },
     "text-embedding-005": {
+        "successor_model": "gemini-embedding-2",
         "deprecation_date": "2027-04-01",
         "deprecation_source": "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
         "input_cost_per_character": 2.5e-8,
@@ -51491,6 +51648,7 @@
         "source": "https://cloud.google.com/vertex-ai/generative-ai/pricing"
     },
     "text-multilingual-embedding-002": {
+        "successor_model": "gemini-embedding-2",
         "deprecation_date": "2027-04-01",
         "deprecation_source": "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
         "input_cost_per_character": 2.5e-8,
@@ -51645,6 +51803,8 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/BAAI/bge-base-en-v1.5": {
+        "deprecation_date": "2026-02-25",
+        "deprecation_source": "https://docs.together.ai/docs/changelog",
         "input_cost_per_token": 8e-9,
         "provider": "together_ai",
         "max_input_tokens": 512,
@@ -51734,6 +51894,7 @@
         "supports_tool_choice": true
     },
     "together_ai/togethercomputer/CodeLlama-34b-Instruct": {
+        "successor_model": "together_ai/meta-models/Muse-Glimmer-30B",
         "deprecation_date": "2026-10-30",
         "provider": "together_ai",
         "mode": "chat",
@@ -51742,6 +51903,9 @@
         "supports_tool_choice": true
     },
     "together_ai/zai-org/GLM-4.6": {
+        "successor_model": "together_ai/zai-org/GLM-5.3",
+        "deprecation_date": "2026-07-29",
+        "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 6e-7,
         "provider": "together_ai",
         "max_input_tokens": 202752,
@@ -52269,6 +52433,7 @@
         "supports_vision": true,
         "cache_read_input_token_cost": 3e-7,
         "cache_creation_input_token_cost": 0.00000375,
+        "successor_model": "us.anthropic.claude-sonnet-5-5",
         "deprecation_date": "2026-11-13",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html"
     },
@@ -52289,6 +52454,7 @@
         "supports_response_schema": true,
         "supports_tool_choice": true,
         "supports_vision": true,
+        "successor_model": "us.anthropic.claude-sonnet-5-5",
         "deprecation_date": "2026-11-13",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html"
     },
@@ -52966,6 +53132,7 @@
         }
     },
     "us.deepseek.r1-v1:0": {
+        "successor_model": "us.deepseek.v3.2",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-deepseek-deepseek-r1.html",
         "input_cost_per_token": 0.00000135,
@@ -53019,6 +53186,7 @@
         "supports_vision": false
     },
     "us.meta.llama3-1-405b-instruct-v1:0": {
+        "successor_model": "us.meta.llama4-maverick-17b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 0.0000024,
@@ -53032,6 +53200,7 @@
         "supports_tool_choice": false
     },
     "us.meta.llama3-1-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 7.2e-7,
@@ -53047,6 +53216,7 @@
         "supports_tool_choice": false
     },
     "us.meta.llama3-1-8b-instruct-v1:0": {
+        "successor_model": "meta.llama2-13b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.2e-7,
@@ -53062,6 +53232,7 @@
         "supports_tool_choice": false
     },
     "us.meta.llama3-2-11b-instruct-v1:0": {
+        "successor_model": "us.meta.llama4-scout-17b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.6e-7,
@@ -53076,6 +53247,7 @@
         "supports_vision": true
     },
     "us.meta.llama3-2-1b-instruct-v1:0": {
+        "successor_model": "us.meta.llama3-1-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-1b-instruct.md",
         "input_cost_per_token": 1e-7,
@@ -53089,6 +53261,7 @@
         "supports_tool_choice": false
     },
     "us.meta.llama3-2-3b-instruct-v1:0": {
+        "successor_model": "us.meta.llama3-1-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-3b-instruct.md",
         "input_cost_per_token": 1.5e-7,
@@ -53102,6 +53275,7 @@
         "supports_tool_choice": false
     },
     "us.meta.llama3-2-90b-instruct-v1:0": {
+        "successor_model": "us.meta.llama4-maverick-17b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 7.2e-7,
@@ -53116,6 +53290,7 @@
         "supports_vision": true
     },
     "us.meta.llama3-3-70b-instruct-v1:0": {
+        "successor_model": "meta.llama2-70b-chat-v1",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 7.2e-7,
@@ -55082,6 +55257,7 @@
         "supports_max_reasoning_effort": true,
         "prompt_cache_min_tokens": 512,
         "deprecation_source": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/fable-5-2",
+        "successor_model": "vertex_ai/claude-opus-5-5",
         "deprecation_date": "2027-11-09",
         "input_cost_per_token_batches": 0.000004,
         "output_cost_per_token_batches": 0.00002,
@@ -55123,6 +55299,7 @@
         "supports_xhigh_reasoning_effort": true,
         "supports_max_reasoning_effort": true,
         "prompt_cache_min_tokens": 512,
+        "successor_model": "vertex_ai/claude-opus-5-5",
         "deprecation_date": "2027-11-09",
         "deprecation_source": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/fable-5-2",
         "input_cost_per_token_batches": 0.000004,
@@ -55253,6 +55430,7 @@
         "supports_max_reasoning_effort": true,
         "prompt_cache_min_tokens": 512,
         "deprecation_source": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/fable-5-2",
+        "successor_model": "vertex_ai/claude-opus-5-5@default",
         "deprecation_date": "2027-11-09",
         "input_cost_per_token_batches": 0.000004,
         "output_cost_per_token_batches": 0.00002,
@@ -55294,6 +55472,7 @@
         "supports_xhigh_reasoning_effort": true,
         "supports_max_reasoning_effort": true,
         "prompt_cache_min_tokens": 512,
+        "successor_model": "vertex_ai/claude-opus-5-5@default",
         "deprecation_date": "2027-11-09",
         "deprecation_source": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/fable-5-2",
         "input_cost_per_token_batches": 0.000004,
@@ -55824,6 +56003,7 @@
     },
     "vertex_ai/deepseek-ai/deepseek-r1-0528-maas": {
         "deprecation_source": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/deprecations/open-models",
+        "successor_model": "vertex_ai/deepseek-ai/deepseek-v4.1-flash-maas",
         "deprecation_date": "2026-10-21",
         "input_cost_per_token": 0.00000135,
         "input_cost_per_token_batches": 6.75e-7,
@@ -56629,6 +56809,7 @@
     "vertex_ai/moonshotai/kimi-k2-thinking-maas": {
         "cache_read_input_token_cost": 6e-8,
         "deprecation_source": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/deprecations/open-models",
+        "successor_model": "moonshot/kimi-k3.1-pro",
         "deprecation_date": "2026-10-21",
         "input_cost_per_token": 6e-7,
         "provider": "vertex_ai-moonshot_models",
@@ -72279,6 +72460,9 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/deepseek-ai/DeepSeek-R1-0528": {
+        "successor_model": "together_ai/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+        "deprecation_date": "2026-07-29",
+        "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 0.000003,
         "output_cost_per_token": 0.000007,
         "provider": "together_ai",
@@ -72287,6 +72471,8 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/mistralai/Ministral-3-14B-Instruct-2512": {
+        "deprecation_date": "2026-02-25",
+        "deprecation_source": "https://docs.together.ai/docs/changelog",
         "input_cost_per_token": 2e-7,
         "output_cost_per_token": 2e-7,
         "provider": "together_ai",
@@ -72295,6 +72481,7 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/nvidia/NVIDIA-Nemotron-Nano-9B-v2": {
+        "successor_model": "together_ai/Qwen/Qwen3.5-9B",
         "deprecation_date": "2026-02-25",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 6e-8,
@@ -72305,6 +72492,9 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/mistralai/Mistral-7B-Instruct-v0.3": {
+        "successor_model": "together_ai/mistralai/Ministral-3-14B-Instruct-2512",
+        "deprecation_date": "2026-01-29",
+        "deprecation_source": "https://docs.together.ai/docs/changelog",
         "input_cost_per_token": 2e-7,
         "output_cost_per_token": 2e-7,
         "provider": "together_ai",
@@ -72339,6 +72529,7 @@
     },
     "scaleway/glm-5.2": {
         "deprecation_source": "https://www.scaleway.com/en/docs/generative-apis/reference-content/supported-models/",
+        "successor_model": "zai/glm-5.3",
         "deprecation_date": "2026-11-16",
         "input_cost_per_token": 0.0000018,
         "provider": "scaleway",
@@ -72367,6 +72558,7 @@
     },
     "azure_ai/kimi-k2.7-code": {
         "cache_read_input_token_cost": 1.9e-7,
+        "successor_model": "azure_ai/kimi-k3.1-pro",
         "deprecation_date": "2027-04-16",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 9.5e-7,
@@ -72513,6 +72705,7 @@
         "alias_of": "azure_ai/FW-GLM-5.3-Flash"
     },
     "azure_ai/FW-GPT-OSS-120B": {
+        "successor_model": "azure_ai/gpt-6.1-terra",
         "deprecation_date": "2027-07-01",
         "cache_read_input_token_cost": 8.2e-8,
         "input_cost_per_token": 1.65e-7,
@@ -74043,6 +74236,7 @@
         ]
     },
     "bedrock_mantle/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 9e-8,
@@ -74094,6 +74288,7 @@
         ]
     },
     "bedrock_mantle/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4e-8,
@@ -74196,6 +74391,7 @@
         ]
     },
     "bedrock_mantle/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4e-7,
@@ -74342,6 +74538,7 @@
         ]
     },
     "bedrock_mantle/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4e-8,
@@ -74658,6 +74855,7 @@
         "source": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json"
     },
     "bedrock_mantle/qwen.qwen3-coder-30b-a3b-instruct": {
+        "successor_model": "bedrock_mantle/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.5e-7,
@@ -74680,6 +74878,7 @@
         "source": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json"
     },
     "bedrock_mantle/qwen.qwen3-coder-480b-a35b-instruct": {
+        "successor_model": "bedrock_mantle/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html",
         "input_cost_per_token": 4.5e-7,
@@ -75714,6 +75913,9 @@
         "max_output_tokens": 4096
     },
     "together_ai/meta-llama/Llama-3.2-1B-Instruct": {
+        "successor_model": "together_ai/meta-models/Muse-Glimmer-30B",
+        "deprecation_date": "2026-07-29",
+        "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 6e-8,
         "provider": "together_ai",
         "mode": "chat",
@@ -75723,6 +75925,9 @@
         "max_output_tokens": 131072
     },
     "together_ai/meta-llama/Llama-3.2-3B-Instruct": {
+        "successor_model": "together_ai/meta-models/Muse-Glimmer-30B",
+        "deprecation_date": "2026-07-29",
+        "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 6e-8,
         "provider": "together_ai",
         "mode": "chat",
@@ -75732,6 +75937,9 @@
         "max_output_tokens": 131072
     },
     "together_ai/Qwen/Qwen2-1.5B-Instruct": {
+        "successor_model": "together_ai/Qwen/Qwen3.5-9B",
+        "deprecation_date": "2026-07-29",
+        "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 2e-8,
         "provider": "together_ai",
         "mode": "chat",
@@ -75741,6 +75949,9 @@
         "max_output_tokens": 32768
     },
     "together_ai/Qwen/Qwen2.5-14B-Instruct": {
+        "successor_model": "together_ai/Qwen/Qwen3.5-9B",
+        "deprecation_date": "2026-07-29",
+        "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 8e-7,
         "provider": "together_ai",
         "mode": "chat",
@@ -75750,6 +75961,9 @@
         "max_output_tokens": 32768
     },
     "together_ai/Qwen/Qwen2.5-72B-Instruct": {
+        "successor_model": "together_ai/Qwen/Qwen4-Max",
+        "deprecation_date": "2026-07-29",
+        "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 0.0000012,
         "provider": "together_ai",
         "mode": "chat",
@@ -75786,6 +76000,7 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/Qwen/Qwen2.5-72B-Instruct-Turbo": {
+        "successor_model": "together_ai/Qwen/Qwen4-Max",
         "deprecation_date": "2026-02-06",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 0.0000012,
@@ -75797,6 +76012,7 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/Qwen/Qwen2.5-VL-72B-Instruct": {
+        "successor_model": "together_ai/Qwen/Qwen4-Max",
         "deprecation_date": "2026-01-05",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 0.00000195,
@@ -75808,6 +76024,7 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8": {
+        "successor_model": "together_ai/Qwen/Qwen4-Max",
         "deprecation_date": "2026-06-04",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 0.000002,
@@ -75819,6 +76036,7 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/Qwen/Qwen3-Coder-Next-FP8": {
+        "successor_model": "together_ai/Qwen/Qwen3.8-Flash",
         "deprecation_date": "2026-05-14",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 5e-7,
@@ -75830,6 +76048,7 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/Qwen/Qwen3-Next-80B-A3B-Instruct": {
+        "successor_model": "together_ai/Qwen/Qwen3.8-Flash",
         "deprecation_date": "2026-04-02",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 1.5e-7,
@@ -75841,6 +76060,7 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/Qwen/Qwen3-Next-80B-A3B-Thinking": {
+        "successor_model": "together_ai/Qwen/Qwen3.8-Flash",
         "deprecation_date": "2026-02-25",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 1.5e-7,
@@ -75863,6 +76083,7 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/Qwen/Qwen3-VL-8B-Instruct": {
+        "successor_model": "together_ai/Qwen/Qwen3.5-9B",
         "deprecation_date": "2026-04-16",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 1.8e-7,
@@ -75875,6 +76096,7 @@
     },
     "together_ai/Qwen/Qwen3.5-397B-A17B": {
         "cache_read_input_token_cost": 3.5e-7,
+        "successor_model": "together_ai/Qwen/Qwen4-Max",
         "deprecation_date": "2026-06-29",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 6e-7,
@@ -75918,6 +76140,7 @@
         "successor_model": "together_ai/zai-org/GLM-5.3-Flash"
     },
     "together_ai/meta-llama/Llama-4-Scout-17B-16E-Instruct": {
+        "successor_model": "together_ai/meta-models/Muse-Spark-Open-816B-A42B",
         "deprecation_date": "2026-02-06",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 1.8e-7,
@@ -75941,6 +76164,7 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo": {
+        "successor_model": "together_ai/meta-models/Muse-Glimmer-30B",
         "deprecation_date": "2026-03-06",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 1.8e-7,
@@ -75952,6 +76176,7 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/mistralai/Mistral-Small-24B-Instruct-2501": {
+        "successor_model": "mistral/mistral-small-2603",
         "deprecation_date": "2026-04-02",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 1e-7,
@@ -75963,6 +76188,7 @@
         "source": "https://api.together.ai/v1/models"
     },
     "together_ai/mistralai/Mixtral-8x7B-Instruct-v0.1": {
+        "successor_model": "mistral/mistral-small-2603",
         "deprecation_date": "2026-04-16",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 6e-7,
@@ -76001,6 +76227,7 @@
     },
     "together_ai/nvidia/nemotron-3-ultra-550b-a55b": {
         "cache_read_input_token_cost": 2e-7,
+        "successor_model": "together_ai/nvidia/NVIDIA-Nemotron-3.5-Super-VL",
         "deprecation_date": "2026-08-27",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 6e-7,
@@ -76024,6 +76251,7 @@
         "successor_model": "together_ai/Qwen/Qwen3.5-9B"
     },
     "together_ai/zai-org/GLM-4.5-Air-FP8": {
+        "successor_model": "together_ai/zai-org/GLM-5.3-Flash",
         "deprecation_date": "2026-04-02",
         "deprecation_source": "https://docs.together.ai/docs/deprecations",
         "input_cost_per_token": 2e-7,
@@ -76073,7 +76301,7 @@
     },
     "azure/eu/codex-mini": {
         "successor_model": "azure/eu/gpt-5.1-codex-mini",
-        "deprecation_date": "2026-11-15",
+        "deprecation_date": "2026-11-17",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "cache_read_input_token_cost": 4.13e-7,
         "input_cost_per_token": 0.00000165,
@@ -76370,6 +76598,7 @@
         "source": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20'Foundry%20Models'%20and%20armRegionName%20eq%20'eastus'%20and%20priceType%20eq%20'Consumption'"
     },
     "azure/eu/gpt-5.4-pro": {
+        "successor_model": "azure/gpt-5.5-pro",
         "deprecation_date": "2027-09-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_token": 0.000033,
@@ -76390,6 +76619,7 @@
         "source": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20'Foundry%20Models'%20and%20armRegionName%20eq%20'eastus'%20and%20priceType%20eq%20'Consumption'"
     },
     "azure/eu/gpt-6-astra": {
+        "successor_model": "azure/eu/gpt-6.1-sol",
         "deprecation_date": "2028-01-11",
         "cache_creation_input_token_cost": 0.000015,
         "cache_creation_input_token_cost_above_272k_tokens": 0.00003,
@@ -76438,6 +76668,7 @@
         "supports_xhigh_reasoning_effort": true
     },
     "azure/eu/gpt-6-luna": {
+        "successor_model": "azure_ai/gpt-6.1-terra",
         "deprecation_date": "2028-03-11",
         "cache_creation_input_token_cost": 1.5e-7,
         "cache_creation_input_token_cost_above_272k_tokens": 3e-7,
@@ -76486,6 +76717,7 @@
         "supports_xhigh_reasoning_effort": true
     },
     "azure/eu/gpt-6-sol": {
+        "successor_model": "azure_ai/gpt-6.1-sol",
         "deprecation_date": "2028-03-11",
         "cache_creation_input_token_cost": 0.000003,
         "cache_creation_input_token_cost_above_272k_tokens": 0.000006,
@@ -76714,7 +76946,7 @@
     },
     "azure/us/codex-mini": {
         "successor_model": "azure/us/gpt-5.1-codex-mini",
-        "deprecation_date": "2026-11-15",
+        "deprecation_date": "2026-11-17",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "cache_read_input_token_cost": 4.13e-7,
         "input_cost_per_token": 0.00000165,
@@ -77011,6 +77243,7 @@
         "source": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20'Foundry%20Models'%20and%20armRegionName%20eq%20'eastus'%20and%20priceType%20eq%20'Consumption'"
     },
     "azure/us/gpt-5.4-pro": {
+        "successor_model": "azure/gpt-5.5-pro",
         "deprecation_date": "2027-09-07",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_token": 0.000033,
@@ -77117,6 +77350,7 @@
     },
     "azure/gpt-live-1": {
         "deprecation_date": "2027-09-10",
+        "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_second": 0.000833333333333,
         "provider": "azure",
         "mode": "realtime",
@@ -77135,6 +77369,7 @@
     },
     "azure/gpt-live-transcribe": {
         "deprecation_date": "2028-02-01",
+        "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_second": 0.000283333333333,
         "provider": "azure",
         "max_input_tokens": 32000,
@@ -77160,6 +77395,7 @@
     },
     "azure/gpt-transcribe": {
         "deprecation_date": "2028-02-01",
+        "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_second": 0.000075,
         "provider": "azure",
         "mode": "audio_transcription",
@@ -77186,6 +77422,7 @@
     },
     "azure/gpt-realtime-translate": {
         "deprecation_date": "2027-11-09",
+        "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_second": 0.000566666666667,
         "provider": "azure",
         "max_input_tokens": 32000,
@@ -79704,6 +79941,7 @@
     },
     "vertex_ai/meta/llama-3.3-70b-instruct-maas": {
         "deprecation_source": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/deprecations/open-models",
+        "successor_model": "vertex_ai/meta/llama-4-scout-17b-16e-instruct-maas",
         "deprecation_date": "2026-10-21",
         "input_cost_per_token": 7.2e-7,
         "input_cost_per_token_batches": 3.6e-7,
@@ -79778,6 +80016,7 @@
     },
     "vertex_ai/virtual-try-on-001": {
         "deprecation_source": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/vto/virtual-try-on-001",
+        "successor_model": "vertex_ai/gemini-nano-banana-2.1",
         "deprecation_date": "2027-03-15",
         "provider": "vertex_ai",
         "mode": "image_generation",
@@ -80295,6 +80534,7 @@
         "source": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/index.json"
     },
     "deepseek.r1-v1:0": {
+        "successor_model": "deepseek.v3.2",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-deepseek-deepseek-r1.html",
         "input_cost_per_token": 0.00000135,
@@ -80479,6 +80719,7 @@
         "cache_creation_input_token_cost": 0.0000025,
         "cache_creation_input_token_cost_above_1hr": 0.000004,
         "cache_read_input_token_cost": 1e-7,
+        "successor_model": "azure_ai/claude-fable-5-2",
         "deprecation_date": "2027-09-29",
         "input_cost_per_token": 0.000002,
         "provider": "azure_ai",
@@ -81552,6 +81793,7 @@
     },
     "azure/model-router": {
         "comment": "The flat $0.14 per M input tokens is the router's own fee, the routed model is priced on top of it",
+        "successor_model": "azure_ai/MAI-Thinking-1",
         "deprecation_date": "2027-05-20",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_token": 1.4e-7,
@@ -81739,6 +81981,7 @@
     "azure_ai/grok-4.7": {
         "cache_read_input_token_cost": 5e-7,
         "cache_read_input_token_cost_above_200k_tokens": 0.000001,
+        "successor_model": "azure_ai/grok-4.6",
         "deprecation_date": "2027-10-05",
         "input_cost_per_token": 0.000002,
         "input_cost_per_token_above_200k_tokens": 0.000004,
@@ -82649,6 +82892,7 @@
         ]
     },
     "azure_ai/Cohere-Embed-V5-Fast": {
+        "successor_model": "azure_ai/embed-v-4-0",
         "deprecation_date": "2027-01-23",
         "input_cost_per_image_token": 4e-7,
         "input_cost_per_token": 8e-8,
@@ -82668,6 +82912,7 @@
         "supports_embedding_image_input": true
     },
     "azure_ai/Cohere-Embed-V5-Pro": {
+        "successor_model": "azure_ai/embed-v-4-0",
         "deprecation_date": "2027-01-23",
         "input_cost_per_image_token": 4e-7,
         "input_cost_per_token": 1.2e-7,
@@ -83205,6 +83450,7 @@
         "cache_creation_input_token_cost": 0.00001,
         "cache_creation_input_token_cost_above_1hr": 0.000016,
         "cache_read_input_token_cost": 4e-7,
+        "successor_model": "azure_ai/claude-fable-5-2",
         "deprecation_date": "2027-01-15",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement",
         "input_cost_per_token": 0.000008,
@@ -83279,7 +83525,7 @@
         "max_input_tokens": 1049000,
         "max_output_tokens": 943718,
         "mode": "chat",
-        "output_cost_per_token": 5e-7,
+        "output_cost_per_token": 4.7e-7,
         "source": "https://www.coreweave.com/products/coreweave-forge/serverless-inference",
         "supports_function_calling": true,
         "supports_prompt_caching": true,
@@ -83636,6 +83882,7 @@
     },
     "azure_ai/MAI-Code-1.1-Flash": {
         "cache_read_input_token_cost": 2e-8,
+        "successor_model": "azure_ai/MAI-Cyber-1-Flash",
         "deprecation_date": "2026-12-09",
         "input_cost_per_token": 2e-7,
         "provider": "azure_ai",
@@ -87446,16 +87693,16 @@
         "supports_vision": true
     },
     "fireworks_ai/accounts/fireworks/routers/spot-deepseek-v4-flash": {
-        "cache_read_input_token_cost": 2.1e-8,
+        "cache_read_input_token_cost": 1.4e-8,
         "deprecation_date": "2026-08-14",
         "deprecation_source": "https://docs.fireworks.ai/api-reference/list-models.md",
-        "input_cost_per_token": 1.05e-7,
+        "input_cost_per_token": 7e-8,
         "provider": "fireworks_ai",
         "max_input_tokens": 1048576,
         "max_output_tokens": 384000,
         "mode": "chat",
-        "output_cost_per_token": 2.1e-7,
-        "source": "https://api.fireworks.ai/v1/serverless/models",
+        "output_cost_per_token": 1.4e-7,
+        "source": "https://api.fireworks.ai/v1/serverless/models?format=nested",
         "successor_model": "fireworks_ai/accounts/fireworks/models/deepseek-v4p1-flash",
         "supports_function_calling": true,
         "supports_prompt_caching": true,
@@ -87487,14 +87734,14 @@
         "supports_vision": true
     },
     "fireworks_ai/accounts/fireworks/routers/glm-5p3-spot": {
-        "cache_read_input_token_cost": 1.82e-7,
-        "input_cost_per_token": 9.8e-7,
+        "cache_read_input_token_cost": 1.3e-7,
+        "input_cost_per_token": 7e-7,
         "provider": "fireworks_ai",
         "max_input_tokens": 1048576,
         "max_output_tokens": 128000,
         "mode": "chat",
-        "output_cost_per_token": 0.00000308,
-        "source": "https://api.fireworks.ai/v1/serverless/models",
+        "output_cost_per_token": 0.0000022,
+        "source": "https://api.fireworks.ai/v1/serverless/models?format=nested",
         "supports_function_calling": true,
         "supports_mid_conversation_system": true,
         "supports_prompt_caching": true,
@@ -87504,14 +87751,14 @@
         "supports_vision": false
     },
     "fireworks_ai/accounts/fireworks/routers/deepseek-v4p1-flash-spot": {
-        "cache_read_input_token_cost": 4.2e-9,
-        "input_cost_per_token": 2.1e-7,
+        "cache_read_input_token_cost": 3e-9,
+        "input_cost_per_token": 1.5e-7,
         "provider": "fireworks_ai",
         "max_input_tokens": 1048576,
         "max_output_tokens": 393216,
         "mode": "chat",
-        "output_cost_per_token": 8.4e-7,
-        "source": "https://api.fireworks.ai/v1/serverless/models",
+        "output_cost_per_token": 6e-7,
+        "source": "https://api.fireworks.ai/v1/serverless/models?format=nested",
         "supports_function_calling": true,
         "supports_mid_conversation_system": true,
         "supports_prompt_caching": true,
@@ -87521,14 +87768,14 @@
         "supports_vision": true
     },
     "fireworks_ai/accounts/fireworks/routers/deepseek-v4p1-flash-1017-ultrafast": {
-        "cache_read_input_token_cost": 4.8e-8,
-        "input_cost_per_token": 0.0000024,
+        "cache_read_input_token_cost": 2.4e-8,
+        "input_cost_per_token": 0.0000012,
         "provider": "fireworks_ai",
         "max_input_tokens": 1048576,
         "max_output_tokens": 393216,
         "mode": "chat",
-        "output_cost_per_token": 0.0000096,
-        "source": "https://docs.fireworks.ai/serverless/pricing.md",
+        "output_cost_per_token": 0.0000048,
+        "source": "https://api.fireworks.ai/v1/serverless/models?format=nested",
         "supports_function_calling": true,
         "supports_mid_conversation_system": true,
         "supports_prompt_caching": true,
@@ -87538,14 +87785,31 @@
         "supports_vision": true
     },
     "fireworks_ai/accounts/fireworks/routers/deepseek-v4p1-flash-1017-spot": {
-        "cache_read_input_token_cost": 4.2e-9,
-        "input_cost_per_token": 2.1e-7,
+        "cache_read_input_token_cost": 3e-9,
+        "input_cost_per_token": 1.5e-7,
         "provider": "fireworks_ai",
         "max_input_tokens": 1048576,
         "max_output_tokens": 393216,
         "mode": "chat",
-        "output_cost_per_token": 8.4e-7,
-        "source": "https://api.fireworks.ai/v1/serverless/models",
+        "output_cost_per_token": 6e-7,
+        "source": "https://api.fireworks.ai/v1/serverless/models?format=nested",
+        "supports_function_calling": true,
+        "supports_mid_conversation_system": true,
+        "supports_prompt_caching": true,
+        "supports_reasoning": true,
+        "supports_response_schema": true,
+        "supports_tool_choice": true,
+        "supports_vision": true
+    },
+    "fireworks_ai/accounts/fireworks/routers/deepseek-v4p1-flash-1017-flex": {
+        "cache_read_input_token_cost": 3e-9,
+        "input_cost_per_token": 1.5e-7,
+        "provider": "fireworks_ai",
+        "max_input_tokens": 1048576,
+        "max_output_tokens": 393216,
+        "mode": "chat",
+        "output_cost_per_token": 6e-7,
+        "source": "https://docs.fireworks.ai/serverless/serverless-modes.md",
         "supports_function_calling": true,
         "supports_mid_conversation_system": true,
         "supports_prompt_caching": true,
@@ -87658,20 +87922,20 @@
         "supports_vision": true
     },
     "gpt-6-rosalind": {
-        "cache_creation_input_token_cost": 0.00001875,
-        "cache_creation_input_token_cost_above_12hr": 0.0000375,
-        "cache_creation_input_token_cost_above_12hr_above_272k_tokens": 0.000075,
-        "cache_creation_input_token_cost_above_272k_tokens": 0.0000375,
+        "cache_creation_input_token_cost": 0.0000125,
+        "cache_creation_input_token_cost_above_12hr": 0.000025,
+        "cache_creation_input_token_cost_above_12hr_above_272k_tokens": 0.00005,
+        "cache_creation_input_token_cost_above_272k_tokens": 0.000025,
         "cache_read_input_token_cost": 0.000001,
-        "cache_read_input_token_cost_above_272k_tokens": 0.000003,
+        "cache_read_input_token_cost_above_272k_tokens": 0.000002,
         "input_cost_per_token": 0.00001,
-        "input_cost_per_token_above_272k_tokens": 0.00003,
+        "input_cost_per_token_above_272k_tokens": 0.00002,
         "provider": "openai",
         "max_input_tokens": 922000,
         "max_output_tokens": 128000,
         "mode": "chat",
         "output_cost_per_token": 0.00005,
-        "output_cost_per_token_above_272k_tokens": 0.0001125,
+        "output_cost_per_token_above_272k_tokens": 0.000075,
         "regional_processing_uplift_multiplier_eu": 1.1,
         "regional_processing_uplift_multiplier_us": 1.1,
         "source": "https://developers.openai.com/api/docs/pricing",
@@ -90714,6 +90978,16 @@
         "output_cost_per_token": 0.00001,
         "source": "https://ie-api.gmicloud.ai/v1/artifact/get_public_artifacts"
     },
+    "gmi/google/gemini-4-hydrogen": {
+        "cache_creation_input_token_cost": 0.000001875,
+        "cache_read_input_token_cost": 7.5e-8,
+        "input_cost_per_token": 0.0000015,
+        "provider": "gmi",
+        "max_input_tokens": 1048576,
+        "mode": "chat",
+        "output_cost_per_token": 0.0000075,
+        "source": "https://ie-api.gmicloud.ai/v1/artifact/get_public_artifacts"
+    },
     "gmi/google/gemma-4-26b-a4b-it": {
         "input_cost_per_token": 1.3e-7,
         "provider": "gmi",
@@ -91691,6 +91965,7 @@
         "supports_vision": true
     },
     "azure_ai/cohere-rerank-v5-pro": {
+        "successor_model": "azure_ai/cohere-rerank-v4.0-pro",
         "deprecation_date": "2027-02-12",
         "deprecation_source": "https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2024-10-01",
         "input_cost_per_token": 5e-8,
@@ -91702,6 +91977,7 @@
         "source": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20'Foundry%20Models'%20and%20armRegionName%20eq%20'eastus'%20and%20priceType%20eq%20'Consumption'"
     },
     "azure_ai/cohere-rerank-v5-fast": {
+        "successor_model": "azure_ai/cohere-rerank-v4.0-fast",
         "deprecation_date": "2027-02-12",
         "deprecation_source": "https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2024-10-01",
         "input_cost_per_token": 2e-8,
@@ -91716,7 +91992,8 @@
         "cache_read_input_audio_token_cost": 4.4e-7,
         "cache_read_input_image_token_cost": 5.5e-7,
         "cache_read_input_token_cost": 4.4e-7,
-        "deprecation_date": "2027-06-25",
+        "successor_model": "azure/gpt-live-1",
+        "deprecation_date": "2027-07-31",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_audio_token": 0.0000352,
         "input_cost_per_image_token": 0.0000055,
@@ -91756,7 +92033,8 @@
         "cache_read_input_audio_token_cost": 3.3e-7,
         "cache_read_input_image_token_cost": 8.8e-8,
         "cache_read_input_token_cost": 6.6e-8,
-        "deprecation_date": "2027-06-25",
+        "successor_model": "azure/gpt-live-1",
+        "deprecation_date": "2027-07-31",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_audio_token": 0.000011,
         "input_cost_per_image_token": 8.8e-7,
@@ -91796,6 +92074,7 @@
         "cache_read_input_audio_token_cost": 4.4e-7,
         "cache_read_input_image_token_cost": 5.5e-7,
         "cache_read_input_token_cost": 4.4e-7,
+        "successor_model": "azure/gpt-live-1",
         "deprecation_date": "2027-08-24",
         "deprecation_source": "https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule",
         "input_cost_per_audio_token": 0.0000352,
@@ -105161,6 +105440,7 @@
         "supports_vision": true
     },
     "azure_ai/mistral-large-4-latest": {
+        "successor_model": "azure_ai/mistral-medium-3-5",
         "deprecation_date": "2027-10-27",
         "deprecation_source": "https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2024-10-01",
         "input_cost_per_token": 7e-7,
@@ -105569,18 +105849,24 @@
         "supports_vision": true
     },
     "databricks/databricks-gemini-4-carbon": {
-        "cache_creation_input_token_cost": 0.000002,
-        "cache_read_input_token_cost": 0.000002,
-        "input_cost_per_token": 0.000002,
+        "cache_creation_input_token_cost": 0.00000249998,
+        "cache_creation_input_token_cost_priority": 0.00000450002,
+        "cache_read_input_token_cost": 1.2502e-7,
+        "cache_read_input_token_cost_priority": 2.2498e-7,
+        "input_cost_per_token": 0.00000249998,
+        "input_cost_per_token_priority": 0.00000450002,
+        "input_dbu_cost_per_token": 0.000035714,
         "provider": "databricks",
         "max_input_tokens": 1048576,
         "max_output_tokens": 1048576,
         "metadata": {
-            "notes": "Gemini 4 Carbon on Databricks is available only through Unity Gateway with the model service name system.ai.gemini-4-carbon on a global endpoint. The Databricks pricing pages list no row for it yet, so input and output are the Global rates on the Vertex AI pricing page for Gemini 4 Carbon (listed there through November 30, 2026), no '*_dbu_cost_per_token' fields are published, and cache tokens bill at the input rate until Databricks publishes cache DBU rates."
+            "notes": "Costs per token are the published Global DBU rates times $0.070 per DBU. The '*_dbu_cost_per_token' fields are provided for reference; cost calculation reads the dollar '*_cost_per_token' fields. The Databricks pricing page says these rates reflect a 50% promotion in effect through November 30, 2026, after which the standard rates are twice those shown. The page lists no cache write rate, so cache writes bill at the input rate. Gemini 4 Carbon is available only through Unity Gateway with the model service name system.ai.gemini-4-carbon."
         },
         "mode": "chat",
-        "output_cost_per_token": 0.00001,
-        "source": "https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models",
+        "output_cost_per_token": 0.00001249997,
+        "output_cost_per_token_priority": 0.00002250003,
+        "output_dbu_cost_per_token": 0.000178571,
+        "source": "https://www.databricks.com/product/pricing/proprietary-foundation-model-serving",
         "supported_modalities": [
             "text",
             "image",
@@ -105599,18 +105885,24 @@
         "supports_vision": true
     },
     "databricks/system.ai.gemini-4-carbon": {
-        "cache_creation_input_token_cost": 0.000002,
-        "cache_read_input_token_cost": 0.000002,
-        "input_cost_per_token": 0.000002,
+        "cache_creation_input_token_cost": 0.00000249998,
+        "cache_creation_input_token_cost_priority": 0.00000450002,
+        "cache_read_input_token_cost": 1.2502e-7,
+        "cache_read_input_token_cost_priority": 2.2498e-7,
+        "input_cost_per_token": 0.00000249998,
+        "input_cost_per_token_priority": 0.00000450002,
+        "input_dbu_cost_per_token": 0.000035714,
         "provider": "databricks",
         "max_input_tokens": 1048576,
         "max_output_tokens": 1048576,
         "metadata": {
-            "notes": "Gemini 4 Carbon on Databricks is available only through Unity Gateway with the model service name system.ai.gemini-4-carbon on a global endpoint. The Databricks pricing pages list no row for it yet, so input and output are the Global rates on the Vertex AI pricing page for Gemini 4 Carbon (listed there through November 30, 2026), no '*_dbu_cost_per_token' fields are published, and cache tokens bill at the input rate until Databricks publishes cache DBU rates."
+            "notes": "Costs per token are the published Global DBU rates times $0.070 per DBU. The '*_dbu_cost_per_token' fields are provided for reference; cost calculation reads the dollar '*_cost_per_token' fields. The Databricks pricing page says these rates reflect a 50% promotion in effect through November 30, 2026, after which the standard rates are twice those shown. The page lists no cache write rate, so cache writes bill at the input rate. Gemini 4 Carbon is available only through Unity Gateway with the model service name system.ai.gemini-4-carbon."
         },
         "mode": "chat",
-        "output_cost_per_token": 0.00001,
-        "source": "https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models",
+        "output_cost_per_token": 0.00001249997,
+        "output_cost_per_token_priority": 0.00002250003,
+        "output_dbu_cost_per_token": 0.000178571,
+        "source": "https://www.databricks.com/product/pricing/proprietary-foundation-model-serving",
         "supported_modalities": [
             "text",
             "image",
@@ -107812,18 +108104,24 @@
         }
     },
     "databricks/system.ai.gemini-4-hydrogen": {
-        "cache_creation_input_token_cost": 0.0000015,
-        "cache_read_input_token_cost": 0.0000015,
-        "input_cost_per_token": 0.0000015,
+        "cache_creation_input_token_cost": 0.00000234374,
+        "cache_creation_input_token_cost_priority": 0.00000421876,
+        "cache_read_input_token_cost": 9.373e-8,
+        "cache_read_input_token_cost_priority": 1.6877e-7,
+        "input_cost_per_token": 0.00000187502,
+        "input_cost_per_token_priority": 0.00000337498,
+        "input_dbu_cost_per_token": 0.000026786,
         "provider": "databricks",
         "max_input_tokens": 1048576,
         "max_output_tokens": 65536,
         "metadata": {
-            "notes": "Gemini 4 Hydrogen on Databricks is available only through Unity Gateway with the model service name system.ai.gemini-4-hydrogen on a global endpoint, and Databricks supports text input only. The Databricks pricing pages list no row for it yet, so input and output are the Global rates on the Vertex AI pricing page for Gemini 4 Hydrogen, no '*_dbu_cost_per_token' fields are published, and cache tokens bill at the input rate until Databricks publishes cache DBU rates."
+            "notes": "Costs per token are the published Global DBU rates times $0.070 per DBU. The '*_dbu_cost_per_token' fields are provided for reference; cost calculation reads the dollar '*_cost_per_token' fields. Gemini 4 Hydrogen on Databricks is available only through Unity Gateway with the model service name system.ai.gemini-4-hydrogen on a global endpoint, and Databricks supports text input only."
         },
         "mode": "chat",
-        "output_cost_per_token": 0.0000075,
-        "source": "https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models",
+        "output_cost_per_token": 0.00000937503,
+        "output_cost_per_token_priority": 0.00001687497,
+        "output_dbu_cost_per_token": 0.000133929,
+        "source": "https://www.databricks.com/product/pricing/proprietary-foundation-model-serving",
         "supported_modalities": [
             "text"
         ],
@@ -107831,6 +108129,7 @@
             "text"
         ],
         "supports_audio_input": false,
+        "supports_prompt_caching": true,
         "supports_reasoning": true,
         "supports_video_input": false,
         "supports_vision": false
@@ -108154,6 +108453,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.00002,
         "cache_read_input_token_cost": 4e-7,
         "cache_read_input_token_cost_above_272k_tokens": 8e-7,
+        "successor_model": "azure/gpt-6-astra",
         "deprecation_date": "2027-02-17",
         "deprecation_source": "https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2024-10-01",
         "input_cost_per_token": 0.000008,
@@ -108205,6 +108505,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.000022,
         "cache_read_input_token_cost": 4.4e-7,
         "cache_read_input_token_cost_above_272k_tokens": 8.8e-7,
+        "successor_model": "azure/us/gpt-6-astra",
         "deprecation_date": "2027-02-17",
         "deprecation_source": "https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2024-10-01",
         "input_cost_per_token": 0.0000088,
@@ -108256,6 +108557,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.000024,
         "cache_read_input_token_cost": 4.8e-7,
         "cache_read_input_token_cost_above_272k_tokens": 9.6e-7,
+        "successor_model": "azure/eu/gpt-6-astra",
         "deprecation_date": "2027-02-17",
         "deprecation_source": "https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2024-10-01",
         "input_cost_per_token": 0.0000096,
@@ -108307,6 +108609,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.000024,
         "cache_read_input_token_cost": 4.8e-7,
         "cache_read_input_token_cost_above_272k_tokens": 9.6e-7,
+        "successor_model": "azure/gpt-6-astra",
         "deprecation_date": "2027-02-17",
         "deprecation_source": "https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2024-10-01",
         "input_cost_per_token": 0.0000096,
@@ -108358,6 +108661,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.000005,
         "cache_read_input_token_cost": 1e-7,
         "cache_read_input_token_cost_above_272k_tokens": 2e-7,
+        "successor_model": "azure/gpt-6.1-sol",
         "deprecation_date": "2027-11-17",
         "deprecation_source": "https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2024-10-01",
         "input_cost_per_token": 0.000002,
@@ -108409,6 +108713,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.0000055,
         "cache_read_input_token_cost": 1.1e-7,
         "cache_read_input_token_cost_above_272k_tokens": 2.2e-7,
+        "successor_model": "azure/us/gpt-6.1-sol",
         "deprecation_date": "2027-11-17",
         "deprecation_source": "https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2024-10-01",
         "input_cost_per_token": 0.0000022,
@@ -108460,6 +108765,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.000006,
         "cache_read_input_token_cost": 1.2e-7,
         "cache_read_input_token_cost_above_272k_tokens": 2.4e-7,
+        "successor_model": "azure/eu/gpt-6.1-sol",
         "deprecation_date": "2027-11-17",
         "deprecation_source": "https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2024-10-01",
         "input_cost_per_token": 0.0000024,
@@ -108511,6 +108817,7 @@
         "cache_creation_input_token_cost_above_272k_tokens": 0.000006,
         "cache_read_input_token_cost": 1.2e-7,
         "cache_read_input_token_cost_above_272k_tokens": 2.4e-7,
+        "successor_model": "azure/apac/gpt-6.1-sol",
         "deprecation_date": "2027-11-17",
         "deprecation_source": "https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2024-10-01",
         "input_cost_per_token": 0.0000024,
@@ -108554,6 +108861,30 @@
         "supports_vision": true,
         "supports_web_search": true,
         "supports_xhigh_reasoning_effort": true
+    },
+    "azure_ai/kimi-k3.1-pro": {
+        "cache_read_input_token_cost": 2.3e-7,
+        "successor_model": "azure_ai/FW-Kimi-K3",
+        "deprecation_date": "2027-11-04",
+        "input_cost_per_token": 0.0000023,
+        "provider": "azure_ai",
+        "max_input_tokens": 1048576,
+        "max_output_tokens": 1048576,
+        "mode": "chat",
+        "output_cost_per_token": 0.0000115,
+        "source": "https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20'Foundry%20Models'%20and%20armRegionName%20eq%20'eastus'%20and%20priceType%20eq%20'Consumption'",
+        "supported_modalities": [
+            "text",
+            "image"
+        ],
+        "supported_output_modalities": [
+            "text"
+        ],
+        "supports_function_calling": true,
+        "supports_prompt_caching": true,
+        "supports_reasoning": true,
+        "supports_tool_choice": true,
+        "supports_vision": true
     },
     "azure_ai/Microsoft-Decision-1.1": {
         "input_cost_per_token": 4.2e-8,
@@ -109477,6 +109808,7 @@
         "supports_vision": true
     },
     "bedrock/ap-northeast-1/deepseek.v3-v1:0": {
+        "successor_model": "bedrock/ap-south-1/deepseek.v3.2",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-deepseek-deepseek-v3-1.html",
         "input_cost_per_token": 7.01666e-7,
@@ -109511,6 +109843,7 @@
         "supports_vision": true
     },
     "bedrock/ap-northeast-1/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.1e-7,
@@ -109531,6 +109864,7 @@
         "supports_vision": true
     },
     "bedrock/ap-northeast-1/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.8e-7,
@@ -109551,6 +109885,7 @@
         "supports_vision": true
     },
     "bedrock/ap-northeast-1/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -109570,6 +109905,7 @@
         "supports_vision": true
     },
     "bedrock/ap-northeast-1/minimax.minimax-m2": {
+        "successor_model": "bedrock/ap-south-1/minimax.minimax-m2.5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 3.6e-7,
@@ -109591,6 +109927,7 @@
         "supports_vision": false
     },
     "bedrock/ap-northeast-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -109707,6 +110044,7 @@
         "supports_vision": true
     },
     "bedrock/ap-northeast-1/moonshot.kimi-k2-thinking": {
+        "successor_model": "moonshot/kimi-k3.1-pro",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 7.3e-7,
@@ -109924,6 +110262,7 @@
         "supports_tool_choice": true
     },
     "bedrock/ap-northeast-1/qwen.qwen3-coder-480b-a35b-v1:0": {
+        "successor_model": "bedrock/ap-south-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html",
         "input_cost_per_token": 5.4e-7,
@@ -110229,6 +110568,7 @@
         "supports_vision": true
     },
     "bedrock/ap-south-1/deepseek.v3-v1:0": {
+        "successor_model": "bedrock/ap-south-1/deepseek.v3.2",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-deepseek-deepseek-v3-1.html",
         "input_cost_per_token": 6.82424e-7,
@@ -110263,6 +110603,7 @@
         "supports_vision": true
     },
     "bedrock/ap-south-1/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.1e-7,
@@ -110283,6 +110624,7 @@
         "supports_vision": true
     },
     "bedrock/ap-south-1/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.7e-7,
@@ -110303,6 +110645,7 @@
         "supports_vision": true
     },
     "bedrock/ap-south-1/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -110322,6 +110665,7 @@
         "supports_vision": true
     },
     "bedrock/ap-south-1/minimax.minimax-m2": {
+        "successor_model": "bedrock/ap-south-1/minimax.minimax-m2.5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 3.5e-7,
@@ -110343,6 +110687,7 @@
         "supports_vision": false
     },
     "bedrock/ap-south-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -110440,6 +110785,7 @@
         "supports_vision": true
     },
     "bedrock/ap-south-1/mistral.mistral-7b-instruct-v0:2": {
+        "successor_model": "bedrock/ap-south-1/mistral.ministral-3-8b-instruct",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mistral-7b-instruct.md",
         "input_cost_per_token": 1.8e-7,
@@ -110481,6 +110827,7 @@
         "supports_vision": true
     },
     "bedrock/ap-south-1/mistral.mixtral-8x7b-instruct-v0:1": {
+        "successor_model": "mistral/mistral-small-2603",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mixtral-8x7b-instruct.md",
         "input_cost_per_token": 5.4e-7,
@@ -110493,6 +110840,7 @@
         "supports_tool_choice": true
     },
     "bedrock/ap-south-1/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -110529,6 +110877,7 @@
         "supports_system_messages": true
     },
     "bedrock/ap-south-1/moonshot.kimi-k2-thinking": {
+        "successor_model": "moonshot/kimi-k3.1-pro",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 7.1e-7,
@@ -110746,6 +111095,7 @@
         "supports_tool_choice": true
     },
     "bedrock/ap-south-1/qwen.qwen3-coder-480b-a35b-v1:0": {
+        "successor_model": "bedrock/ap-south-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html",
         "input_cost_per_token": 5.3e-7,
@@ -111055,6 +111405,7 @@
         "supports_vision": true
     },
     "bedrock/ap-southeast-2/minimax.minimax-m2.1": {
+        "successor_model": "bedrock/ap-south-1/minimax.minimax-m2.5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 3.1e-7,
@@ -111076,6 +111427,7 @@
         "supports_vision": false
     },
     "bedrock/ap-southeast-2/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.1e-7,
@@ -111097,6 +111449,7 @@
         "supports_vision": false
     },
     "bedrock/ap-southeast-2/mistral.mistral-7b-instruct-v0:2": {
+        "successor_model": "bedrock/ap-south-1/mistral.ministral-3-8b-instruct",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mistral-7b-instruct.md",
         "input_cost_per_token": 2e-7,
@@ -111119,6 +111472,7 @@
         "supports_function_calling": true
     },
     "bedrock/ap-southeast-2/mistral.mixtral-8x7b-instruct-v0:1": {
+        "successor_model": "mistral/mistral-small-2603",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mixtral-8x7b-instruct.md",
         "input_cost_per_token": 5.9e-7,
@@ -111271,6 +111625,7 @@
         "supports_vision": false
     },
     "bedrock/ap-southeast-3/deepseek.v3-v1:0": {
+        "successor_model": "bedrock/ap-south-1/deepseek.v3.2",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-deepseek-deepseek-v3-1.html",
         "input_cost_per_token": 6e-7,
@@ -111305,6 +111660,7 @@
         "supports_vision": true
     },
     "bedrock/ap-southeast-3/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -111424,6 +111780,7 @@
         "supports_tool_choice": true
     },
     "bedrock/ap-southeast-3/qwen.qwen3-coder-480b-a35b-v1:0": {
+        "successor_model": "bedrock/ap-south-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html",
         "input_cost_per_token": 4.7e-7,
@@ -111746,6 +112103,7 @@
         "supports_vision": true
     },
     "bedrock/ca-central-1/mistral.mistral-7b-instruct-v0:2": {
+        "successor_model": "mistral.ministral-3-8b-instruct",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mistral-7b-instruct.md",
         "input_cost_per_token": 1.7e-7,
@@ -111768,6 +112126,7 @@
         "supports_function_calling": true
     },
     "bedrock/ca-central-1/mistral.mixtral-8x7b-instruct-v0:1": {
+        "successor_model": "mistral/mistral-small-2603",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mixtral-8x7b-instruct.md",
         "input_cost_per_token": 5.2e-7,
@@ -111934,6 +112293,7 @@
         "supports_vision": true
     },
     "bedrock/eu-central-1/meta.llama3-2-1b-instruct-v1:0": {
+        "successor_model": "bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-1b-instruct.md",
         "input_cost_per_token": 1.3e-7,
@@ -111947,6 +112307,7 @@
         "supports_tool_choice": false
     },
     "bedrock/eu-central-1/meta.llama3-2-3b-instruct-v1:0": {
+        "successor_model": "bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-3b-instruct.md",
         "input_cost_per_token": 1.9e-7,
@@ -111960,6 +112321,7 @@
         "supports_tool_choice": false
     },
     "bedrock/eu-central-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -112368,6 +112730,7 @@
         "supports_vision": true
     },
     "bedrock/eu-north-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -112689,6 +113052,7 @@
         "supports_vision": true
     },
     "bedrock/eu-south-1/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.1e-7,
@@ -112709,6 +113073,7 @@
         "supports_vision": true
     },
     "bedrock/eu-south-1/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.7e-7,
@@ -112729,6 +113094,7 @@
         "supports_vision": true
     },
     "bedrock/eu-south-1/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -112748,6 +113114,7 @@
         "supports_vision": true
     },
     "bedrock/eu-south-1/minimax.minimax-m2": {
+        "successor_model": "bedrock/eu-west-1/minimax.minimax-m2.5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 3.5e-7,
@@ -112769,6 +113136,7 @@
         "supports_vision": false
     },
     "bedrock/eu-south-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -112866,6 +113234,7 @@
         "supports_vision": true
     },
     "bedrock/eu-south-1/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -113540,6 +113909,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-1/eu.meta.llama3-2-1b-instruct-v1:0": {
+        "successor_model": "bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-1b-instruct.md",
         "input_cost_per_token": 1.1e-7,
@@ -113553,6 +113923,7 @@
         "supports_tool_choice": false
     },
     "bedrock/eu-west-1/eu.meta.llama3-2-3b-instruct-v1:0": {
+        "successor_model": "bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-3b-instruct.md",
         "input_cost_per_token": 1.7e-7,
@@ -113585,6 +113956,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-1/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.1e-7,
@@ -113605,6 +113977,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-1/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.7e-7,
@@ -113625,6 +113998,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-1/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -113644,6 +114018,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-1/meta.llama3-2-1b-instruct-v1:0": {
+        "successor_model": "bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-1b-instruct.md",
         "input_cost_per_token": 1.1e-7,
@@ -113657,6 +114032,7 @@
         "supports_tool_choice": false
     },
     "bedrock/eu-west-1/meta.llama3-2-3b-instruct-v1:0": {
+        "successor_model": "bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-3b-instruct.md",
         "input_cost_per_token": 1.7e-7,
@@ -113670,6 +114046,7 @@
         "supports_tool_choice": false
     },
     "bedrock/eu-west-1/minimax.minimax-m2": {
+        "successor_model": "bedrock/eu-west-1/minimax.minimax-m2.5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 3.5e-7,
@@ -113691,6 +114068,7 @@
         "supports_vision": false
     },
     "bedrock/eu-west-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -113788,6 +114166,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-1/mistral.mistral-7b-instruct-v0:2": {
+        "successor_model": "bedrock/eu-west-1/mistral.ministral-3-8b-instruct",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mistral-7b-instruct.md",
         "input_cost_per_token": 1.6e-7,
@@ -113810,6 +114189,7 @@
         "supports_function_calling": true
     },
     "bedrock/eu-west-1/mistral.mixtral-8x7b-instruct-v0:1": {
+        "successor_model": "mistral/mistral-small-2603",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mixtral-8x7b-instruct.md",
         "input_cost_per_token": 4.9e-7,
@@ -113822,6 +114202,7 @@
         "supports_tool_choice": true
     },
     "bedrock/eu-west-1/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -114260,6 +114641,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-2/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.4e-7,
@@ -114280,6 +114662,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-2/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 3.6e-7,
@@ -114300,6 +114683,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-2/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 6e-8,
@@ -114319,6 +114703,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-2/minimax.minimax-m2": {
+        "successor_model": "bedrock/eu-west-1/minimax.minimax-m2.5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.7e-7,
@@ -114340,6 +114725,7 @@
         "supports_vision": false
     },
     "bedrock/eu-west-2/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 6.2e-7,
@@ -114437,6 +114823,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-2/mistral.mistral-7b-instruct-v0:2": {
+        "successor_model": "bedrock/eu-west-1/mistral.ministral-3-8b-instruct",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mistral-7b-instruct.md",
         "input_cost_per_token": 2e-7,
@@ -114459,6 +114846,7 @@
         "supports_function_calling": true
     },
     "bedrock/eu-west-2/mistral.mixtral-8x7b-instruct-v0:1": {
+        "successor_model": "mistral/mistral-small-2603",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mixtral-8x7b-instruct.md",
         "input_cost_per_token": 5.9e-7,
@@ -114669,6 +115057,7 @@
         "supports_tool_choice": true
     },
     "bedrock/eu-west-2/qwen.qwen3-coder-480b-a35b-v1:0": {
+        "successor_model": "bedrock/eu-west-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html",
         "input_cost_per_token": 7e-7,
@@ -114923,6 +115312,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-3/eu.meta.llama3-2-3b-instruct-v1:0": {
+        "successor_model": "bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-3b-instruct.md",
         "input_cost_per_token": 2e-7,
@@ -114955,6 +115345,7 @@
         "supports_vision": true
     },
     "bedrock/eu-west-3/meta.llama3-2-1b-instruct-v1:0": {
+        "successor_model": "bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-1b-instruct.md",
         "input_cost_per_token": 1.3e-7,
@@ -114968,6 +115359,7 @@
         "supports_tool_choice": false
     },
     "bedrock/eu-west-3/meta.llama3-2-3b-instruct-v1:0": {
+        "successor_model": "bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0",
         "deprecation_date": "2026-07-07",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-meta-llama-3-2-3b-instruct.md",
         "input_cost_per_token": 2e-7,
@@ -115167,6 +115559,7 @@
         "supports_vision": true
     },
     "bedrock/sa-east-1/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.1e-7,
@@ -115187,6 +115580,7 @@
         "supports_vision": true
     },
     "bedrock/sa-east-1/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.8e-7,
@@ -115207,6 +115601,7 @@
         "supports_vision": true
     },
     "bedrock/sa-east-1/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -115226,6 +115621,7 @@
         "supports_vision": true
     },
     "bedrock/sa-east-1/minimax.minimax-m2": {
+        "successor_model": "bedrock/sa-east-1/minimax.minimax-m2.5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 3.6e-7,
@@ -115247,6 +115643,7 @@
         "supports_vision": false
     },
     "bedrock/sa-east-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -115344,6 +115741,7 @@
         "supports_vision": true
     },
     "bedrock/sa-east-1/mistral.mistral-7b-instruct-v0:2": {
+        "successor_model": "bedrock/sa-east-1/mistral.ministral-3-8b-instruct",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mistral-7b-instruct.md",
         "input_cost_per_token": 2.5e-7,
@@ -115385,6 +115783,7 @@
         "supports_vision": true
     },
     "bedrock/sa-east-1/mistral.mixtral-8x7b-instruct-v0:1": {
+        "successor_model": "mistral/mistral-small-2603",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-mistral-ai-mixtral-8x7b-instruct.md",
         "input_cost_per_token": 7.6e-7,
@@ -115397,6 +115796,7 @@
         "supports_tool_choice": true
     },
     "bedrock/sa-east-1/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -115433,6 +115833,7 @@
         "supports_system_messages": true
     },
     "bedrock/sa-east-1/moonshot.kimi-k2-thinking": {
+        "successor_model": "moonshot/kimi-k3.1-pro",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 7.3e-7,
@@ -116417,6 +116818,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/ap-northeast-1/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.1e-7,
@@ -116440,6 +116842,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/ap-northeast-1/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.8e-7,
@@ -116463,6 +116866,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/ap-northeast-1/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -116557,6 +116961,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/ap-northeast-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -116691,6 +117096,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/ap-northeast-1/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -116996,6 +117402,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/ap-northeast-1/qwen.qwen3-coder-30b-a3b-instruct": {
+        "successor_model": "bedrock_mantle/ap-northeast-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.8e-7,
@@ -117016,6 +117423,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/ap-northeast-1/qwen.qwen3-coder-480b-a35b-instruct": {
+        "successor_model": "bedrock_mantle/ap-northeast-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html",
         "input_cost_per_token": 5.4e-7,
@@ -117232,6 +117640,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/ap-south-1/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.1e-7,
@@ -117255,6 +117664,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/ap-south-1/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.7e-7,
@@ -117278,6 +117688,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/ap-south-1/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -117372,6 +117783,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/ap-south-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -117506,6 +117918,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/ap-south-1/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -117811,6 +118224,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/ap-south-1/qwen.qwen3-coder-30b-a3b-instruct": {
+        "successor_model": "bedrock_mantle/ap-south-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.8e-7,
@@ -117831,6 +118245,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/ap-south-1/qwen.qwen3-coder-480b-a35b-instruct": {
+        "successor_model": "bedrock_mantle/ap-south-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html",
         "input_cost_per_token": 5.3e-7,
@@ -118047,6 +118462,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/ap-southeast-2/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 9.27e-8,
@@ -118070,6 +118486,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/ap-southeast-2/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.369e-7,
@@ -118093,6 +118510,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/ap-southeast-2/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.12e-8,
@@ -118187,6 +118605,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/ap-southeast-2/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.1e-7,
@@ -118321,6 +118740,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/ap-southeast-2/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.12e-8,
@@ -118626,6 +119046,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/ap-southeast-2/qwen.qwen3-coder-30b-a3b-instruct": {
+        "successor_model": "bedrock_mantle/ap-southeast-2/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.545e-7,
@@ -118646,6 +119067,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/ap-southeast-2/qwen.qwen3-coder-480b-a35b-instruct": {
+        "successor_model": "bedrock_mantle/ap-southeast-2/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html",
         "input_cost_per_token": 4.635e-7,
@@ -118862,6 +119284,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/ap-southeast-3/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.08e-7,
@@ -118885,6 +119308,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/ap-southeast-3/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.76e-7,
@@ -118908,6 +119332,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/ap-southeast-3/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-8,
@@ -119002,6 +119427,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/ap-southeast-3/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -119114,6 +119540,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/ap-southeast-3/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-8,
@@ -119419,6 +119846,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/ap-southeast-3/qwen.qwen3-coder-30b-a3b-instruct": {
+        "successor_model": "bedrock_mantle/ap-southeast-3/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.6e-7,
@@ -119439,6 +119867,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/ap-southeast-3/qwen.qwen3-coder-480b-a35b-instruct": {
+        "successor_model": "bedrock_mantle/ap-southeast-3/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html",
         "input_cost_per_token": 4.7e-7,
@@ -119611,6 +120040,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/eu-central-1/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.08e-7,
@@ -119658,6 +120088,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-central-1/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-8,
@@ -119821,6 +120252,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/eu-central-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -119933,6 +120365,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-central-1/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-8,
@@ -120194,6 +120627,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/eu-central-1/qwen.qwen3-coder-30b-a3b-instruct": {
+        "successor_model": "bedrock_mantle/eu-central-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2e-7,
@@ -120339,6 +120773,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/eu-north-1/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.08e-7,
@@ -120362,6 +120797,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-north-1/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.76e-7,
@@ -120385,6 +120821,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-north-1/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-8,
@@ -120479,6 +120916,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/eu-north-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -120591,6 +121029,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-north-1/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-8,
@@ -120964,6 +121403,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/eu-south-1/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.1e-7,
@@ -120987,6 +121427,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-south-1/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.7e-7,
@@ -121010,6 +121451,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-south-1/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -121104,6 +121546,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/eu-south-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -121216,6 +121659,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-south-1/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -121477,6 +121921,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/eu-south-1/qwen.qwen3-coder-30b-a3b-instruct": {
+        "successor_model": "bedrock_mantle/eu-south-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2e-7,
@@ -121599,6 +122044,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/eu-west-1/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.1e-7,
@@ -121622,6 +122068,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-west-1/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.7e-7,
@@ -121645,6 +122092,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-west-1/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -121739,6 +122187,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/eu-west-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -121851,6 +122300,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-west-1/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -122112,6 +122562,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/eu-west-1/qwen.qwen3-coder-30b-a3b-instruct": {
+        "successor_model": "bedrock_mantle/eu-west-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.8e-7,
@@ -122278,6 +122729,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/eu-west-2/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.4e-7,
@@ -122301,6 +122753,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-west-2/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 3.6e-7,
@@ -122324,6 +122777,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-west-2/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/eu-central-1/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 6e-8,
@@ -122418,6 +122872,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/eu-west-2/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 6.2e-7,
@@ -122530,6 +122985,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/eu-west-2/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 6e-8,
@@ -122835,6 +123291,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/eu-west-2/qwen.qwen3-coder-30b-a3b-instruct": {
+        "successor_model": "bedrock_mantle/eu-west-2/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.3e-7,
@@ -122855,6 +123312,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/eu-west-2/qwen.qwen3-coder-480b-a35b-instruct": {
+        "successor_model": "bedrock_mantle/eu-west-2/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html",
         "input_cost_per_token": 7e-7,
@@ -123071,6 +123529,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/sa-east-1/google.gemma-3-12b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-26b-a4b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.1e-7,
@@ -123094,6 +123553,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/sa-east-1/google.gemma-3-27b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-31b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 2.8e-7,
@@ -123117,6 +123577,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/sa-east-1/google.gemma-3-4b-it": {
+        "successor_model": "bedrock_mantle/google.gemma-4-e2b",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -123211,6 +123672,7 @@
         "supports_vision": false
     },
     "bedrock_mantle/sa-east-1/mistral.devstral-2-123b": {
+        "successor_model": "mistral/mistral-medium-3-5",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 4.8e-7,
@@ -123345,6 +123807,7 @@
         "supports_vision": true
     },
     "bedrock_mantle/sa-east-1/mistral.voxtral-mini-3b-2507": {
+        "successor_model": "mistral/voxtral-mini-2602",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 5e-8,
@@ -123650,6 +124113,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/sa-east-1/qwen.qwen3-coder-30b-a3b-instruct": {
+        "successor_model": "bedrock_mantle/sa-east-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html",
         "input_cost_per_token": 1.8e-7,
@@ -123670,6 +124134,7 @@
         "supports_tool_choice": true
     },
     "bedrock_mantle/sa-east-1/qwen.qwen3-coder-480b-a35b-instruct": {
+        "successor_model": "bedrock_mantle/sa-east-1/qwen.qwen3-coder-next",
         "deprecation_date": "2027-03-30",
         "deprecation_source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-qwen-qwen3-coder-480b-a35b-instruct.html",
         "input_cost_per_token": 5.4e-7,
@@ -124698,5 +125163,133 @@
         "mode": "evaluation",
         "output_cost_per_token": 0,
         "source": "https://docs.perplexity.ai/docs/decisions/quickstart"
+    },
+    "gemini/genie-4": {
+        "input_cost_per_image_token": 0.0000015,
+        "input_cost_per_token": 0.0000015,
+        "provider": "gemini",
+        "max_input_tokens": 1048576,
+        "max_output_tokens": 65536,
+        "mode": "chat",
+        "output_cost_per_token": 0.000009,
+        "output_cost_per_video_token": 0.0000175,
+        "source": "https://ai.google.dev/gemini-api/docs/pricing",
+        "supported_endpoints": [
+            "/v1beta/interactions"
+        ],
+        "supported_modalities": [
+            "text",
+            "image"
+        ],
+        "supported_output_modalities": [
+            "video",
+            "audio"
+        ],
+        "supports_audio_input": false,
+        "supports_audio_output": true,
+        "supports_function_calling": false,
+        "supports_prompt_caching": false,
+        "supports_reasoning": false,
+        "supports_response_schema": false,
+        "supports_system_messages": false,
+        "supports_url_context": false,
+        "supports_video_input": false,
+        "supports_vision": true,
+        "supports_web_search": false
+    },
+    "gpt-live-1.1": {
+        "input_cost_per_second": 0.000833333333333,
+        "provider": "openai",
+        "mode": "realtime",
+        "source": "https://developers.openai.com/api/docs/pricing",
+        "supported_modalities": [
+            "text",
+            "audio"
+        ],
+        "supported_output_modalities": [
+            "text",
+            "audio"
+        ],
+        "supports_audio_input": true,
+        "supports_audio_output": true,
+        "supports_function_calling": true
+    },
+    "fal_ai/ideogram/v4.6": {
+        "provider": "fal_ai",
+        "metadata": {
+            "comment": "fal reports the charge for each request in the x-fal-billable-units response header, priced at output_cost_per_billable_unit dollars per unit. One image at 2K or below (up to 4,194,304 pixels) is 8 units at very low quality, 30 at low, 60 at the default medium and 100 at high, and above 2K it is 60 units at low, 120 at medium and 200 at high. The per-image price is the default medium quality at 2K or below, used when the header is absent"
+        },
+        "mode": "image_generation",
+        "output_cost_per_billable_unit": 0.001,
+        "output_cost_per_image": 0.06,
+        "source": "https://fal.ai/models/ideogram/v4.6",
+        "supported_endpoints": [
+            "/v1/images/generations"
+        ]
+    },
+    "fal_ai/ideogram/v4.6/edit": {
+        "provider": "fal_ai",
+        "metadata": {
+            "comment": "fal reports the charge for each request in the x-fal-billable-units response header, priced at output_cost_per_billable_unit dollars per unit. One image at 2K or below (up to 4,194,304 pixels) is 8 units at very low quality, 30 at low, 60 at the default medium and 220 at high, and above 2K it is 60 units at low, 200 at medium and 600 at high. The per-image price is the default medium quality at 2K or below, used when the header is absent"
+        },
+        "mode": "image_generation",
+        "output_cost_per_billable_unit": 0.001,
+        "output_cost_per_image": 0.06,
+        "source": "https://fal.ai/models/ideogram/v4.6/edit",
+        "supported_endpoints": [
+            "/v1/images/edits",
+            "/v1/images/generations"
+        ],
+        "supports_vision": true
+    },
+    "together_ai/tencent/Hy4": {
+        "cache_read_input_token_cost": 4.2e-8,
+        "input_cost_per_token": 8.34e-7,
+        "provider": "together_ai",
+        "max_input_tokens": 1048576,
+        "max_output_tokens": 1048576,
+        "mode": "chat",
+        "output_cost_per_token": 0.000002501,
+        "source": "https://api.together.ai/v1/models",
+        "supports_function_calling": true,
+        "supports_prompt_caching": true,
+        "supports_reasoning": true,
+        "supports_response_schema": true,
+        "supports_tool_choice": true,
+        "supports_vision": true
+    },
+    "databricks/databricks-gemini-nano-banana-2-1": {
+        "cache_creation_input_token_cost": 0.00000187502,
+        "cache_creation_input_token_cost_priority": 0.00000337498,
+        "cache_read_input_token_cost": 1.8753e-7,
+        "cache_read_input_token_cost_priority": 3.3747e-7,
+        "input_cost_per_image_token": 0.00000187502,
+        "input_cost_per_token": 0.00000187502,
+        "input_cost_per_token_priority": 0.00000337498,
+        "input_dbu_cost_per_token": 0.000026786,
+        "provider": "databricks",
+        "max_input_tokens": 131072,
+        "max_output_tokens": 32768,
+        "metadata": {
+            "notes": "Costs per token are the published Global DBU rates times $0.070 per DBU. The '*_dbu_cost_per_token' fields are provided for reference; cost calculation reads the dollar '*_cost_per_token' fields. The page lists no cache write rate, so cache writes bill at the input rate."
+        },
+        "mode": "chat",
+        "output_cost_per_image_token": 0.00003749998,
+        "output_cost_per_image_token_priority": 0.00006750002,
+        "output_cost_per_token": 0.00000937503,
+        "output_cost_per_token_priority": 0.00001687497,
+        "output_dbu_cost_per_token": 0.000133929,
+        "source": "https://www.databricks.com/product/pricing/proprietary-foundation-model-serving",
+        "supported_modalities": [
+            "text",
+            "image"
+        ],
+        "supported_output_modalities": [
+            "text",
+            "image"
+        ],
+        "supports_function_calling": false,
+        "supports_prompt_caching": true,
+        "supports_vision": true
     }
 }
