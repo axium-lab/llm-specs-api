@@ -26543,7 +26543,8 @@
         },
         "source": "https://docs.gnani.ai/api/STT/models/prisma-v2-5",
         "supported_endpoints": [
-            "/v1/audio/transcriptions"
+            "/v1/audio/transcriptions",
+            "/v1/realtime"
         ]
     },
     "gnani/prisma-v3.0": {
@@ -26551,7 +26552,8 @@
         "mode": "audio_transcription",
         "source": "https://docs.gnani.ai/api/STT/models/prisma-v3",
         "supported_endpoints": [
-            "/v1/audio/transcriptions"
+            "/v1/audio/transcriptions",
+            "/v1/realtime"
         ]
     },
     "elevenlabs/scribe_v1": {
@@ -33144,6 +33146,7 @@
         "output_cost_per_image": 0.039,
         "output_cost_per_image_token": 0.00003,
         "output_cost_per_image_token_batches": 0.000015,
+        "output_cost_per_image_token_flex": 0.000015,
         "output_cost_per_image_token_priority": 0.000054,
         "output_cost_per_reasoning_token": 0.0000025,
         "output_cost_per_token": 0.0000025,
@@ -36007,7 +36010,7 @@
     "chatgpt/gpt-5.5": {
         "successor_model": "chatgpt/gpt-6.1-sol",
         "deprecation_date": "2026-10-14",
-        "deprecation_source": "https://developers.openai.com/codex/models",
+        "deprecation_source": "https://learn.chatgpt.com/docs/models",
         "provider": "chatgpt",
         "source": "https://platform.openai.com/docs/models/gpt-5.5",
         "max_input_tokens": 1050000,
@@ -36089,7 +36092,7 @@
     "chatgpt/gpt-5.4": {
         "successor_model": "chatgpt/gpt-6-sol",
         "deprecation_date": "2026-08-31",
-        "deprecation_source": "https://developers.openai.com/codex/models",
+        "deprecation_source": "https://learn.chatgpt.com/docs/models",
         "provider": "chatgpt",
         "max_input_tokens": 1050000,
         "max_output_tokens": 128000,
@@ -36145,7 +36148,7 @@
     "chatgpt/gpt-5.3-codex-spark": {
         "successor_model": "chatgpt/gpt-5.1-codex-mini",
         "deprecation_date": "2026-09-14",
-        "deprecation_source": "https://developers.openai.com/codex/models",
+        "deprecation_source": "https://learn.chatgpt.com/docs/models",
         "provider": "chatgpt",
         "max_input_tokens": 128000,
         "max_output_tokens": 128000,
@@ -39992,7 +39995,7 @@
         "cache_read_input_token_cost": 5e-7,
         "input_cost_per_token": 0.000005,
         "provider": "openai",
-        "max_input_tokens": 400000,
+        "max_input_tokens": 272000,
         "max_output_tokens": 128000,
         "mode": "chat",
         "output_cost_per_token": 0.00003,
@@ -59323,15 +59326,21 @@
         ],
         "cache_read_input_token_cost": 5e-7,
         "cache_read_input_token_cost_above_200k_tokens": 0.000001,
+        "cache_read_input_token_cost_above_200k_tokens_batches": 8e-7,
+        "cache_read_input_token_cost_batches": 4e-7,
         "input_cost_per_image_token": 0.000002,
         "input_cost_per_token": 0.000002,
         "input_cost_per_token_above_200k_tokens": 0.000004,
+        "input_cost_per_token_above_200k_tokens_batches": 0.0000032,
+        "input_cost_per_token_batches": 0.0000016,
         "provider": "xai",
         "max_input_tokens": 500000,
         "max_output_tokens": 500000,
         "mode": "chat",
         "output_cost_per_token": 0.000006,
         "output_cost_per_token_above_200k_tokens": 0.000012,
+        "output_cost_per_token_above_200k_tokens_batches": 0.0000096,
+        "output_cost_per_token_batches": 0.0000048,
         "source": "https://api.x.ai/v1/language-models",
         "supports_function_calling": true,
         "supports_prompt_caching": true,
@@ -59475,6 +59484,11 @@
         "supports_function_calling": true,
         "supports_prompt_caching": true,
         "supports_reasoning": true,
+        "reasoning_effort_levels": [
+            "low",
+            "high",
+            "max"
+        ],
         "supports_response_schema": true,
         "supports_tool_choice": true
     },
@@ -59493,6 +59507,11 @@
         "supports_function_calling": true,
         "supports_prompt_caching": true,
         "supports_reasoning": true,
+        "reasoning_effort_levels": [
+            "low",
+            "high",
+            "max"
+        ],
         "supports_response_schema": true,
         "supports_tool_choice": true,
         "source": "https://docs.z.ai/guides/overview/pricing",
@@ -66097,6 +66116,7 @@
             "/v1/chat/completions",
             "/v1/responses"
         ],
+        "supports_all_json_schema_keywords": false,
         "supports_function_calling": true,
         "supports_parallel_function_calling": false,
         "supports_reasoning": true,
@@ -66122,6 +66142,7 @@
             "/v1/chat/completions",
             "/v1/responses"
         ],
+        "supports_all_json_schema_keywords": false,
         "supports_function_calling": true,
         "supports_parallel_function_calling": false,
         "supports_reasoning": true,
@@ -66147,6 +66168,7 @@
             "/v1/chat/completions",
             "/v1/responses"
         ],
+        "supports_all_json_schema_keywords": false,
         "supports_function_calling": true,
         "supports_parallel_function_calling": false,
         "supports_reasoning": true,
@@ -73817,6 +73839,39 @@
             "/v1/audio/transcriptions"
         ]
     },
+    "elevenlabs/scribe_v2_realtime": {
+        "input_cost_per_second": 0.000061111,
+        "provider": "elevenlabs",
+        "metadata": {
+            "calculation": "$0.22/hour = $0.003667/minute = $0.000061111 per second",
+            "original_pricing_per_hour": 0.22
+        },
+        "mode": "audio_transcription",
+        "output_cost_per_second": 0,
+        "source": "https://elevenlabs.io/pricing/api",
+        "supported_endpoints": [
+            "/v1/realtime"
+        ],
+        "supported_modalities": [
+            "audio"
+        ],
+        "supported_output_modalities": [
+            "text"
+        ],
+        "supports_audio_input": true
+    },
+    "elevenlabs/scribe_v2_realtime/keyterms": {
+        "input_cost_per_second": 0.000013889,
+        "provider": "elevenlabs",
+        "metadata": {
+            "calculation": "$0.05/hour = $0.000013889 per second",
+            "note": "Keyterm prompting add-on for Scribe v2 Realtime, billed on top of the base rate",
+            "original_pricing_per_hour": 0.05
+        },
+        "mode": "audio_transcription",
+        "output_cost_per_second": 0,
+        "source": "https://elevenlabs.io/pricing/api"
+    },
     "scaleway/glm-5.2": {
         "deprecation_source": "https://www.scaleway.com/en/docs/generative-apis/reference-content/supported-models/",
         "successor_model": "zai/glm-5.3",
@@ -75081,6 +75136,7 @@
             "/v1/chat/completions",
             "/v1/responses"
         ],
+        "supports_all_json_schema_keywords": false,
         "supports_function_calling": true,
         "supports_parallel_function_calling": false,
         "supports_reasoning": true,
@@ -75106,6 +75162,7 @@
             "/v1/chat/completions",
             "/v1/responses"
         ],
+        "supports_all_json_schema_keywords": false,
         "supports_function_calling": true,
         "supports_parallel_function_calling": false,
         "supports_reasoning": true,
@@ -75131,6 +75188,7 @@
             "/v1/chat/completions",
             "/v1/responses"
         ],
+        "supports_all_json_schema_keywords": false,
         "supports_function_calling": true,
         "supports_parallel_function_calling": false,
         "supports_reasoning": true,
@@ -123138,6 +123196,7 @@
             "/v1/chat/completions",
             "/v1/responses"
         ],
+        "supports_all_json_schema_keywords": false,
         "supports_function_calling": true,
         "supports_parallel_function_calling": false,
         "supports_reasoning": true,
@@ -123161,6 +123220,7 @@
             "/v1/chat/completions",
             "/v1/responses"
         ],
+        "supports_all_json_schema_keywords": false,
         "supports_function_calling": true,
         "supports_parallel_function_calling": false,
         "supports_reasoning": true,
@@ -123184,6 +123244,7 @@
             "/v1/chat/completions",
             "/v1/responses"
         ],
+        "supports_all_json_schema_keywords": false,
         "supports_function_calling": true,
         "supports_parallel_function_calling": false,
         "supports_reasoning": true,
@@ -128695,5 +128756,246 @@
         "supports_vision": true,
         "supports_web_search": true,
         "supports_xhigh_reasoning_effort": true
+    },
+    "fireworks_ai/accounts/fireworks/models/qwen4-max": {
+        "cache_read_input_token_cost": 7.5e-8,
+        "cache_read_input_token_cost_priority": 9.375e-8,
+        "input_cost_per_token": 0.0000015,
+        "input_cost_per_token_priority": 0.000001875,
+        "provider": "fireworks_ai",
+        "max_input_tokens": 262144,
+        "mode": "chat",
+        "output_cost_per_token": 0.0000045,
+        "output_cost_per_token_priority": 0.000005625,
+        "source": "https://api.fireworks.ai/v1/serverless/models?format=nested",
+        "supports_function_calling": true,
+        "supports_mid_conversation_system": false,
+        "supports_prompt_caching": true,
+        "supports_reasoning": true,
+        "supports_response_schema": true,
+        "supports_tool_choice": true,
+        "supports_vision": true
+    },
+    "fireworks_ai/accounts/fireworks/models/hy4-flash": {
+        "cache_read_input_token_cost": 3e-9,
+        "cache_read_input_token_cost_priority": 3.75e-9,
+        "input_cost_per_token": 7e-8,
+        "input_cost_per_token_priority": 8.75e-8,
+        "provider": "fireworks_ai",
+        "max_input_tokens": 524288,
+        "mode": "chat",
+        "output_cost_per_token": 2.81e-7,
+        "output_cost_per_token_priority": 3.5125e-7,
+        "source": "https://fireworks.ai/models/fireworks/hy4-flash",
+        "supports_function_calling": true,
+        "supports_prompt_caching": true,
+        "supports_reasoning": true,
+        "supports_response_schema": true,
+        "supports_tool_choice": true,
+        "supports_vision": true
+    },
+    "huawei_maas/glm-5.3": {
+        "cache_read_input_token_cost": 2.6e-7,
+        "input_cost_per_token": 0.0000014,
+        "provider": "huawei_maas",
+        "max_input_tokens": 1000000,
+        "max_output_tokens": 128000,
+        "max_tokens": 128000,
+        "mode": "chat",
+        "output_cost_per_token": 0.0000044,
+        "source": "https://support.huaweicloud.com/intl/en-us/price-maas/price-maas-0002.html",
+        "supports_function_calling": true,
+        "supports_prompt_caching": true,
+        "supports_reasoning": true
+    },
+    "huawei_maas/glm-5.2": {
+        "cache_read_input_token_cost": 2.6e-7,
+        "deprecation_date": "2026-11-30",
+        "deprecation_source": "https://support.huaweicloud.com/intl/en-us/bulletin-maas/bulletin-maas-0002.html",
+        "input_cost_per_token": 0.0000014,
+        "provider": "huawei_maas",
+        "max_input_tokens": 1000000,
+        "max_output_tokens": 128000,
+        "max_tokens": 128000,
+        "mode": "chat",
+        "off_peak_pricing": {
+            "cache_read_input_token_cost": 1.82e-7,
+            "hours_utc": "13:00-00:00",
+            "input_cost_per_token": 9.8e-7,
+            "output_cost_per_token": 0.00000308
+        },
+        "output_cost_per_token": 0.0000044,
+        "source": "https://support.huaweicloud.com/intl/en-us/price-maas/price-maas-0002.html",
+        "successor_model": "huawei_maas/glm-5.3",
+        "supports_function_calling": true,
+        "supports_reasoning": true
+    },
+    "huawei_maas/deepseek-v4.1-flash-1017": {
+        "cache_read_input_token_cost": 6e-9,
+        "input_cost_per_token": 3e-7,
+        "provider": "huawei_maas",
+        "max_input_tokens": 1000000,
+        "max_output_tokens": 384000,
+        "max_tokens": 384000,
+        "mode": "chat",
+        "off_peak_pricing": {
+            "cache_read_input_token_cost": 3e-9,
+            "hours_utc": "13:00-00:00",
+            "input_cost_per_token": 1.5e-7,
+            "output_cost_per_token": 6e-7
+        },
+        "output_cost_per_token": 0.0000012,
+        "source": "https://support.huaweicloud.com/intl/en-us/price-maas/price-maas-0002.html",
+        "supports_assistant_prefill": true,
+        "supports_function_calling": true,
+        "supports_prompt_caching": true,
+        "supports_reasoning": true,
+        "supports_vision": true
+    },
+    "huawei_maas/deepseek-v4.1-flash": {
+        "cache_read_input_token_cost": 3e-8,
+        "deprecation_date": "2026-11-30",
+        "deprecation_source": "https://support.huaweicloud.com/intl/en-us/bulletin-maas/bulletin-maas-0002.html",
+        "input_cost_per_token": 3e-7,
+        "provider": "huawei_maas",
+        "max_input_tokens": 1000000,
+        "max_output_tokens": 384000,
+        "max_tokens": 384000,
+        "mode": "chat",
+        "off_peak_pricing": {
+            "cache_read_input_token_cost": 1.5e-8,
+            "hours_utc": "13:00-00:00",
+            "input_cost_per_token": 1.5e-7,
+            "output_cost_per_token": 6e-7
+        },
+        "output_cost_per_token": 0.0000012,
+        "source": "https://support.huaweicloud.com/intl/en-us/price-maas/price-maas-0002.html",
+        "successor_model": "huawei_maas/deepseek-v4.1-flash-1017",
+        "supports_function_calling": true,
+        "supports_prompt_caching": true,
+        "supports_reasoning": true,
+        "supports_vision": true
+    },
+    "us-gov.openai.gpt-5.6-cyber": {
+        "cache_creation_input_token_cost": 0.00002109375,
+        "cache_read_input_token_cost": 0.0000016875,
+        "input_cost_per_token": 0.000016875,
+        "provider": "bedrock_converse",
+        "max_input_tokens": 922000,
+        "max_output_tokens": 128000,
+        "mode": "chat",
+        "output_cost_per_token": 0.00010125,
+        "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-cyber.html",
+        "supported_endpoints": [
+            "/v1/chat/completions",
+            "/v1/responses"
+        ],
+        "supported_modalities": [
+            "text",
+            "image"
+        ],
+        "supported_output_modalities": [
+            "text"
+        ],
+        "supports_bedrock_converse_tool_result_images": false,
+        "supports_bedrock_runtime_chat_completions_response_format": true,
+        "supports_function_calling": true,
+        "supports_minimal_reasoning_effort": false,
+        "supports_openai_prompt_cache_breakpoint": true,
+        "supports_reasoning": true,
+        "supports_sampling_params": false,
+        "supports_tool_choice": true,
+        "supports_vision": true,
+        "supports_xhigh_reasoning_effort": true
+    },
+    "xai/grok-4.7-latest": {
+        "cache_read_input_token_cost": 5e-7,
+        "cache_read_input_token_cost_above_200k_tokens": 0.000001,
+        "cache_read_input_token_cost_above_200k_tokens_batches": 8e-7,
+        "cache_read_input_token_cost_batches": 4e-7,
+        "input_cost_per_image_token": 0.000002,
+        "input_cost_per_token": 0.000002,
+        "input_cost_per_token_above_200k_tokens": 0.000004,
+        "input_cost_per_token_above_200k_tokens_batches": 0.0000032,
+        "input_cost_per_token_batches": 0.0000016,
+        "provider": "xai",
+        "max_input_tokens": 500000,
+        "max_output_tokens": 500000,
+        "mode": "chat",
+        "output_cost_per_token": 0.000006,
+        "output_cost_per_token_above_200k_tokens": 0.000012,
+        "output_cost_per_token_above_200k_tokens_batches": 0.0000096,
+        "output_cost_per_token_batches": 0.0000048,
+        "source": "https://api.x.ai/v1/language-models",
+        "supported_modalities": [
+            "text",
+            "image"
+        ],
+        "supports_function_calling": true,
+        "supports_prompt_caching": true,
+        "supports_reasoning": true,
+        "supports_response_schema": true,
+        "supports_tool_choice": true,
+        "supports_vision": true,
+        "supports_web_search": true
+    },
+    "xai/grok-4.6-latest": {
+        "cache_read_input_token_cost": 5e-7,
+        "cache_read_input_token_cost_above_200k_tokens": 0.000001,
+        "cache_read_input_token_cost_above_200k_tokens_batches": 8e-7,
+        "cache_read_input_token_cost_batches": 4e-7,
+        "input_cost_per_image_token": 0.000002,
+        "input_cost_per_token": 0.000002,
+        "input_cost_per_token_above_200k_tokens": 0.000004,
+        "input_cost_per_token_above_200k_tokens_batches": 0.0000032,
+        "input_cost_per_token_batches": 0.0000016,
+        "provider": "xai",
+        "max_input_tokens": 500000,
+        "max_output_tokens": 500000,
+        "mode": "chat",
+        "output_cost_per_token": 0.000006,
+        "output_cost_per_token_above_200k_tokens": 0.000012,
+        "output_cost_per_token_above_200k_tokens_batches": 0.0000096,
+        "output_cost_per_token_batches": 0.0000048,
+        "source": "https://api.x.ai/v1/language-models",
+        "supported_modalities": [
+            "text",
+            "image"
+        ],
+        "supports_function_calling": true,
+        "supports_prompt_caching": true,
+        "supports_reasoning": true,
+        "supports_response_schema": true,
+        "supports_tool_choice": true,
+        "supports_vision": true,
+        "supports_web_search": true
+    },
+    "fal_ai/krea/v3/text-to-image/lora": {
+        "provider": "fal_ai",
+        "metadata": {
+            "comment": "fal prices krea/v3/text-to-image/lora at $0.05 per megapixel, counting the output and reference images, and reports the charge for each request in the x-fal-billable-units response header, priced at output_cost_per_billable_unit dollars per unit. One image is 1.2 units ($0.06) up to 1024x1024 and 2.4 units ($0.12) at 1536x1536, 2048x2048 and the default image_size auto, measured 2026-11-25. The per-image price is used when the header is absent"
+        },
+        "mode": "image_generation",
+        "output_cost_per_billable_unit": 0.05,
+        "output_cost_per_image": 0.12,
+        "source": "https://fal.ai/models/krea/v3/text-to-image/lora",
+        "supported_endpoints": [
+            "/v1/images/generations"
+        ]
+    },
+    "fal_ai/krea/v3/edit/lora": {
+        "provider": "fal_ai",
+        "metadata": {
+            "comment": "fal prices krea/v3/edit/lora at $0.05 per megapixel, counting the output and reference images, and reports the charge for each request in the x-fal-billable-units response header, priced at output_cost_per_billable_unit dollars per unit. One image with one 1376x768 reference image is 4.0 units ($0.20) up to 1024x1024 and 5.2 units ($0.26) at 2048x2048 and the default image_size auto, and a second reference image adds 2.8 units ($0.14), measured 2026-11-25. The per-image price is used when the header is absent"
+        },
+        "mode": "image_generation",
+        "output_cost_per_billable_unit": 0.05,
+        "output_cost_per_image": 0.26,
+        "source": "https://fal.ai/models/krea/v3/edit/lora",
+        "supported_endpoints": [
+            "/v1/images/edits",
+            "/v1/images/generations"
+        ],
+        "supports_vision": true
     }
 }
